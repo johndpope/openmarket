@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+
+  <title>OpenMarket</title>
+
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" /> 
+
+  <!-- Bootstrap core CSS -->
+  <link href="../css/united.bootstrap.min.css" rel="stylesheet">
+
+  <!-- Link to font awesome -->
+  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
+
+  <!-- Bootstrap social css -->
+  <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
+
+  <!--   Bootstrap validator -->
+  <link rel="stylesheet" href="../bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
+
+  <!--   toastr css -->
+  <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
+
+  <!--   typeahead css -->
+  <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
+
+  <!-- Pickadate -->
+  <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
+  <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
+
+  <!-- Summernote -->
+  <link href="../bower_components/summernote/dist/summernote.css" rel="stylesheet" />
+
+  <!-- Bootstrap datepicker -->
+  <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
+
+  <!-- This main css -->
+  <link href="../css/main.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+  <!-- Navbars -->
+
+  <!-- the start of the doc -->
+  <div id="wrapper">
+
+    <!-- header -->
+    <nav class="navbar navbar-default navbar-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">OpenMarket</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/about">About</a>
+            </li>
+            <li><a href="/wallet">Wallet</a>
+            </li>
+            <li><a href="/api">API</a>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/api.html">API Reference</a>
+                </li>
+                <li><a href="/FAQ">Frequently Asked Questions</a>
+                </li>
+                <li><a href="https://github.com/tchoulihan/bitmerchant">Github</a>
+                </li>
+                <li><a href="https://www.bountysource.com/trackers/9805417-tchoulihan-bitmerchant">Bounty Source</a>
+                </li>
+                <li><a href="https://github.com/tchoulihan/bitmerchant">Bugs/Feature requests</a>
+                </li>
+                <li><a href="https://github.com/tchoulihan/bitmerchant">Contact</a>
+                </li>
+
+
+              </ul>
+            </li>
+          </ul>
+          <div id="power" class="navbar-right">
+            <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a> -->
+            <button type="submit" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-power-off fa-2x"></i>
+            </button>
+
+            <ul class="dropdown-menu">
+              <li><a href="" id="power_off">Power off</a>
+              </li>
+              <li><a href="" id="restart">Restart</a>
+              </li>
+            </ul>
+          </div>
+
+
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+
+    <!-- The full page with teh sidebar -->
+    <div class="container-fluid">
+      <div class="row">
+
+        <!-- The sidebar -->
+        <div id="side_col" class="col-md-3 sidebar">
+
+          <div class="mini-submenu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </div>
+          <div class="list-group">
+            <a class="list-group-item active" href="wallet" rel="keep-params"><i class="fa fa-bank fa-fw"></i> &nbsp; Wallet</a>
+            <a class="list-group-item" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
+            <a class="list-group-item" href="tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
+            <a class="list-group-item" href="settings" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Settings</a>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- stop plugging in -->
+
+
+      <!-- Sidebar -->
+      <!--   <div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+      <li class="active"><a href="userdashboard_overview.html"><i class="fa fa-dashboard"></i> Overview</a></li>
+      <li><a href="userdashboard_funds.html"><i class="fa fa-bar-chart-o"></i> Funds</a></li>
+      <li><a href="userdashboard_pieces.html"><i class="fa fa-table"></i> Pieces</a></li>
+      <li><a href="userdashboard_prices.html"><i class="fa fa-edit"></i> Prices</a></li>
+    </ul>
+
+  </div> -->
+
+
+
+      <!-- The sidebar -->
+
+
+
+      <!-- The Page -->
+      <div class="row-fluid">
+        <div class="othermain-col hide col-md-9 col-md-offset-3">
+
+
+
+          <div class="row">
+
+
+            <div class="col-md-12">
+              <h1 id="page_title"> Your Wallet</h1>
+            </div>
+
+
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+
+              <ol class="breadcrumb breadcrumb-small">
+                <li><a href="wallet" rel="keep-params"><i class="fa fa-bars"></i> &nbsp; Home</a>
+                </li>
+                <li class="active"><i class="fa fa-bank"></i> Wallet</li>
+              </ol>
+            </div>
+          </div>
+          <br>
+
+          <div class="row sync-complete">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="col-md-8">
+                    <h4>Balance 
+              <span class="text-primary balance-cur"> &nbsp; &nbsp; <span class="balance"></span> mBTC</span> 
+              <span class="text-muted"> &nbsp; &asymp; &nbsp; <span id="converted_balance"></span> <span id="merchant_currency_iso"> USD</span></span> 
+              </h4>
+
+                  </div>
+
+                  <div class="col-md-4">
+
+                    <button id="receieveBtn" type="button" class="btn btn-default pull-right wallet-btn disabled" data-toggle="modal" data-target="#receiveModal"><i class="fa fa-arrow-circle-o-left fa-fw"></i> Receive</button>
+                    <button id="sendBtn" type="button" class="btn btn-default pull-right wallet-btn disabled" data-toggle="modal"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Send</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row sync-incomplete">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <h4 class="text-muted" id="status_text"></h4>
+                  <!-- Show the TOR progress bar -->
+                  <div class="progress">
+                    <div id="progress_bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                      <span class="sr-only">0% Complete</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row send-incomplete">
+            <div class="col-md-12">
+              <h4 class="text-muted" id="send_status"></h4>
+            </div>
+          </div>
+
+
+
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Transactions</h3>
+                </div>
+                <div id="transactions" class="panel-body large-table">
+                  <script id="transactions_template" type="x-tmpl-mustache">
+                    <table id="transactions_table" class="table table-hover table-striped tablesorter">
+                      <thead>
+                        <tr>
+                          <th>Date <i class="fa fa-sort"></i>
+                          </th>
+                          <th>Message <i class="fa fa-sort"></th>
+                <th>Status <i class="fa fa-sort"></th>
+                <th>Amount <i class="fa fa-sort"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              {{#.}}
+
+              <tr> 
+                <td>{{#dateformat}}{{longDate}}{{/dateformat}}</td>
+                <td>{{{message}}} <b>{{button_name}}</b> 
+                 <a class="text-muted" href="{{blockexplorer_url}}">
+                    <sup>tx</sup></a>
+                {{#order}}
+                  <br> <a class="text-muted" href="/order_details?order={{order}}"> Order # {{order}} </a>
+                {{/order}}
+                {{#fee}}
+                  <br> <span class="text-muted">Network fee </span>
+                {{/fee}}
+
+                </td>
+                <td>{{{status}}}</td>
+                <td>{{{amount}}} 
+                  {{#fee}}
+                    <br><span class="text-muted">{{fee}}</span>
+                  {{/fee}}
+
+                </td>
+            
+              </tr>
+              {{/.}}
+
+            </tbody>
+          </script>
+        </table>
+
+      </div>
+      <div class="panel-footer pager-footer">
+        <ul class="pager">
+          <li id="creators_transactions_pager_prev" class="disabled"><a href="javascript:void(0);">Previous</a></li>
+          <li id="creators_transactions_pager_next" ><a href="javascript:void(0);">Next</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+          </div>
+
+          <div class="row">
+            <hr class="featurette-divider">
+            <footer>
+              <p class="pull-right"><a href="#">Back to top</a>
+              </p>
+              <p>&copy; 2015 Bitmerchant, Inc. &middot; <a href="/about">About</a> &middot; <a href="https://github.com/tchoulihan/bitmerchant">Contact</a> &middot; <a href="/FAQ">Support</a> &middot; <a href="https://github.com/tchoulihan/bitmerchant">Github</a>
+              </p>
+            </footer>
+          </div>
+
+
+          <br>
+
+        </div>
+
+      </div>
+
+      <!-- end of wrapper -->
+    </div>
+
+
+
+  </div>
+
+  <!-- Modals -->
+
+
+  <div id="sendModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Send Money</h4>
+        </div>
+        <div class="modal-body">
+          <form id="sendMoneyForm" class="form-horizontal" role="form">
+
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Amount</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <div id="withdrawSymbol" class="input-group-addon">BTC</div>
+
+                  <input name="sendAmount" class="form-control" type="text" id="formGroupInputLarge" placeholder="BTC" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">To</label>
+
+
+              <div class="col-sm-10">
+                <input name="address" type="text" class="form-control" placeholder="Bitcoin Address">
+              </div>
+            </div>
+
+
+            <div class="form-group form-group-lg">
+
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Your Funds</label>
+              <div name="funds" class="col-sm-10 form-control-static balance-btc">
+              </div>
+            </div>
+
+            <div class="form-group form-group-lg">
+
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Potential Funds After</label>
+              <div name="fundsLeft" class="col-sm-10 form-control-static">
+
+              </div>
+            </div>
+            <button name="placeSendBtn" type="submit" class="btn btn-primary">Send</button>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="sendEncryptedModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Send Money</h4>
+        </div>
+        <div class="modal-body">
+          <form id="sendMoneyEncryptedForm" class="form-horizontal" role="form">
+
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Amount</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <div id="withdrawSymbol" class="input-group-addon">BTC</div>
+
+                  <input name="sendAmount" class="form-control" type="text" id="formGroupInputLarge" placeholder="BTC" data-bv-notempty="true" data-bv-notempty-message="An amount is required" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">To</label>
+
+
+              <div class="col-sm-10">
+                <input name="address" type="text" class="form-control" placeholder="Bitcoin Address" data-bv-notempty="true" data-bv-notempty-message="An Address is required" >
+              </div>
+            </div>
+
+             <div class="form-group">
+              <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-10">
+                <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty"  data-bv-stringlength="true" data-bv-stringlength-min="5" data-bv-stringlength-message="The password must be more than 5 characters long" />
+
+              </div>
+            </div>
+
+
+            <div class="form-group form-group-lg">
+
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Your Funds</label>
+              <div name="funds" class="col-sm-10 form-control-static balance-btc">
+              </div>
+            </div>
+
+            <div class="form-group form-group-lg">
+
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Potential Funds After</label>
+              <div name="fundsLeft" class="col-sm-10 form-control-static">
+
+              </div>
+            </div>
+            <button name="placeSendBtn" type="submit" class="btn btn-primary" data-loading-text="Sending &nbsp;<i class='fa fa-circle-o-notch fa-spin'></i>">Send</button>
+
+                            </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade bs-example-modal-lg" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="userloginModalLabel">Receive Money</h4>
+                </div>
+
+                <div class="modal-body">
+                  <div class="row">
+                    <div id="qrcode" class="text-center"></div>
+                    <h4 id="receive_address" class="text-center well"></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+          <!-- Bootstrap core JavaScript
+      ================================================== -->
+          <!-- Placed at the end of the document so the pages load faster -->
+          <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+          <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+          <script type="text/javascript" src="../bower_components/bootstrapValidator/dist/js/bootstrapValidator.min.js "></script>
+          <script src="../bower_components/toastr/toastr.js"></script>
+          <script src="../bower_components/mustache/mustache.js"></script>
+          <script src="../bower_components/holderjs/holder.js"></script>
+          <script src="../js/json.date-extensions.min.js"></script>
+          <script src="../bower_components/tablesorter/jquery.tablesorter.min.js"></script>
+          <script src="../bower_components/highcharts/highcharts.js"></script>
+          <script src="../bower_components/highcharts/modules/exporting.js"></script>
+          <script src="../bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+          <script src="../bower_components/pickadate/lib/picker.js"></script>
+          <script src="../bower_components/pickadate/lib/picker.date.js"></script>
+          <script src="../bower_components/summernote/dist/summernote.min.js"></script>
+          <script src="../bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+          <script src="../bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
+
+          <!-- my scripts -->
+          <script src="../js/tools.js"></script>
+          <script src="../js/common.js"></script>
+          <script src="../js/wallet.js"></script>
+
+
+
+</body>
+
+</html>

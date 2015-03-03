@@ -8,7 +8,8 @@ public static String APP_NAME = "openmarket";
 	
 	
 	public static final Integer SPARK_WEB_PORT = 4567;
-		
+	
+	
 	public static final String EXTERNAL_IP = Tools.httpGet("http://checkip.amazonaws.com/").trim();
 	
 	public static String WEB_SERVICE_URL = "http://" + EXTERNAL_IP + ":" + SPARK_WEB_PORT + "/";
@@ -48,6 +49,8 @@ public static String APP_NAME = "openmarket";
 	public static final String RQL_DIR = HOME_DIR + "/db";
 	
 	public static final String MASTER_NODE_URL = "http://localhost:4001";
+	
+	public static final Integer RQL_PORT = 4001;
 	
 	public static final String RQL_SETUP_SCRIPT = SOURCE_CODE_HOME + "/rql_setup.sh";
 	

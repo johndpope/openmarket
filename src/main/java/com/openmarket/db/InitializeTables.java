@@ -71,7 +71,7 @@ public class InitializeTables {
 			s.add("ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9");
 			s.add("cd " + DataSources.RQL_DIR);
 			s.add("export GOPATH=$PWD");
-			s.add("$GOPATH/bin/rqlite data");
+			s.add("$GOPATH/bin/rqlite -p " + DataSources.RQL_PORT + " data");
 			
 			java.nio.file.Files.write(Paths.get(DataSources.RQL_REJOIN_SCRIPT), s);
 			

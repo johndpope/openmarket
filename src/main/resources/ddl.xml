@@ -15,10 +15,16 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="identifier" null="1" autoincrement="0">
+<row name="email" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="password_encrypted" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="authenticated" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="email_code" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -126,7 +132,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="336" y="5" name="address">
+<table x="433" y="13" name="address">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -284,7 +290,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="518" y="175" name="country">
+<table x="590" y="180" name="country">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
