@@ -3,7 +3,8 @@ package com.openmarket.db.actions;
 import java.util.Date;
 import java.util.Map;
 
-import org.javalite.activejdbc.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import spark.Response;
 
@@ -15,6 +16,8 @@ import com.openmarket.tools.TableConstants;
 import com.openmarket.tools.Tools;
 
 public class Actions {
+	
+	static final Logger log = LoggerFactory.getLogger(Actions.class);
 
 	public static class UserActions {
 
@@ -52,12 +55,19 @@ public class Actions {
 			String token = Tools.generateSecureRandom();
 			
 			// Store that token in the user row
-			User userUpdate = user.set("email_code", token);
+//			User userUpdate = user.set("email_code", token);
 			
-			Tools.writeRQL(userUpdate.toInsert());
+	
+			
+			String update = Tools.toUpdate("user", user.getId().toString(), "email_code", token);
+		
+			
+			Tools.writeRQL(update);
+			
+			String url = DataSources.SET_PASSWORD_URL + "?token=" + token;
 						
 			Map<String, Object> vars = ImmutableMap.<String, Object>builder()
-					.put("token", token)
+					.put("url", url)
 					.build();
 			
 			String html = Tools.parseMustache(vars, DataSources.SIGNUP_EMAIL_TEMPLATE);

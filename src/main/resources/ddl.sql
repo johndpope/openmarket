@@ -231,4 +231,3 @@ CREATE TABLE 'product_thumbnail' (
 'image_loc' TEXT DEFAULT NULL
 );
 
-CREATE INDEX '' ON 'address' ('');

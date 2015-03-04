@@ -433,6 +433,10 @@ ul.nav li.dropdown:hover > ul.dropdown-menu , li.dropdown:hover div.navbar-form 
   }
   }*/
 
+.form-inline > .form-group {
+    vertical-align: top;
+}
+
 .main .page-header .main-col {
     margin-top: 0;
 }

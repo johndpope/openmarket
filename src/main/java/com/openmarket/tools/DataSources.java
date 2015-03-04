@@ -9,6 +9,10 @@ public static String APP_NAME = "openmarket";
 	
 	public static final Integer SPARK_WEB_PORT = 4567;
 	
+	public static final String URL = "http://localhost:" + SPARK_WEB_PORT + "/";
+	
+	public static final String SET_PASSWORD_URL = URL + "html/set_password.html";
+	
 	
 	public static final String EXTERNAL_IP = Tools.httpGet("http://checkip.amazonaws.com/").trim();
 	
@@ -24,11 +28,11 @@ public static String APP_NAME = "openmarket";
 	
 	public static final String WEB_HOME = SOURCE_CODE_HOME;
 	
-	public static final String SHADED_JAR_FILE = CODE_DIR + "/target/" + APP_NAME + "-shaded.jar";
+	public static final String SHADED_JAR_FILE = CODE_DIR + "/target/" + APP_NAME + ".jar";
 	
-	public static final String SHADED_JAR_FILE_2 = CODE_DIR + "/" + APP_NAME + "-shaded.jar";
+	public static final String SHADED_JAR_FILE_2 = CODE_DIR + "/" + APP_NAME + ".jar";
 	
-	public static final String ZIP_FILE = HOME_DIR + "/" + APP_NAME + "-shaded.zip";
+	public static final String ZIP_FILE = HOME_DIR + "/" + APP_NAME + ".zip";
 	
 	public static final String TOOLS_JS = SOURCE_CODE_HOME + "/web/js/tools.js";
 	

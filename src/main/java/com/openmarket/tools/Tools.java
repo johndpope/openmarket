@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigInteger;
@@ -50,6 +52,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DBException;
+import org.javalite.activejdbc.Model;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -85,19 +88,47 @@ public class Tools {
 	// Instead of using session ids, use a java secure random ID
 	private static final SecureRandom RANDOM = new SecureRandom();
 
+	
+	public static String toUpdate(String tableName, String id, Object... namesAndValues) {
+		
+		
+		StringBuilder s = new StringBuilder();
+		
+		log.info("got here 2");
+		
+		s.append("UPDATE " + tableName + " SET ");
+		
+		for (int i = 0; i < namesAndValues.length - 1; i+=2) {
+			Object field = namesAndValues[i];
+			Object value = namesAndValues[i+1];
+			s.append(field + " = " + "'" + value + "'");
+			
+			if (i+2 < namesAndValues.length) {
+				s.append(" , ");
+			}
+		}
+		
+		s.append(" WHERE id = " + id + ";");
+		
+		log.info("got here 3");
+		
+		return s.toString();
+		
+	}
 
 	public static String parseMustache(Map<String, Object> vars, String templateFile) {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		String templateString;
+//		String templateString;
 		try {
-			templateString = new String(java.nio.file.Files.readAllBytes(Paths.get(templateFile)));
+//			templateString = new String(java.nio.file.Files.readAllBytes(Paths.get(templateFile)));
 
-		
+
 			Writer writer = new OutputStreamWriter(baos);
 			MustacheFactory mf = new DefaultMustacheFactory();
-			Mustache mustache = mf.compile(templateString);
+			Mustache mustache = mf.compile(new FileReader(templateFile), "example");
 			mustache.execute(writer, vars);
+			
 
 			writer.flush();
 		} catch (IOException e) {
@@ -175,7 +206,7 @@ public class Tools {
 			throw new NoSuchElementException(e.getMessage());
 		}
 
-		String message = "email sent to " + email;
+		String message = "Email sent to " + email;
 
 		return message;
 
@@ -200,6 +231,16 @@ public class Tools {
 			throw new NoSuchElementException("Not a local ip, can't access");
 		}
 	}
+
+	public static void allowAllHeaders(Request req, Response res) {
+		String origin = req.headers("Origin");
+		res.header("Access-Control-Allow-Credentials", "true");
+		res.header("Access-Control-Allow-Origin", origin);
+
+
+	}
+	
+	
 
 	public static void logRequestInfo(Request req) {
 		String origin = req.headers("Origin");

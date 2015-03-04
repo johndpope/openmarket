@@ -1,2 +1,2 @@
 mvn install
-java -jar target/openmarket.jar
+java -jar target/openmarket.jar $@

@@ -106,7 +106,7 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/about">Wishlist <span class="caret"></span></a>
+            <li><a href="#login">Wishlist <span class="caret"></span></a>
             </li>
 
             <li><a href="/about">Cart <span class="caret"></span></a>
@@ -114,7 +114,7 @@
             <li class="dropdown">
               <div class="navbar-form">
 
-                <a class="dropdown-toggle btn btn-default">Sign in <span class="caret"></span></a>
+                <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
 
               </div>
             </li>
@@ -176,13 +176,15 @@
           </div>
 
           <!-- Sign up -->
-            <div class="row">
+          <div class="row">
             <div class="col-md-8 col-md-offset-4 center-block">
-              <form class="form-inline">
+              <form id="signup_form" class="form-inline">
                 <div class="form-group">
-                  <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email Address">
+                  <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="Email" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
                 </div>
+
                 <button type="submit" class="btn btn-default">Sign Up Now</button>
+
               </form>
             </div>
           </div>
@@ -294,7 +296,7 @@
             </div>
           </div>
 
-          <hr>
+          <hr class="thin-hr">
 
           <!-- Recommended for you  -->
           <div class="row">
@@ -402,6 +404,8 @@
             </div>
           </div>
 
+          <hr class="thin-hr">
+
           <!-- Greatest hits  -->
           <div class="row">
             <div class="col-md-12">
@@ -508,6 +512,8 @@
             </div>
           </div>
 
+          <hr class="thin-hr">
+
           <!-- About OpenMarket -->
           <div class="row">
             <div class="col-md-12">
@@ -605,7 +611,7 @@
             </div>
           </div>
 
-        
+
 
 
           <!-- Footer -->
@@ -636,147 +642,196 @@
   <!-- Modals -->
 
 
-  <div id="sendModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div id="userDisclaimerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog">
 
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
           </button>
-          <h4 class="modal-title">Send Money</h4>
+          <h4 class="modal-title">Disclaimer</h4>
         </div>
         <div class="modal-body">
-          <form id="sendMoneyForm" class="form-horizontal" role="form">
-
-            <div class="form-group form-group-lg">
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">Amount</label>
-              <div class="col-sm-10">
-                <div class="input-group">
-                  <div id="withdrawSymbol" class="input-group-addon">BTC</div>
-
-                  <input name="sendAmount" class="form-control" type="text" id="formGroupInputLarge" placeholder="BTC" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
-                </div>
-              </div>
-
-
-            </div>
-
-            <div class="form-group form-group-lg">
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">To</label>
+          <div class="text">
+            <ul>
+              <li>All transactions are performed in BTC, using currency conversions updated every 15 minutes from https://bitcoinaverage.com/ </li>
+              <li>Bitpieces does not guarantee the value of your pieces. </li>
+              <li>Bitpieces does not guarantee that a creator has the funds to pay rewards. Buying pieces is a contract between you and the creator. Read about creator safety
+                <a href='/FAQ#how_do_i_know_if_a_creator_is_safe'>here</a>. </li>
+              <li>Legal action must be taken against the creator directly, if they fail to provide you with rewards, or if the value of their pieces decreases dramatically. </li>
+              <li> Your bitcoin wallet may charge you a small fee for making a deposit. </li>
+            </ul>
+          </div>
 
 
-              <div class="col-sm-10">
-                <input name="address" type="text" class="form-control" placeholder="Bitcoin Address">
-              </div>
-            </div>
-
-
-            <div class="form-group form-group-lg">
-
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">Your Funds</label>
-              <div name="funds" class="col-sm-10 form-control-static balance-btc">
-              </div>
-            </div>
-
-            <div class="form-group form-group-lg">
-
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">Potential Funds After</label>
-              <div name="fundsLeft" class="col-sm-10 form-control-static">
-
-              </div>
-            </div>
-            <button name="placeSendBtn" type="submit" class="btn btn-primary">Send</button>
-
-          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Okay, I accept</button>
         </div>
 
       </div>
     </div>
   </div>
 
-  <div id="sendEncryptedModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
 
+  <div class="modal fade bs-example-modal-lg" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-          </button>
-          <h4 class="modal-title">Send Money</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="userloginModalLabel">Sign in or Register</h4>
         </div>
+
         <div class="modal-body">
-          <form id="sendMoneyEncryptedForm" class="form-horizontal" role="form">
 
-            <div class="form-group form-group-lg">
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">Amount</label>
+          <h3> Sign in &nbsp;&nbsp;&nbsp; 
+                <small> <a href="#" data-toggle="modal" data-target="#recoverPasswordModal">Recover password </a> </small></h3>
+
+          <form id="loginForm" class="form-horizontal" role="form">
+            <div id="userLoginDiv" class="form-group">
+              <label for="inputUsername3" class="col-sm-2 control-label">Username</label>
               <div class="col-sm-10">
-                <div class="input-group">
-                  <div id="withdrawSymbol" class="input-group-addon">BTC</div>
-
-                  <input name="sendAmount" class="form-control" type="text" id="formGroupInputLarge" placeholder="BTC" data-bv-notempty="true" data-bv-notempty-message="An amount is required" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                <input name="username" type="Username" class="form-control" id="inputUsername3" placeholder="Username or Email" data-bv-message="The username is not valid" data-bv-notempty="true" data-bv-notempty-message="The username is required and cannot be empty" data-bv-regexp="true" data-bv-regexp-regexp="^[a-zA-Z0-9\._-]+$" data-bv-regexp-message="The username can only consist of alphabetical, number, dot and underscore" data-bv-stringlength="true" data-bv-stringlength-min="3" data-bv-stringlength-max="30" data-bv-stringlength-message="The username must be more than 3 and less than 30 characters long">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-10">
+                <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    <input name="remember" type="checkbox"> Remember me
+                  </label>
                 </div>
               </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
 
+                  <label>
+                    <input name="creatorCheckbox" type="checkbox" id="creatorCheckbox" value="creator"> I'm a Creator
+                  </label>
 
+                </div>
+              </div>
             </div>
 
-            <div class="form-group form-group-lg">
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">To</label>
 
 
+
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button id="signinBtn" type="submit" class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign in</button>
+              </div>
+            </div>
+          </form>
+
+          <!-- The different sign ins 
+                <table style="width:100%">
+                  <tr>
+                    <td>
+                      <a class="btn btn-primary btn-social btn-facebook">
+                        <i class="fa fa-facebook"></i> Sign in with Facebook
+                      </a>
+                    </td>
+                    <td>
+                     <a class="btn btn-primary btn-social btn-twitter">
+                      <i class="fa fa-twitter"></i> Sign in with Twitter
+                    </a>
+                  </td>
+                  <td>
+                   <a class="btn btn-primary btn-social btn-google-plus">
+                    <i class="fa fa-google-plus"></i> Sign in with Google
+                  </a>
+                </td>
+              </td>
+              <td>
+               <a class="btn btn-primary btn-social btn-reddit">
+                <i class="fa fa-reddit"></i> Sign in with Reddit
+              </a>
+            </td>
+          </tr>
+        </table>-->
+          <hr>
+          <h3> Register &nbsp;&nbsp;&nbsp; <small><a href="/creators_register">Creator register</a> </small></h3>
+
+          <form id="registerForm" class="form-horizontal" role="form" data-bv-message="This value is not valid" data-bv-feedbackicons-valid="glyphicon glyphicon-ok" data-bv-feedbackicons-invalid="glyphicon glyphicon-remove" data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+
+            <div class="form-group">
+              <label for="inputUsername4" class="col-sm-2 control-label">Username</label>
               <div class="col-sm-10">
-                <input name="address" type="text" class="form-control" placeholder="Bitcoin Address" data-bv-notempty="true" data-bv-notempty-message="An Address is required">
+                <input name="username" type="Username" class="form-control" id="inputUsername4" placeholder="Username" data-bv-message="The username is not valid" data-bv-notempty="true" data-bv-notempty-message="The username is required and cannot be empty" data-bv-regexp="true" data-bv-regexp-regexp="^[a-zA-Z0-9\._-]+$" data-bv-regexp-message="The username can only consist of alphabetical, number, dot and underscore" data-bv-stringlength="true" data-bv-stringlength-min="3" data-bv-stringlength-max="30" data-bv-stringlength-message="The username must be more than 3 and less than 30 characters long" />
+
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-2 control-label">Email address</label>
+              <div class="col-sm-10">
+                <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="Email" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
               </div>
             </div>
 
             <div class="form-group">
               <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
               <div class="col-sm-10">
-                <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-stringlength="true" data-bv-stringlength-min="5" data-bv-stringlength-message="The password must be more than 5 characters long" />
+                <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-identical="true" data-bv-identical-field="verifyPassword" data-bv-identical-message="The password and its confirm are not the same" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+
+
+
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-2 control-label">Verify password</label>
+              <div class="col-sm-10">
+                <input name="verifyPassword" type="password" class="form-control" id="inputPassword3" placeholder="Verify Password" data-bv-notempty="true" data-bv-notempty-message="The confirm password is required and cannot be empty" data-bv-identical="true" data-bv-identical-field="password" data-bv-identical-message="The password and its confirm are not the same" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username" />
+
 
               </div>
             </div>
 
-
-            <div class="form-group form-group-lg">
-
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">Your Funds</label>
-              <div name="funds" class="col-sm-10 form-control-static balance-btc">
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    <input name="remember" type="checkbox"> Remember me
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    <input name="terms" type="checkbox" data-bv-notempty="true" data-bv-notempty-message="You must accept the terms and conditions">
+                    <a href="#" data-toggle="modal" data-target="#userDisclaimerModal">I accept these terms and conditions </a>
+                  </label>
+                </div>
               </div>
             </div>
 
-            <div class="form-group form-group-lg">
-
-              <label class="col-sm-2 control-label" for="formGroupInputLarge">Potential Funds After</label>
-              <div name="fundsLeft" class="col-sm-10 form-control-static">
-
+            <div class="form-group">
+              <div id="recaptcha_div" class="col-sm-offset-2 col-sm-10"> </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button id="registerBtn" type="submit" class="btn btn-primary">Register</button>
               </div>
             </div>
-            <button name="placeSendBtn" type="submit" class="btn btn-primary" data-loading-text="Sending &nbsp;<i class='fa fa-circle-o-notch fa-spin'></i>">Send</button>
-
           </form>
+
+
+
         </div>
 
       </div>
     </div>
   </div>
-
-  <div class="modal fade bs-example-modal-lg" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="userloginModalLabel">Receive Money</h4>
-        </div>
-
-        <div class="modal-body">
-          <div class="row">
-            <div id="qrcode" class="text-center"></div>
-            <h4 id="receive_address" class="text-center well"></h4>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- end of login modal -->
 
 
 
@@ -807,7 +862,7 @@
   <!-- my scripts -->
   <script src="../js/tools.js"></script>
   <script src="../js/common.js"></script>
-  <script src="../js/wallet.js"></script>
+  <script src="../js/home.js"></script>
 
 
 
