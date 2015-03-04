@@ -27,6 +27,9 @@
 <row name="email_code" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
+<key type="UNIQUE" name="">
+<part>email</part>
+</key>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
@@ -164,6 +167,8 @@
 </row>
 <key type="PRIMARY" name="">
 <part>id</part>
+</key>
+<key type="INDEX" name="">
 </key>
 </table>
 <table x="620" y="797" name="feedback">

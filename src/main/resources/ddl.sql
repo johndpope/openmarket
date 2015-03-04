@@ -1,7 +1,10 @@
 CREATE TABLE 'user' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
-'name' TEXT DEFAULT NULL,
-'password_encrypted' TEXT DEFAULT NULL
+'email' TEXT DEFAULT NULL,
+'password_encrypted' TEXT DEFAULT NULL,
+'authenticated' INTEGER DEFAULT NULL,
+'email_code' TEXT DEFAULT NULL,
+UNIQUE (email)
 );
 
 CREATE TABLE 'seller' (
@@ -228,3 +231,4 @@ CREATE TABLE 'product_thumbnail' (
 'image_loc' TEXT DEFAULT NULL
 );
 
+CREATE INDEX '' ON 'address' ('');
