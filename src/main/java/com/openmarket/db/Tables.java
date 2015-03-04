@@ -26,4 +26,5 @@ public class Tables {
 	@Table("Seller")
 	public static class Seller extends Model {}
 	
+	
 }

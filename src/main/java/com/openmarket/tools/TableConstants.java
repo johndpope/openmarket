@@ -1,4 +1,4 @@
-package com.openmarket.db;
+package com.openmarket.tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class TableConstants {
 	
+	public static final Integer EXPIRE_SECONDS = 3600;
 
 	public static final Map<String, String> CURRENCY_MAP = ImmutableMap.<String, String>builder()
 			.put("BTC", "Bitcoin")

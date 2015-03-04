@@ -36,6 +36,8 @@ static final Logger log = LoggerFactory.getLogger(WebService.class);
 
 //		WalletService.setup();
 //		API.setup();
+	    
+	    Platform.setup();
 
 
 

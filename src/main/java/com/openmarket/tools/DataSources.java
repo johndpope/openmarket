@@ -58,4 +58,10 @@ public static String APP_NAME = "openmarket";
 	public static final String RQL_REJOIN_SCRIPT = SOURCE_CODE_HOME + "/rql_rejoin.sh";
 	
 	
+	// Properties files
+	public static final String EMAIL_PROP = SOURCE_CODE_HOME + "/email.properties";
+	
+	public static final String SIGNUP_EMAIL_TEMPLATE = SOURCE_CODE_HOME + "/signup_email_template.html";
+	
+	
 }

@@ -8,13 +8,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,10 +26,20 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -45,6 +59,9 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,9 +79,111 @@ public class Tools {
 			withZone(DateTimeZone.UTC);
 	public static final DateTimeFormatter DTF = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").
 			withZone(DateTimeZone.UTC);
-	
+
 	public static final StrongPasswordEncryptor PASS_ENCRYPT = new StrongPasswordEncryptor();
 
+	// Instead of using session ids, use a java secure random ID
+	private static final SecureRandom RANDOM = new SecureRandom();
+
+
+	public static String parseMustache(Map<String, Object> vars, String templateFile) {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		String templateString;
+		try {
+			templateString = new String(java.nio.file.Files.readAllBytes(Paths.get(templateFile)));
+
+		
+			Writer writer = new OutputStreamWriter(baos);
+			MustacheFactory mf = new DefaultMustacheFactory();
+			Mustache mustache = mf.compile(templateString);
+			mustache.execute(writer, vars);
+
+			writer.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String output = baos.toString();
+		log.info(output);
+
+
+
+		return output;
+
+
+
+
+
+
+	}
+
+	public static Properties loadProperties(String propertiesFileLocation) {
+
+		Properties prop = new Properties();
+		InputStream input = null;
+		try {
+			input = new FileInputStream(propertiesFileLocation);
+
+			// load a properties file
+			prop.load(input);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return prop;
+
+	}
+
+
+	public static String sendEmail(String email, String subject, String text) {
+
+		Properties props = Tools.loadProperties(DataSources.EMAIL_PROP);
+		final String username = props.getProperty("username");
+		log.info("user-email-name = " + username);
+		final String password =  props.getProperty("password");
+
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+
+		Session session = Session.getInstance(props,
+				new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+
+		try {
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress("Noreply_bitpieces@gmail.com"));
+			message.setRecipients(Message.RecipientType.TO,
+					InternetAddress.parse(email));
+			message.setSubject(subject);
+
+			//			message.setText(text);
+			message.setContent(text, "text/html");
+
+
+			Transport.send(message);
+
+			log.info("Done");
+
+		} catch (MessagingException e) {
+			throw new NoSuchElementException(e.getMessage());
+		}
+
+		String message = "email sent to " + email;
+
+		return message;
+
+	}
+
+	public static String generateSecureRandom() {
+		return new BigInteger(256, RANDOM).toString(32);
+	}
 
 	public static void allowOnlyLocalHeaders(Request req, Response res) {
 
@@ -105,7 +224,7 @@ public class Tools {
 		log.debug("request host = " + req.host());
 		log.debug("request url = " + req.url());
 	}
-	
+
 	public static final Map<String, String> createMapFromAjaxPost(String reqBody) {
 		log.debug(reqBody);
 		Map<String, String> postMap = new HashMap<String, String>();
@@ -127,7 +246,7 @@ public class Tools {
 		return postMap;
 
 	}
-	
+
 	public static void runScript(String path) {
 		try {
 			File file = new File(path);
@@ -207,18 +326,19 @@ public class Tools {
 		}
 
 	}
-	
+
 	public static String reformatSQLForRQL(String sql) {
-		
+
 		String reformat = sql.replace("\n", "").replace("\r", "").replace("'", "\"").replace(");", ");\n");;
-		
-		
+
+
 		return reformat;
 	}
 
 	public static String writeRQL(String cmd) {
 
 		String reformatted = reformatSQLForRQL(cmd);
+		log.info("rql write string : " + reformatted);
 
 		String postURL = DataSources.MASTER_NODE_URL + "/db?pretty";
 
@@ -231,16 +351,16 @@ public class Tools {
 			httpPost.setEntity(new StringEntity(reformatted));
 
 			ResponseHandler<String> handler = new BasicResponseHandler();
-			
+
 			CloseableHttpResponse response = httpClient.execute(httpPost);
-			
+
 			message = handler.handleResponse(response);
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		message = "Rqlite write status : " + message;
 		log.info(message);
 		return message;
@@ -263,7 +383,7 @@ public class Tools {
 		// Initialize the DB if it hasn't already
 		InitializeTables.init(delete);
 
-		
+
 	}
 
 
