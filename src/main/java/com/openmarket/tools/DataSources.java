@@ -22,6 +22,7 @@ public static String APP_NAME = "openmarket";
 	
 	public static final String SOURCE_CODE_HOME = HOME_DIR + "/src";
 	
+	public static final String WEB_HOME = SOURCE_CODE_HOME;
 	
 	public static final String SHADED_JAR_FILE = CODE_DIR + "/target/" + APP_NAME + "-shaded.jar";
 	

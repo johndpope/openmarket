@@ -29,7 +29,7 @@ static final Logger log = LoggerFactory.getLogger(WebService.class);
 
 //		staticFileLocation("/web"); // Static files
 		//		staticFileLocation("/web/html"); // Static files
-				externalStaticFileLocation(DataSources.SOURCE_CODE_HOME+ "/web/");
+				externalStaticFileLocation(DataSources.WEB_HOME);
 
 		// Set up the secure keystore
 	
