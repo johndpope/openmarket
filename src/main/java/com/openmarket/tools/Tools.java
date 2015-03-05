@@ -24,9 +24,13 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -419,7 +423,7 @@ public class Tools {
 
 		setupDirectories();
 
-		copyResourcesToHomeDir();
+		copyResourcesToHomeDir(true);
 
 		// Initialize the DB if it hasn't already
 		InitializeTables.init(delete);
@@ -438,12 +442,12 @@ public class Tools {
 		}
 	}
 
-	public static void copyResourcesToHomeDir() {
+	public static void copyResourcesToHomeDir(Boolean copyAnyway) {
 
 
 		String zipFile = null;
 
-		if (!new File(DataSources.SOURCE_CODE_HOME).exists()) {
+		if (copyAnyway || !new File(DataSources.SOURCE_CODE_HOME).exists()) {
 			log.info("Copying resources to  ~/." + DataSources.APP_NAME + " dirs");
 
 			try {
@@ -527,5 +531,88 @@ public class Tools {
 			out.close();
 		}
 	}
+	
+	public static List<Map.Entry<String,Integer>> readGoogleProductCategories() {
+		
+		
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ">";
+	 
+		
+		// Need a map from the name, to its index
+		Map<String, Integer> nameToIndexMap = new HashMap<>();
+		
+		// The resulting list
+		List<Map.Entry<String,Integer>> adjacencyList = new ArrayList<Map.Entry<String,Integer>>();
+		
+		try {
+	 
+			br = new BufferedReader(new FileReader(DataSources.GOOGLE_CATEGORIES_LIST));
+			Integer i = 0;
+			while ((line = br.readLine()) != null) {
+				i++;
+				String[] vars = line.split(cvsSplitBy);
+				
+				String lastCategory = vars[vars.length-1].trim();
+				nameToIndexMap.put(lastCategory, i);
+				
+				Integer parentIndex = null;
+				if (vars.length > 1) {
+					// Now get the 2nd to last one, that is the parent
+					String parentName = vars[vars.length-2].trim();
+					
+					// get that parents index
+					parentIndex = nameToIndexMap.get(parentName);
+					
+					
+				} 
+				
+				Map.Entry<String,Integer> nameAndParentIndex = 
+						new java.util.AbstractMap.SimpleEntry<>(lastCategory,parentIndex);
+				
+				// Add to the adjency list
+				adjacencyList.add(nameAndParentIndex);
+				
+				
+				
+//				System.out.println(nameAndParentIndex);
+				
+			
+	 
+			}
+	 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	 
+		
+		return adjacencyList;
+	  }
+	
+	public static String googleProductCategoriesToInserts(
+			List<Map.Entry<String,Integer>> adjacencyList) {
+		
+		StringBuilder s = new StringBuilder();
+		
+		for (Entry<String, Integer> e : adjacencyList) {
+			s.append("INSERT INTO category VALUES ('" + e.getKey() + "'," + e.getValue() + ");");
+			s.append("\n");
+		}
+		
+		return s.toString();
+		
+	}
+		
+		
+	
 
 }

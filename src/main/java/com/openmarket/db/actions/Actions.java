@@ -50,6 +50,48 @@ public class Actions {
 
 
 		}
+		
+		public static String userLogout(String auth) {
+
+			
+			Login login = getLoginFromAuth(auth);
+
+			if (login == null) {
+				throw new NoSuchElementException("User not logged in");
+			}
+			
+			long now = new Date().getTime();
+			
+			// Set the expire time to right now
+			String update = Tools.toUpdate("login", login.getId().toString(), 
+					"expire_time", now);
+
+			Tools.writeRQL(update);
+
+			return "Logged out";
+		}
+		
+		public static Login getLoginFromAuth(String auth) {
+			
+			long now = new Date().getTime();
+			
+			Login login = Login.findFirst("session_id = ? and expire_time > ?" , auth, now);
+			
+			
+			return login;
+			
+			
+		}
+		
+		public static User getUserFromAuth(String auth) {
+			
+			Login login = getLoginFromAuth(auth);
+			
+			User user = User.findById(login.getString("user_id"));
+			
+			return user;
+			
+		}
 
 		public static String sendSignUpEmail(User user) {
 
@@ -133,7 +175,7 @@ public class Actions {
 			String authenticatedSessionId = Tools.generateSecureRandom();
 
 			// Not sure if this is necessary yet
-			Boolean secure = true;
+			Boolean secure = false;
 
 			// Store the users user in the DB, give them a session id
 			Login login = Login.create("user_id", user.getId(),

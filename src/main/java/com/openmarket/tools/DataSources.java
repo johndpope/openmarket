@@ -26,7 +26,7 @@ public static String APP_NAME = "openmarket";
 	
 	public static final String SOURCE_CODE_HOME = HOME_DIR + "/src";
 	
-	public static final String WEB_HOME = SOURCE_CODE_HOME;
+	public static final String WEB_HOME = SOURCE_CODE_HOME + "/web";
 	
 	public static final String SHADED_JAR_FILE = CODE_DIR + "/target/" + APP_NAME + ".jar";
 	
@@ -66,6 +66,9 @@ public static String APP_NAME = "openmarket";
 	public static final String EMAIL_PROP = SOURCE_CODE_HOME + "/email.properties";
 	
 	public static final String SIGNUP_EMAIL_TEMPLATE = SOURCE_CODE_HOME + "/signup_email_template.html";
+	
+	// Google categories
+	public static final String GOOGLE_CATEGORIES_LIST = SOURCE_CODE_HOME + "/categories.list";
 	
 	
 }

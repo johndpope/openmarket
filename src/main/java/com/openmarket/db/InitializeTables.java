@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -32,8 +33,8 @@ public class InitializeTables {
 
 		setupOrRejoinRQL();
 		createTables();
-		//		fillTables();
-		
+		fillTables();
+
 		// For some reason, this needs to wait 5 seconds for the write locks to release
 		try {
 			Thread.sleep(5000);
@@ -48,9 +49,12 @@ public class InitializeTables {
 
 		List<String> s = new ArrayList<>();
 
+
+
 		try {
 			// First setup
 			if (!new File(DataSources.RQL_DIR).exists()) {
+				log.info("Initializing rqlite");
 				s.add("ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9");
 				s.add("cd " + DataSources.HOME_DIR);
 				s.add("mkdir db");
@@ -67,17 +71,18 @@ public class InitializeTables {
 
 			}
 
+			log.info("Starting rqlite");
 			s.clear();
 			s.add("ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9");
 			s.add("cd " + DataSources.RQL_DIR);
 			s.add("export GOPATH=$PWD");
 			s.add("$GOPATH/bin/rqlite -p " + DataSources.RQL_PORT + " data");
-			
+
 			java.nio.file.Files.write(Paths.get(DataSources.RQL_REJOIN_SCRIPT), s);
-			
+
 			RQLite.start();
-			
-			
+
+
 
 
 		} catch (IOException e) {
@@ -103,9 +108,9 @@ public class InitializeTables {
 		try {
 
 			if (!new File(DataSources.DB_FILE).exists()) {
-
+				log.info("Creating tables/running the DDL...");
 				Tools.runRQLFile(new File(DataSources.SQL_FILE));
-//				Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE));
+				//				Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE));
 
 				log.info("Tables created successfully");
 			} else {
@@ -116,6 +121,20 @@ public class InitializeTables {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			System.exit(0);
 		}
+	}
+
+	public static void fillTables() {
+		log.info("Filling tables...");
+
+		setupCategories();
+
+	}
+
+	public static void setupCategories() {
+		List<Entry<String, Integer>> list = Tools.readGoogleProductCategories();
+		String s = Tools.googleProductCategoriesToInserts(list);
+
+		Tools.writeRQL(s);
 	}
 
 
