@@ -86,6 +86,7 @@ public class Actions {
 
 		public static User signupUserWithToken(String token, String password) {
 
+			log.info("token = " + token);
 			User user = User.findFirst("email_code = ?", token);
 
 			if (user != null) {
@@ -93,7 +94,8 @@ public class Actions {
 				String encryptedPass = Tools.PASS_ENCRYPT.encryptPassword(password);
 
 				String update = Tools.toUpdate("user", user.getId().toString(), 
-						"password_encrypted", encryptedPass);
+						"password_encrypted", encryptedPass,
+						"authenticated", true);
 
 				Tools.writeRQL(update);
 

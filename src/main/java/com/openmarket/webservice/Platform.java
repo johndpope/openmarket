@@ -73,5 +73,30 @@ public class Platform {
 			}
 
 		});
+		
+		post("/login", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+				
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				String password = vars.get("password");
+				String email = vars.get("email");
+				
+				Tools.dbInit();
+				
+				String message = UserActions.userLogin(email, password, res);
+				
+				Tools.dbClose();
+				
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
 	}
 }

@@ -15,7 +15,9 @@
       position:relative; 
       bottom:0;
       }*/
-
+.modal-sm {
+  max-width: 300px;
+}
 .col-centered{
     float: none;
     margin: 0 auto;
