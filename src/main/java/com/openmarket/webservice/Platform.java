@@ -5,6 +5,9 @@ import static spark.Spark.post;
 
 
 
+
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +30,37 @@ public class Platform {
 				String email = Tools.createMapFromAjaxPost(req.body()).get("email");
 				
 				Tools.dbInit();
-				User user = User.create("email", email);
-				Tools.writeRQL(user.toInsert());
-				user = User.findFirst("email = ?", email);
+				
+				User user = UserActions.createUserSimple(email);
 				
 				String message = UserActions.sendSignUpEmail(user);
+				
+				Tools.dbClose();
+				
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
+		
+		post("/set_password", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+				
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				String password = vars.get("password");
+				String token = vars.get("token");
+				
+				Tools.dbInit();
+				User user = UserActions.signupUserWithToken(token, password);
+				String email = user.getString("email");
+				
+				String message = UserActions.userLogin(email, password, res);
 				
 				Tools.dbClose();
 				
