@@ -1,13 +1,14 @@
 package com.openmarket.tools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
 public class TableConstants {
-	
+
 	public static final Integer EXPIRE_SECONDS = 3600;
 
 	public static final Map<String, String> CURRENCY_MAP = ImmutableMap.<String, String>builder()
@@ -68,8 +69,35 @@ public class TableConstants {
 	public static final List<String> CURRENCY_LIST() {
 		List<String> currencyList = new ArrayList<>();
 		currencyList.addAll(TableConstants.CURRENCY_MAP.keySet());
-		
+
 		return currencyList;
-		
+
 	}
+
+	public static final List<String> INSTALL_RQLITE_SCRIPT_LINES =
+			Arrays.asList(
+					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
+					"cd " + DataSources.HOME_DIR,
+					"mkdir db",
+					"cd db/",
+					"export GOPATH=$PWD",
+					"go get github.com/otoolep/rqlite",
+					"go get gopkg.in/check.v1;");
+
+
+	public static final List<String> RQLITE_JOIN_LINES = 
+			Arrays.asList(
+					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
+					"cd " + DataSources.RQL_DIR,
+					"export GOPATH=$PWD",
+					"$GOPATH/bin/rqlite -join " + DataSources.MASTER_NODE_URL + 
+					" -p " + DataSources.RQL_PORT + " data");
+
+	public static final List<String> RQLITE_STARTUP_SCRIPT_LINES =
+			Arrays.asList(
+					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
+					"cd " + DataSources.RQL_DIR,
+					"export GOPATH=$PWD",
+					"$GOPATH/bin/rqlite -p " + DataSources.RQL_PORT + " data");
 }
+

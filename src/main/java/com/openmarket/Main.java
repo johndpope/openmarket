@@ -13,10 +13,10 @@ import com.openmarket.tools.Tools;
 import com.openmarket.webservice.WebService;
 
 public class Main {
-	
+
 	static  Logger log = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-	
-	
+
+
 	@Option(name="-testnet",usage="Run using the Bitcoin testnet3")
 	private boolean testnet;
 
@@ -25,42 +25,47 @@ public class Main {
 
 	@Option(name="-loglevel", usage="Sets the log level [INFO, DEBUG, etc.]")     
 	private String loglevel = "INFO";
-	
+
+	@Option(name="-masterNode", usage="Startup OpenMarket with a different master DB node" + 
+			"IE, 127.0.0.1:4001")   
+	private String customMasterNode;
+
 
 	public void doMain(String[] args) {
 
 
 		parseArguments(args);
 
+		setMasterNodeVars(customMasterNode);
 
 		log.setLevel(Level.toLevel(loglevel));
 
 		// get the correct network
-//		params = (testnet) ? TestNet3Params.get() : MainNetParams.get();
+		//		params = (testnet) ? TestNet3Params.get() : MainNetParams.get();
 		DataSources.HOME_DIR = (testnet) ? DataSources.HOME_DIR  + "/testnet" : DataSources.HOME_DIR;
-
 
 		// Initialize the replicated db
 		Tools.initializeDBAndSetupDirectories(deleteDB);
-		
+
 		// Start the webservice
 		WebService.start();
 
 		// Start the sellers wallet
-//		INSTANCE.init();
+		//		INSTANCE.init();
 
 
 
-//		Tools.pollAndOpenStartPage();
+		//		Tools.pollAndOpenStartPage();
 
 
 	}
-	
+
 	public static void main(String[] args) {
 		new Main().doMain(args);
-		
+
 	}
-	
+
+
 	private void parseArguments(String[] args) {
 		CmdLineParser parser = new CmdLineParser(this);
 
@@ -82,6 +87,14 @@ public class Main {
 			return;
 		}
 	}
-	
-	
+
+	private void setMasterNodeVars(String customMasterNode) {
+		if (customMasterNode != null) {
+			String[] split = customMasterNode.split(":");
+			
+			DataSources.MASTER_NODE_IP = split[0];
+			DataSources.MASTER_NODE_PORT = split[1];
+		}
+	}
+
 }

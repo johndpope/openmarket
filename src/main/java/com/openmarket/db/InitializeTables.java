@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.openmarket.tools.DataSources;
+import com.openmarket.tools.TableConstants;
 import com.openmarket.tools.Tools;
 
 public class InitializeTables {
@@ -32,10 +33,7 @@ public class InitializeTables {
 		} 
 
 		setupOrRejoinRQL();
-		createTables();
-		fillTables();
 
-		// For some reason, this needs to wait 5 seconds for the write locks to release
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
@@ -43,42 +41,45 @@ public class InitializeTables {
 			e.printStackTrace();
 		}
 
+
+		// For some reason, this needs to wait 5 seconds for the write locks to release
+
+
 	}
 
 	public static void setupOrRejoinRQL() {
 
-		List<String> s = new ArrayList<>();
+
 
 
 
 		try {
-			// First setup
+
 			if (!new File(DataSources.RQL_DIR).exists()) {
-				log.info("Initializing rqlite");
-				s.add("ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9");
-				s.add("cd " + DataSources.HOME_DIR);
-				s.add("mkdir db");
-				s.add("cd db/");
-				s.add("export GOPATH=$PWD");
-				s.add("go get github.com/otoolep/rqlite");
-				s.add("go get gopkg.in/check.v1;");
-				//				s.add("$GOPATH/bin/rqlite data");
+
+				log.info("Initializing rqlite...(done only once to connect to the network)");
 
 
-				java.nio.file.Files.write(Paths.get(DataSources.RQL_SETUP_SCRIPT), s);
+				java.nio.file.Files.write(Paths.get(DataSources.RQLITE_INSTALL_SCRIPT),
+						TableConstants.INSTALL_RQLITE_SCRIPT_LINES);
 
-				Tools.runScript(DataSources.RQL_SETUP_SCRIPT);
+				Tools.runScript(DataSources.RQLITE_INSTALL_SCRIPT);
+
+				// For some reason the joining command is a weird one, then after initializing its 
+				// like regular.
+				if (!DataSources.IS_MASTER_NODE) {
+					log.info("Joining rqlite master node @ " + DataSources.MASTER_NODE_URL);
+					java.nio.file.Files.write(Paths.get(DataSources.RQLITE_JOIN_SCRIPT),
+							TableConstants.RQLITE_JOIN_LINES);
+
+					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT);
+				}
 
 			}
 
-			log.info("Starting rqlite");
-			s.clear();
-			s.add("ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9");
-			s.add("cd " + DataSources.RQL_DIR);
-			s.add("export GOPATH=$PWD");
-			s.add("$GOPATH/bin/rqlite -p " + DataSources.RQL_PORT + " data");
-
-			java.nio.file.Files.write(Paths.get(DataSources.RQL_REJOIN_SCRIPT), s);
+			log.info("Starting rqlite...");
+			java.nio.file.Files.write(Paths.get(DataSources.RQLITE_STARTUP_SCRIPT), 
+					TableConstants.RQLITE_STARTUP_SCRIPT_LINES);
 
 			RQLite.start();
 

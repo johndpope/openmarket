@@ -53,13 +53,22 @@ public static String APP_NAME = "openmarket";
 	// RQL 
 	public static final String RQL_DIR = HOME_DIR + "/db";
 	
-	public static final String MASTER_NODE_URL = "http://localhost:4001";
+	public static String MASTER_NODE_IP = "localhost";
+	
+	public static String MASTER_NODE_PORT = "4001";
+	
+	public static final String MASTER_NODE_URL = "http://" + MASTER_NODE_IP + ":" + MASTER_NODE_PORT;
+	
+	public static final Boolean IS_MASTER_NODE = MASTER_NODE_IP.equals("localhost") || 
+			MASTER_NODE_IP.equals(EXTERNAL_IP);
 	
 	public static final Integer RQL_PORT = 4001;
 	
-	public static final String RQL_SETUP_SCRIPT = SOURCE_CODE_HOME + "/rql_setup.sh";
+	public static final String RQLITE_INSTALL_SCRIPT = SOURCE_CODE_HOME + "/rql_setup.sh";
 	
-	public static final String RQL_REJOIN_SCRIPT = SOURCE_CODE_HOME + "/rql_rejoin.sh";
+	public static final String RQLITE_JOIN_SCRIPT = SOURCE_CODE_HOME + "/rql_join.sh";
+	
+	public static final String RQLITE_STARTUP_SCRIPT = SOURCE_CODE_HOME + "/rql_startup.sh";
 	
 	
 	// Properties files
@@ -70,5 +79,5 @@ public static String APP_NAME = "openmarket";
 	// Google categories
 	public static final String GOOGLE_CATEGORIES_LIST = SOURCE_CODE_HOME + "/categories.list";
 	
-	
+
 }

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+
+  <title>OpenMarket</title>
+
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
+
+  <!-- Bootstrap core CSS -->
+  <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
+
+  <!-- Link to font awesome -->
+  <!-- <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"> -->
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- Bootstrap social css -->
+  <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
+
+  <!--   Bootstrap validator -->
+  <link rel="stylesheet" href="../bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
+
+  <!--   toastr css -->
+  <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
+
+  <!--   typeahead css -->
+  <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
+
+  <!-- Pickadate -->
+  <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
+  <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
+
+  <!-- Summernote -->
+  <link href="../bower_components/summernote/dist/summernote.css" rel="stylesheet" />
+
+  <!-- Bootstrap datepicker -->
+  <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
+
+  <!-- This main css -->
+  <link href="../css/main.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+  <!-- Navbars -->
+
+  <!-- the start of the doc -->
+  <div id="wrapper" class="wrapper hide">
+
+    <!-- header -->
+    <nav class="navbar navbar-default navbar-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">OpenMarket</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+
+            <form id="creator_search" class="navbar-form navbar-left navbar-input-group" role="search">
+              <div class="input-group">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">All <span class="caret"></span>
+                  </button>
+                </div>
+                <div class="form-group">
+                  <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for items or shops">
+                </div>
+                <span class="input-group-btn">
+              <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
+              </button>
+              </span>
+              </div>
+            </form>
+
+            <li class="dropdown">
+              <div class="navbar-form">
+                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="/api.html">API Reference</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+
+
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#login">Wishlist <span class="caret"></span></a>
+            </li>
+
+            <li><a href="/about">Cart <span class="caret"></span></a>
+            </li>
+            <li class="dropdown logged-out">
+              <div class="navbar-form">
+
+                <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
+
+              </div>
+            </li>
+
+            <li class="dropdown logged-in">
+              <div class="navbar-form">
+                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="/api.html">Orders</a>
+                  </li>
+                  <li><a href="/api.html">WishList</a>
+                  </li>
+                  <li><a href="/api.html">Settings</a>
+                  </li>
+                  <li class="divider">
+                  </li>
+                  <li><a id="logouthref" href="#">Sign out</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+
+          </ul>
+
+
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+
+    <!-- The full page with teh sidebar -->
+    <div class="container-fluid">
+
+      <!-- The Page -->
+      <div class="row-fluid">
+        <div class="othermain-col col-md-12">
+
+
+
+          <div class="row">
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="3000">
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+
+              </ol>
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                  <img src="holder.js/1016x400/social">
+                  <div class="carousel-caption">
+                    <h3>ARGE</h3>
+                    <p>okay</p>
+                  </div>
+                </div>
+                <div class="item">
+                  <img src="holder.js/1016x400/social">
+                  <div class="carousel-caption">
+                    ARG
+                  </div>
+                </div>
+
+                <div class="item">
+                  <img src="holder.js/1016x400/social">
+                  <div class="carousel-caption">
+                    ARG3
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+          <!-- Sign up -->
+          <div class="row logged-out">
+            <div class="col-md-offset-4 col-md-8 ">
+              <form id="signup_form" class="form-inline">
+                <div class="form-group">
+                  <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="Email" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
+                </div>
+
+                <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign Up Now</button>
+
+              </form>
+            </div>
+          </div>
+          <hr class="thin-hr">
+
+          <!-- Trending items -->
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="text-center"> Trending Items  <br>   <small> Explore the top finds from around the marketplace.</small></h1>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="thin-hr">
+
+          <!-- Recommended for you  -->
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="text-center"> Recommended for you  <br>   <small> Shop for items based on what you’ve viewed.</small></h1>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="thin-hr">
+
+          <!-- Greatest hits  -->
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="text-center"> Greatest Hits  <br>   <small> The highest rated items from the most popular categories.</small></h1>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-small">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="thin-hr">
+
+          <!-- About OpenMarket -->
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="text-center"> OpenMarket  <br>   <small> The first decentralized online shopping platform.</small></h1>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <!-- <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%"> -->
+                    <div class="text-center">
+                      <i class="fa fa-code-fork fa-6"></i>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h2 class="text-center">
+                        <a href="">Open-Source</a>
+                      </h2>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4 class="text-center text-muted"> OpenMarket is completely open-source, and extremely secure. </h4>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <!-- <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%"> -->
+                    <div class="text-center">
+                      <i class="fa fa-server fa-6"></i>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h2 class="text-center">
+                        <a href="">Decentralized</a>
+                      </h2>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4 class="text-center text-muted"> OpenMarket is hosted by a network of sellers, to make sure that it is always available. </h4>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <!-- <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%"> -->
+                    <div class="text-center">
+                      <i class="fa fa-coffee fa-6"></i>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h2 class="text-center">
+                        <a href="">Free</a>
+                      </h2>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4 class="text-center text-muted"> OpenMarket is entirely free to use, for both buyers and sellers. You can donate here.</h4>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <!-- Footer -->
+          <div class="row-fluid">
+            <hr class="featurette-divider">
+            <footer>
+              <p class="pull-right"><a href="#">Back to top</a>
+              </p>
+              <p>&copy; 2015 OpenMarket, Inc. &middot; <a href="/about">About</a> &middot; <a href="https://github.com/tchoulihan/openmarket">Contact</a> &middot; <a href="https://github.com/tchoulihan/openmarket">Support</a> &middot; <a href="https://github.com/tchoulihan/openmarket">Github</a>
+              </p>
+            </footer>
+          </div>
+
+
+          <br>
+
+        </div>
+
+      </div>
+
+      <!-- end of wrapper -->
+    </div>
+
+
+
+  </div>
+
+  <!-- Modals -->
+
+
+  <div id="userDisclaimerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Disclaimer</h4>
+        </div>
+        <div class="modal-body">
+          <div class="text">
+            <ul>
+              <li>All transactions are performed in BTC, using currency conversions updated every 15 minutes from https://bitcoinaverage.com/ </li>
+              <li>Bitpieces does not guarantee the value of your pieces. </li>
+              <li>Bitpieces does not guarantee that a creator has the funds to pay rewards. Buying pieces is a contract between you and the creator. Read about creator safety
+                <a href='/FAQ#how_do_i_know_if_a_creator_is_safe'>here</a>. </li>
+              <li>Legal action must be taken against the creator directly, if they fail to provide you with rewards, or if the value of their pieces decreases dramatically. </li>
+              <li> Your bitcoin wallet may charge you a small fee for making a deposit. </li>
+            </ul>
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Okay, I accept</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+
+          <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active"><a href="#loginTab" aria-controls="home" role="tab" data-toggle="tab">Log in</a>
+              </li>
+              <li role="presentation"><a href="#signupTab" aria-controls="profile" role="tab" data-toggle="tab">Sign Up</a>
+              </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="loginTab">
+
+                <h1 class="text-center"> Log in </h1>
+                <br>
+
+                <form id="login_form_modal" class="form-horizontal" role="form">
+                  <div id="userLoginDiv" class="form-group">
+                    <label for="inputUsername3" class="col-sm-12">Email</label>
+                    <div class="col-sm-12">
+                      <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="Email Address" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-12">Password</label>
+                    <div class="col-sm-12">
+                      <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username">
+                    </div>
+                  </div>
+
+
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <button id="signinBtn" type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign in</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+
+              <!-- The sign up tab -->
+              <div role="tabpanel" class="tab-pane" id="signupTab">
+
+                <h1 class="text-center"> Sign up </h1>
+                <br>
+
+                <form id="signup_form_modal" class="form-horizontal">
+                  <div class="form-group">
+                    <label for="inputUsername3" class="col-sm-12">Email</label>
+
+                    <div class="col-sm-12">
+                      <input name="email" type="inputEmail3" class="form-control" placeholder="Email Address" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign Up</button>
+
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+  <!-- end of login modal -->
+
+
+
+
+
+
+
+  <!-- Bootstrap core JavaScript
+      ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../bower_components/bootstrapValidator/dist/js/bootstrapValidator.min.js "></script>
+  <script src="../bower_components/toastr/toastr.js"></script>
+  <script src="../bower_components/mustache/mustache.js"></script>
+  <script src="../bower_components/holderjs/holder.js"></script>
+  <script src="../js/json.date-extensions.min.js"></script>
+  <script src="../bower_components/tablesorter/jquery.tablesorter.min.js"></script>
+  <script src="../bower_components/highcharts/highcharts.js"></script>
+  <script src="../bower_components/highcharts/modules/exporting.js"></script>
+  <script src="../bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+  <script src="../bower_components/pickadate/lib/picker.js"></script>
+  <script src="../bower_components/pickadate/lib/picker.date.js"></script>
+  <script src="../bower_components/summernote/dist/summernote.min.js"></script>
+  <script src="../bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="../bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
+
+  <!-- my scripts -->
+  <script src="../js/tools.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/home.js"></script>
+
+
+
+</body>
+
+</html>

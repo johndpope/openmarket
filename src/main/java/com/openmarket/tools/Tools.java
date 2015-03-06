@@ -374,7 +374,7 @@ public class Tools {
 
 	public static String reformatSQLForRQL(String sql) {
 
-		String reformat = sql.replace("\n", "").replace("\r", "").replace("'", "\"").replace(");", ");\n");;
+		String reformat = sql.replace("\n", "").replace("\r", "").replace("'", "\"").replace(");", ");\n");
 
 
 		return reformat;
@@ -604,7 +604,8 @@ public class Tools {
 		StringBuilder s = new StringBuilder();
 		
 		for (Entry<String, Integer> e : adjacencyList) {
-			s.append("INSERT INTO category VALUES ('" + e.getKey() + "'," + e.getValue() + ");");
+			s.append("INSERT INTO category (name,parent) "
+					+ "VALUES ('" + e.getKey() + "'," + e.getValue() + ");");
 			s.append("\n");
 		}
 		
