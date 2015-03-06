@@ -1,2 +1,2 @@
 mvn install
-java -jar target/openmarket.jar $@
+sudo java -Duser.home=$HOME -jar target/openmarket.jar -port 80 $@

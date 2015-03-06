@@ -73,15 +73,15 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-
-            <form id="creator_search" class="navbar-form navbar-left navbar-input-group" role="search">
+          <li id="searchbar">
+            <form id="search_form" class="navbar-form navbar-left navbar-input-group " role="search">
               <div class="input-group">
                 <div class="input-group-btn">
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">All <span class="caret"></span>
                   </button>
                 </div>
                 <div class="form-group">
-                  <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for items or shops">
+                  <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for items or shops" autofocus="autofocus">
                 </div>
                 <span class="input-group-btn">
               <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
@@ -89,6 +89,7 @@
               </span>
               </div>
             </form>
+            </li>
 
             <li class="dropdown">
               <div class="navbar-form">

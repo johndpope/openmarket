@@ -7,7 +7,7 @@ public static String APP_NAME = "openmarket";
 	
 	
 	
-	public static final Integer SPARK_WEB_PORT = 4567;
+	public static Integer SPARK_WEB_PORT = 4567;
 	
 	public static final String URL = "http://localhost:" + SPARK_WEB_PORT + "/";
 	
@@ -25,8 +25,6 @@ public static String APP_NAME = "openmarket";
 	public static final String CODE_DIR = System.getProperty("user.dir");
 	
 	public static final String SOURCE_CODE_HOME = HOME_DIR + "/src";
-	
-	public static final String WEB_HOME = SOURCE_CODE_HOME + "/web";
 	
 	public static final String SHADED_JAR_FILE = CODE_DIR + "/target/" + APP_NAME + ".jar";
 	
@@ -79,5 +77,13 @@ public static String APP_NAME = "openmarket";
 	// Google categories
 	public static final String GOOGLE_CATEGORIES_LIST = SOURCE_CODE_HOME + "/categories.list";
 	
-
+	// Web pages
+	public static final String WEB_HOME = SOURCE_CODE_HOME + "/web";
+	
+	public static final String WEB_HTML = WEB_HOME + "/html";
+	
+	
+	public static final String PAGES(String pageName) {
+		return WEB_HTML + "/" + pageName + ".html";
+	}
 }

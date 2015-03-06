@@ -92,47 +92,47 @@ public class Tools {
 	// Instead of using session ids, use a java secure random ID
 	private static final SecureRandom RANDOM = new SecureRandom();
 
-	
+
 	public static String toUpdate(String tableName, String id, Object... namesAndValues) {
-		
-		
+
+
 		StringBuilder s = new StringBuilder();
-		
+
 		log.info("got here 2");
-		
+
 		s.append("UPDATE " + tableName + " SET ");
-		
+
 		for (int i = 0; i < namesAndValues.length - 1; i+=2) {
 			Object field = namesAndValues[i];
 			Object value = namesAndValues[i+1];
 			s.append(field + " = " + "'" + value + "'");
-			
+
 			if (i+2 < namesAndValues.length) {
 				s.append(" , ");
 			}
 		}
-		
+
 		s.append(" WHERE id = " + id + ";");
-		
+
 		log.info("got here 3");
-		
+
 		return s.toString();
-		
+
 	}
 
 	public static String parseMustache(Map<String, Object> vars, String templateFile) {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		String templateString;
+		//		String templateString;
 		try {
-//			templateString = new String(java.nio.file.Files.readAllBytes(Paths.get(templateFile)));
+			//			templateString = new String(java.nio.file.Files.readAllBytes(Paths.get(templateFile)));
 
 
 			Writer writer = new OutputStreamWriter(baos);
 			MustacheFactory mf = new DefaultMustacheFactory();
 			Mustache mustache = mf.compile(new FileReader(templateFile), "example");
 			mustache.execute(writer, vars);
-			
+
 
 			writer.flush();
 		} catch (IOException e) {
@@ -243,8 +243,8 @@ public class Tools {
 
 
 	}
-	
-	
+
+
 
 	public static void logRequestInfo(Request req) {
 		String origin = req.headers("Origin");
@@ -432,7 +432,14 @@ public class Tools {
 	}
 
 
-
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public static void setupDirectories() {
 		if (!new File(DataSources.HOME_DIR).exists()) {
 			log.info("Setting up ~/." + DataSources.APP_NAME + " dirs");
@@ -502,6 +509,19 @@ public class Tools {
 		}
 	}
 
+	public static String readFile(String path) {
+		String s = null;
+
+		byte[] encoded;
+		try {
+			encoded = java.nio.file.Files.readAllBytes(Paths.get(path));
+
+			s = new String(encoded, Charset.defaultCharset());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return s;
+	}
 
 	private static void copy(InputStream in, OutputStream out) throws IOException {
 		byte[] buffer = new byte[1024];
@@ -531,57 +551,57 @@ public class Tools {
 			out.close();
 		}
 	}
-	
+
 	public static List<Map.Entry<String,Integer>> readGoogleProductCategories() {
-		
-		
+
+
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ">";
-	 
-		
+
+
 		// Need a map from the name, to its index
 		Map<String, Integer> nameToIndexMap = new HashMap<>();
-		
+
 		// The resulting list
 		List<Map.Entry<String,Integer>> adjacencyList = new ArrayList<Map.Entry<String,Integer>>();
-		
+
 		try {
-	 
+
 			br = new BufferedReader(new FileReader(DataSources.GOOGLE_CATEGORIES_LIST));
 			Integer i = 0;
 			while ((line = br.readLine()) != null) {
 				i++;
 				String[] vars = line.split(cvsSplitBy);
-				
+
 				String lastCategory = vars[vars.length-1].trim();
 				nameToIndexMap.put(lastCategory, i);
-				
+
 				Integer parentIndex = null;
 				if (vars.length > 1) {
 					// Now get the 2nd to last one, that is the parent
 					String parentName = vars[vars.length-2].trim();
-					
+
 					// get that parents index
 					parentIndex = nameToIndexMap.get(parentName);
-					
-					
+
+
 				} 
-				
+
 				Map.Entry<String,Integer> nameAndParentIndex = 
 						new java.util.AbstractMap.SimpleEntry<>(lastCategory,parentIndex);
-				
+
 				// Add to the adjency list
 				adjacencyList.add(nameAndParentIndex);
-				
-				
-				
-//				System.out.println(nameAndParentIndex);
-				
-			
-	 
+
+
+
+				//				System.out.println(nameAndParentIndex);
+
+
+
 			}
-	 
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -593,27 +613,27 @@ public class Tools {
 				}
 			}
 		}
-	 
-		
+
+
 		return adjacencyList;
-	  }
-	
+	}
+
 	public static String googleProductCategoriesToInserts(
 			List<Map.Entry<String,Integer>> adjacencyList) {
-		
+
 		StringBuilder s = new StringBuilder();
-		
+
 		for (Entry<String, Integer> e : adjacencyList) {
 			s.append("INSERT INTO category (name,parent) "
 					+ "VALUES ('" + e.getKey() + "'," + e.getValue() + ");");
 			s.append("\n");
 		}
-		
+
 		return s.toString();
-		
+
 	}
-		
-		
-	
+
+
+
 
 }

@@ -152,39 +152,176 @@
     <!-- The full page with teh sidebar -->
     <div class="container-fluid">
 
-      <!-- Sidebar -->
-      <div class="row">
-
-        <!-- The sidebar -->
-        <div id="side_col" class="col-md-3 sidebar">
-
-          <div class="mini-submenu">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </div>
-          <div class="list-group">
-            <a class="list-group-item active" href="wallet" rel="keep-params"><i class="fa fa-bank fa-fw"></i> &nbsp; Bitcoin Wallet</a>
-            <a class="list-group-item" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
-            <a class="list-group-item" href="settings" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Items</a>
-            <a class="list-group-item" href="tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
-
-            <a class="list-group-item" href="settings" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Settings</a>
-
-          </div>
-        </div>
-      </div>
       <!-- The Page -->
       <div class="row-fluid">
-        <div class="othermain-col col-md-offset-3 col-md-9">
-          DER
+        <div class="col-md-3 vertical-line">
+
+          <div class="panel panel-info">
+            <div class="panel-body">
+              <ul class="left-bar-list">
+                <li class="first-level text-muted"> Electronics</li>
+                <li class="second-level"> <a href="">TVS</a>
+                </li>
+                <li class="second-level"> <a href="">Monitors</li></a>
+                  <li class="second-level text-overflow"> <a href="">A whole lot of other shit here</a>
+                  </li>
+
+              </ul>
+            </div>
+          </div>
+
+          <div class="panel panel-danger">
+            <div class="panel-body">
+              <div class="text-muted">Price filter </div>
+              <br>
+              <form id="price_filter_form " class="form-inline">
+                <div class="form-group  col-xs-5">
+                  <input name="min_price" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="min" />
+                </div>
+                <div class="form-group col-xs-1 pushdown">
+                  <i class="fa fa-angle-right fa-2x"></i>
+                </div>
+
+                <div class="form-group  col-xs-5">
+                  <input name="max_price" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="max" />
+                </div>
+
+              </form>
+            </div>
+          </div>
+
 
         </div>
 
+        <div class="col-md-9">
+          <h1 class="text-center">
+          Top sellers in Electronics
+          <br>
+          <small>Explore</small>
+          </h1>
+          <div class="row">
+            <div class="col-xs-4">
+              <div>12 results</div>
+            </div>
+            <div class="col-xs-8">
+              <div class="text-right">
+                <span>Sort by:</span>
+                <a class="btn btn-default">Most Reviews <span class="caret"></span></a>
+              </div>
+            </div>
+          </div>
+
+          <br>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-smaller">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-smaller">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-body panel-picture-smaller">
+                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
+                </div>
+                <div class="panel-footer">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="text-center text-overflow">
+                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="spacer"></div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-success text-right"> 40.00 USD</div>
+                    </div>
+                  </div>
+                  <div class="font-spacer">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
       </div>
 
-      <!-- end of wrapper -->
+
+
     </div>
+
+    <!-- end of wrapper -->
+  </div>
 
 
 

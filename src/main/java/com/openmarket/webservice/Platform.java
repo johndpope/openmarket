@@ -1,7 +1,12 @@
 package com.openmarket.webservice;
 
 import static spark.Spark.post;
+import static spark.Spark.get;
 
+import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -9,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.openmarket.db.Tables.User;
 import com.openmarket.db.actions.Actions.UserActions;
+import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
 
 public class Platform {
@@ -18,6 +24,19 @@ public class Platform {
 
 	public static void setup() {
 
+		get("/test_static", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);
+		
+			
+			return Tools.readFile(DataSources.GOOGLE_CATEGORIES_LIST);
+		});
+		
+		get("/home", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);
+		
+			
+			return Tools.readFile(DataSources.PAGES("home"));
+		});
 
 		post("/send_signup_email", (req, res) -> {
 			try {

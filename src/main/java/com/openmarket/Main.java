@@ -29,6 +29,9 @@ public class Main {
 	@Option(name="-masterNode", usage="Startup OpenMarket with a different master DB node" + 
 			"IE, 127.0.0.1:4001")   
 	private String customMasterNode;
+	
+	@Option(name="-port", usage="Startup your webserver on a different port(default is 4567)")
+	private Integer port;
 
 
 	public void doMain(String[] args) {
@@ -36,9 +39,11 @@ public class Main {
 
 		parseArguments(args);
 
-		setMasterNodeVars(customMasterNode);
+		setRQLMasterNodeVars(customMasterNode);
+		
+		setPort(port);
 
-		log.setLevel(Level.toLevel(loglevel));
+		log.setLevel(Level.toLevel(loglevel));		
 
 		// get the correct network
 		//		params = (testnet) ? TestNet3Params.get() : MainNetParams.get();
@@ -88,13 +93,20 @@ public class Main {
 		}
 	}
 
-	private void setMasterNodeVars(String customMasterNode) {
+	private void setRQLMasterNodeVars(String customMasterNode) {
 		if (customMasterNode != null) {
 			String[] split = customMasterNode.split(":");
 			
 			DataSources.MASTER_NODE_IP = split[0];
 			DataSources.MASTER_NODE_PORT = split[1];
 		}
+	}
+	
+	private void setPort(Integer port) {
+		if (port != null) {
+			DataSources.SPARK_WEB_PORT = port;
+		}
+		
 	}
 
 }

@@ -34,12 +34,7 @@ public class InitializeTables {
 
 		setupOrRejoinRQL();
 
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 
 
 		// For some reason, this needs to wait 5 seconds for the write locks to release
@@ -49,13 +44,13 @@ public class InitializeTables {
 
 	public static void setupOrRejoinRQL() {
 
-
-
-
-
 		try {
 
-			if (!new File(DataSources.RQL_DIR).exists()) {
+			Boolean rqlDirExists = new File(DataSources.RQL_DIR).exists();
+			
+			Boolean firstRqlRun = false;
+			
+			if (!rqlDirExists) {
 
 				log.info("Initializing rqlite...(done only once to connect to the network)");
 
@@ -73,7 +68,11 @@ public class InitializeTables {
 							TableConstants.RQLITE_JOIN_LINES);
 
 					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT);
-				}
+				} 
+				
+				firstRqlRun = true;
+				
+				
 
 			}
 
@@ -82,6 +81,17 @@ public class InitializeTables {
 					TableConstants.RQLITE_STARTUP_SCRIPT_LINES);
 
 			RQLite.start();
+			
+			// Let it start up
+			Tools.sleep(5000);
+			
+			// This means you are the master node, so you need to set up the tables from scratch
+			if (DataSources.IS_MASTER_NODE && firstRqlRun) {
+				log.info("Filling the tables, be aware that this will take ~20 minutes due to filling"
+						+ " over 16000 product categories from google's product taxonomy.");
+				createTables();
+				fillTables();
+			}
 
 
 
