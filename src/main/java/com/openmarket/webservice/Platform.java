@@ -24,18 +24,12 @@ public class Platform {
 
 	public static void setup() {
 
-		get("/test_static", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);
 		
-			
-			return Tools.readFile(DataSources.GOOGLE_CATEGORIES_LIST);
-		});
+
 		
-		get("/home", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);
-		
-			
-			return Tools.readFile(DataSources.PAGES("home"));
+		get("/home/:derp", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			return "ur a NEWB";
 		});
 
 		post("/send_signup_email", (req, res) -> {
@@ -135,6 +129,20 @@ public class Platform {
 				return e.getMessage();
 			}
 
+		});
+		
+		
+		
+		// All the simple webpages
+		get("/:page", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			String pageName = req.params(":page");
+			return Tools.readFile(DataSources.PAGES(pageName));
+		});
+		
+		get("/", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			return Tools.readFile(DataSources.PAGES("home"));
 		});
 	}
 }

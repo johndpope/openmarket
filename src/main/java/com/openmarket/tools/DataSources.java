@@ -13,10 +13,20 @@ public static String APP_NAME = "openmarket";
 	
 	public static final String SET_PASSWORD_URL = URL + "html/set_password.html";
 	
+	public static Boolean IS_SSL = false;
 	
-	public static final String EXTERNAL_IP = Tools.httpGet("http://checkip.amazonaws.com/").trim();
+	public static String HTTP = (IS_SSL) ? "https://" : "http://";
 	
-	public static String WEB_SERVICE_URL = "http://" + EXTERNAL_IP + ":" + SPARK_WEB_PORT + "/";
+	public static String EXTERNAL_IP = Tools.httpGet("http://checkip.amazonaws.com/").trim();
+	
+	
+	public static String WEB_SERVICE_EXTERNAL_URL(){
+		return  HTTP + EXTERNAL_IP + ":" + SPARK_WEB_PORT + "/";
+	}
+	
+	public static String WEB_SERVICE_INTERNAL_URL() {
+		return HTTP + "localhost:" + SPARK_WEB_PORT + "/";
+	}
 	
 	// The path to the openmarket dir
 	public static String HOME_DIR = System.getProperty( "user.home" ) + "/." + APP_NAME;

@@ -52,7 +52,7 @@ public class InitializeTables {
 			
 			if (!rqlDirExists) {
 
-				log.info("Initializing rqlite...(done only once to connect to the network)");
+				log.info("Installing rqlite...(done only once to connect to the network)");
 
 
 				java.nio.file.Files.write(Paths.get(DataSources.RQLITE_INSTALL_SCRIPT),

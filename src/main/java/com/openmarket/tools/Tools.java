@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigInteger;
@@ -25,7 +24,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +54,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DBException;
-import org.javalite.activejdbc.Model;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -92,6 +89,30 @@ public class Tools {
 	// Instead of using session ids, use a java secure random ID
 	private static final SecureRandom RANDOM = new SecureRandom();
 
+	public static void addExternalWebServiceVarToTools() {
+
+		try {
+			List<String> lines = java.nio.file.Files.readAllLines(Paths.get(DataSources.TOOLS_JS));
+
+			String interalServiceLine = "var sparkService = '" + 
+					DataSources.WEB_SERVICE_INTERNAL_URL() + "';";
+
+			String externalServiceLine = "var externalSparkService ='" + 
+					DataSources.WEB_SERVICE_EXTERNAL_URL() + "';";
+
+			lines.set(0, interalServiceLine);
+			lines.set(1, externalServiceLine);
+
+			java.nio.file.Files.write(Paths.get(DataSources.TOOLS_JS), lines);
+			Files.touch(new File(DataSources.TOOLS_JS));
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	public static String toUpdate(String tableName, String id, Object... namesAndValues) {
 
@@ -424,6 +445,8 @@ public class Tools {
 		setupDirectories();
 
 		copyResourcesToHomeDir(true);
+
+		addExternalWebServiceVarToTools();
 
 		// Initialize the DB if it hasn't already
 		InitializeTables.init(delete);

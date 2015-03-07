@@ -36,15 +36,17 @@ public class WebService {
 
 		//		WalletService.setup();
 		//		API.setup();
+		
+		get("/hello", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);
+			return "hi from the openmarket wallet web service";
+		});
 
 		Platform.setup();
 
 
 
-		get("/hello", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);
-			return "hi from the openmarket wallet web service";
-		});
+		
 
 
 
