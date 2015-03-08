@@ -36,7 +36,7 @@ function setupLoginFormModal() {
         })
         .on('success.form.bv', function(event) {
             event.preventDefault();
-            standardFormPost('login', "#login_form_modal","#loginModal", true, null, null, null);
+            standardFormPost('login', "#login_form_modal","#loginModal", null, showHideElementsLoggedIn, null, true);
 
         });
 

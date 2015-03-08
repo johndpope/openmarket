@@ -52,6 +52,9 @@
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
+<key type="UNIQUE" name="">
+<part>user_id</part>
+</key>
 </table>
 <table x="34" y="935" name="product">
 <row name="id" null="1" autoincrement="1">
@@ -188,8 +191,6 @@
 </row>
 <key type="PRIMARY" name="">
 <part>id</part>
-</key>
-<key type="INDEX" name="">
 </key>
 </table>
 <table x="620" y="797" name="feedback">

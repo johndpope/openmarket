@@ -9,15 +9,22 @@ UNIQUE (email)
 
 CREATE TABLE 'seller' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
-'user_id' INTEGER DEFAULT NULL REFERENCES 'user' ('id')
+'user_id' INTEGER DEFAULT NULL REFERENCES 'user' ('id'),
+'shop_name' TEXT DEFAULT NULL,
+'payment_info_id' INTEGER DEFAULT NULL REFERENCES 'payment_info' ('id'),
+UNIQUE (user_id)
 );
 
 CREATE TABLE 'product' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'seller_id' INTEGER DEFAULT NULL REFERENCES 'seller' ('id'),
+'category_id' INTEGER DEFAULT NULL REFERENCES 'category' ('id'),
 'buy' INTEGER DEFAULT NULL,
 'auction' INTEGER DEFAULT NULL,
-'shipping_days' INTEGER DEFAULT NULL
+'quantity' INTEGER DEFAULT NULL,
+'title' TEXT DEFAULT NULL,
+'desc' TEXT DEFAULT NULL,
+'processing_time_span_id' INTEGER DEFAULT NULL REFERENCES 'time_span' ('id')
 );
 
 CREATE TABLE 'shipment' (
@@ -108,7 +115,8 @@ CREATE TABLE 'currency' (
 
 CREATE TABLE 'country' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
-'name' TEXT DEFAULT NULL
+'name' TEXT DEFAULT NULL,
+'country_code' INTEGER DEFAULT NULL
 );
 
 CREATE TABLE 'cart_item_payment' (
@@ -169,13 +177,8 @@ CREATE TABLE 'answer_vote' (
 CREATE TABLE 'category' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'name' TEXT DEFAULT NULL,
-'parent' INTEGER DEFAULT NULL
-);
-
-CREATE TABLE 'product_category' (
-'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
-'product_id' INTEGER DEFAULT NULL REFERENCES 'product' ('id'),
-'category_id' INTEGER DEFAULT NULL REFERENCES 'category' ('id')
+'parent' INTEGER DEFAULT NULL,
+'is_physical' INTEGER DEFAULT true
 );
 
 CREATE TABLE 'wishlist_item' (
@@ -197,7 +200,7 @@ CREATE TABLE 'product_price' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'product_id' INTEGER DEFAULT NULL REFERENCES 'product' ('id'),
 'price' INTEGER DEFAULT NULL,
-'currency_id' INTEGER DEFAULT NULL REFERENCES 'currency' ('id'),
+'native_currency_id' INTEGER DEFAULT NULL REFERENCES 'currency' ('id'),
 'variable_price' INTEGER DEFAULT NULL,
 'price_select' INTEGER DEFAULT NULL
 );
@@ -229,5 +232,59 @@ CREATE TABLE 'product_thumbnail' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'product_id' INTEGER DEFAULT NULL REFERENCES 'product' ('id'),
 'image_loc' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'tag' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'title' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'product_tag' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'tag_id' INTEGER DEFAULT NULL REFERENCES 'tag' ('id'),
+'product_id' INTEGER DEFAULT NULL REFERENCES 'product' ('id')
+);
+
+CREATE TABLE 'time_type' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'name' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'time_span' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'time_type_id' INTEGER DEFAULT NULL REFERENCES 'time_type' ('id'),
+'min' INTEGER DEFAULT NULL,
+'max' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'shipping' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'product_id' INTEGER DEFAULT NULL,
+'from_country_id' INTEGER DEFAULT NULL REFERENCES 'country' ('id')
+);
+
+CREATE TABLE 'shipping_cost' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'shipping_id' INTEGER DEFAULT NULL REFERENCES 'shipping' ('id'),
+'to_country_id' INTEGER DEFAULT NULL REFERENCES 'country' ('id'),
+'price' INTEGER DEFAULT NULL,
+'native_currency_id' INTEGER DEFAULT NULL REFERENCES 'currency' ('id')
+);
+
+CREATE TABLE 'product_bullet' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'product_id' INTEGER DEFAULT NULL REFERENCES 'product' ('id'),
+'text' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'payment_type' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'name' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'payment_info' (
+'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'payment_type_id' INTEGER DEFAULT NULL REFERENCES 'payment_type' ('id'),
+'payment_info_location' TEXT DEFAULT NULL
 );
 

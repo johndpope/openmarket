@@ -252,9 +252,15 @@ public class Tools {
 		//		res.header("Access-Control-Allow-Origin", "*");
 		//		res.header("Access-Control-Allow-Credentials", "true");
 
-		if (!(req.ip().equals("127.0.0.1") || req.ip().equals("0:0:0:0:0:0:0:1"))) {
+		
+		if (!isLocalIP(req.ip())) {
 			throw new NoSuchElementException("Not a local ip, can't access");
 		}
+	}
+	
+	public static Boolean isLocalIP(String ip) {
+		Boolean isLocalIP = (ip.equals("127.0.0.1") || ip.equals("0:0:0:0:0:0:0:1"));
+		return isLocalIP;
 	}
 
 	public static void allowAllHeaders(Request req, Response res) {
@@ -333,6 +339,7 @@ public class Tools {
 		try {
 			Base.open("org.sqlite.JDBC", "jdbc:sqlite:" + DataSources.DB_FILE, "root", "p@ssw0rd");
 		} catch (DBException e) {
+			e.printStackTrace();
 			dbClose();
 			dbInit();
 		}

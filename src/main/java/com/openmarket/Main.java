@@ -17,7 +17,7 @@ public class Main {
 	static  Logger log = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
 
-	@Option(name="-testnet",usage="Run using the Bitcoin testnet3")
+	@Option(name="-test",usage="Run using the Bitcoin testnet3, and a test DB")
 	private boolean testnet;
 
 	@Option(name="-deleteDB",usage="Delete the sqlite DB before running.")
@@ -26,12 +26,14 @@ public class Main {
 	@Option(name="-loglevel", usage="Sets the log level [INFO, DEBUG, etc.]")     
 	private String loglevel = "INFO";
 
-	@Option(name="-masterNode", usage="Startup OpenMarket with a different master DB node" + 
+	@Option(name="-masternode", usage="Startup OpenMarket with a different master DB node" + 
 			"IE, 127.0.0.1:4001")   
 	private String customMasterNode;
 	
 	@Option(name="-port", usage="Startup your webserver on a different port(default is 4567)")
 	private Integer port;
+	
+	
 
 
 	public void doMain(String[] args) {

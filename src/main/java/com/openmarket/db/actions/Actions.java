@@ -11,6 +11,7 @@ import spark.Response;
 
 import com.google.common.collect.ImmutableMap;
 import com.openmarket.db.Tables.Login;
+import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.User;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.TableConstants;
@@ -109,11 +110,10 @@ public class Actions {
 
 			String update = Tools.toUpdate("user", user.getId().toString(), "email_code", token);
 
-
 			Tools.writeRQL(update);
 
-			String url = DataSources.SET_PASSWORD_URL + "?token=" + token;
-
+			String url = DataSources.SET_PASSWORD_URL() + "?token=" + token;
+			
 			Map<String, Object> vars = ImmutableMap.<String, Object>builder()
 					.put("url", url)
 					.build();
@@ -121,7 +121,7 @@ public class Actions {
 			String html = Tools.parseMustache(vars, DataSources.SIGNUP_EMAIL_TEMPLATE);
 
 			String message = Tools.sendEmail(email, subject, html);
-
+			
 			return message;
 
 		}
@@ -137,7 +137,8 @@ public class Actions {
 
 				String update = Tools.toUpdate("user", user.getId().toString(), 
 						"password_encrypted", encryptedPass,
-						"authenticated", true);
+						"authenticated", true,
+						"email_code", null);
 
 				Tools.writeRQL(update);
 
@@ -156,6 +157,22 @@ public class Actions {
 	}
 
 
+	public static class SellerActions {
+		
+		public static Seller createSellerSimple(String userId) {
+			
+			Seller seller = Seller.create("user_id", userId);
+			Tools.writeRQL(seller.toInsert());
+			seller = Seller.findFirst("user_id = ?", userId);
+
+			return seller;
+		}
+		
+		public static Seller getSeller(String userId) {
+			Seller seller = Seller.findFirst("user_id = ?", userId);
+			return seller;
+		}
+	}
 
 
 

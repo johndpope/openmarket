@@ -90,7 +90,7 @@ public class InitializeTables {
 				log.info("Filling the tables, be aware that this will take ~20 minutes due to filling"
 						+ " over 16000 product categories from google's product taxonomy.");
 				createTables();
-				fillTables();
+//				fillTables();
 			}
 
 

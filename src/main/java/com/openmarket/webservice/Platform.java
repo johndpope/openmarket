@@ -12,7 +12,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.User;
+import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
@@ -41,6 +43,9 @@ public class Platform {
 				Tools.dbInit();
 
 				User user = UserActions.createUserSimple(email);
+				
+				// If its a local IP, also create the seller too
+				Seller seller = SellerActions.createSellerSimple(user.getId().toString());
 
 				String message = UserActions.sendSignUpEmail(user);
 
@@ -68,8 +73,18 @@ public class Platform {
 				Tools.dbInit();
 				User user = UserActions.signupUserWithToken(token, password);
 				String email = user.getString("email");
+				
+				
 
 				String message = UserActions.userLogin(email, password, res);
+				
+				// see if the user is actually a seller, if it is, change the message to a seller one,
+				// in order to redirect the page
+				Seller seller = SellerActions.getSeller(user.getId().toString());
+				if (seller != null) {
+					message = "Logged in as a seller";
+				}
+			
 
 				Tools.dbClose();
 
@@ -141,7 +156,7 @@ public class Platform {
 		});
 		
 		get("/", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowOnlyLocalHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("home"));
 		});
 	}

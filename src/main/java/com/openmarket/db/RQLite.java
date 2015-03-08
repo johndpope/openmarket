@@ -3,7 +3,7 @@ package com.openmarket.db;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
 
-public class RQLite implements Runnable{
+public class RQLite implements Runnable {
 
 	private static Thread t;
 	public void run() {

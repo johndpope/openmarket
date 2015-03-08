@@ -1,5 +1,5 @@
 var sparkService = 'http://localhost:4567/';
-var externalSparkService ='http://96.28.13.51:4567/';
+var externalSparkService = 'http://96.28.13.51:4567/';
 
 
 
@@ -231,7 +231,7 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
   });
 
   // if (event != null) {
-    // event.preventDefault();
+  // event.preventDefault();
   // }
   return false;
 
@@ -575,71 +575,73 @@ Date.prototype.customFormat = function(formatString) {
 
 
 function showHideElementsLoggedIn() {
-    var sessionId = getCookie("authenticated_session_id");
-    console.log(sessionId);
-    console.log(getCookies());
-    console.log(document.cookie);
+  var sessionId = getCookie("authenticated_session_id");
+  console.log(sessionId);
+  console.log(getCookies());
+  console.log(document.cookie);
 
-    if (sessionId != null) {
-        $(".logged-in").removeClass("hide");
-        $(".logged-out").addClass("hide");
+  if (sessionId != null) {
+    $(".logged-in").removeClass("hide");
+    $(".logged-out").addClass("hide");
 
 
-    } else {
-        $(".logged-in").addClass("hide");
-        $(".logged-out").removeClass("hide");
+  } else {
+    $(".logged-in").addClass("hide");
+    $(".logged-out").removeClass("hide");
 
-    }
-    $(".wrapper").removeClass("hide");
+  }
+  $(".wrapper").removeClass("hide");
 
 
 }
 
 
 function setupLogout() {
-    var sessionId = getCookie("authenticated_session_id");
-    var url = sparkService + "/logout";
-    $('#logouthref').click(function() {
-        $.ajax({
-            type: "POST",
-            url: url,
-            xhrFields: {
-                withCredentials: true
-            },
-            // data: seriesData, 
-            success: function(data, status, xhr) {
-                // console.log(data);
-                // var jsonObj = JSON.parse(data);
-                // JSON.useDateParser();
-                // var jsonObj = jQuery.parseJSON(data);
-                // JSON.useDateParser();
+  var sessionId = getCookie("authenticated_session_id");
+  var url = sparkService + "/logout";
+  $('#logouthref').click(function() {
+    $.ajax({
+      type: "POST",
+      url: url,
+      xhrFields: {
+        withCredentials: true
+      },
+      // data: seriesData, 
+      success: function(data, status, xhr) {
+        // console.log(data);
+        // var jsonObj = JSON.parse(data);
+        // JSON.useDateParser();
+        // var jsonObj = jQuery.parseJSON(data);
+        // JSON.useDateParser();
 
 
-                toastr.success(data);
-                // console.log(url);
-                delete_cookie("authenticated_session_id");
-  
-                setTimeout(
-                    function() {
-                        var url = "/";
-                        window.location.replace(url);
+        toastr.success(data);
+        // console.log(url);
+        delete_cookie("authenticated_session_id");
 
-                    }, 1500);
+        // setTimeout(
+        //     function() {
+        //         var url = "/";
+        //         window.location.replace(url);
 
+        //     }, 1500);
 
-            },
-            error: function(request, status, error) {
-
-                toastr.error(request.responseText);
-            }
-        });
+        showHideElementsLoggedIn();
 
 
+      },
+      error: function(request, status, error) {
 
-        // showHideElementsLoggedIn();
-
-
-
-
+        toastr.error(request.responseText);
+      }
     });
+
+
+
+    // showHideElementsLoggedIn();
+
+
+
+
+  });
 }

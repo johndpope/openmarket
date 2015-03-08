@@ -9,9 +9,12 @@ public static String APP_NAME = "openmarket";
 	
 	public static Integer SPARK_WEB_PORT = 4567;
 	
-	public static final String URL = "http://localhost:" + SPARK_WEB_PORT + "/";
+	public static String URL() {
+		return "http://localhost:" + SPARK_WEB_PORT + "/";
+	}
 	
-	public static final String SET_PASSWORD_URL = URL + "html/set_password.html";
+	
+
 	
 	public static Boolean IS_SSL = false;
 	
@@ -26,6 +29,10 @@ public static String APP_NAME = "openmarket";
 	
 	public static String WEB_SERVICE_INTERNAL_URL() {
 		return HTTP + "localhost:" + SPARK_WEB_PORT + "/";
+	}
+	
+	public static String SET_PASSWORD_URL() {
+		return URL() + "set_password";
 	}
 	
 	// The path to the openmarket dir
