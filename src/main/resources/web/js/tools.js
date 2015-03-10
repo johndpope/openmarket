@@ -225,8 +225,12 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
 
     },
     error: function(request, status, error) {
-      toastr.error(request.responseText);
-      btn.button('reset');
+      if (request.responseText != null) {
+        toastr.error(request.responseText);
+      } else {
+        toastr.error("Couldn't find endpoint " + url);
+        btn.button('reset');
+      }
     }
   });
 
@@ -541,6 +545,15 @@ function getUrlParameter(sParam) {
   }
 }
 
+function getUrlPathArray() {
+  return window.location.pathname.split('/');
+}
+
+function getLastUrlPath() {
+  return getUrlPathArray().slice(-1)[0];
+
+}
+
 var standardDateFormatObj = {
   "dateformat": function() {
     return function(text, render) {
@@ -645,3 +658,11 @@ function setupLogout() {
 
   });
 }
+
+var delay = (function() {
+  var timer = 0;
+  return function(callback, ms) {
+    clearTimeout(timer);
+    timer = setTimeout(callback, ms);
+  };
+})();

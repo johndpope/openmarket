@@ -66,6 +66,7 @@ public class TableConstants {
 			.put( "ZAR", "R")
 			.build();
 
+
 	public static final List<String> CURRENCY_LIST() {
 		List<String> currencyList = new ArrayList<>();
 		currencyList.addAll(TableConstants.CURRENCY_MAP.keySet());
@@ -74,6 +75,45 @@ public class TableConstants {
 
 	}
 
+	public static final List<String> TIME_TYPES = Arrays.asList(
+			"business days",
+			"weeks");
+
+	public static class ProcessingTime {
+		private Integer min, max, timeTypeId;
+
+		public ProcessingTime(Integer min, Integer max, Integer timeTypeId) {
+			super();
+			this.min = min;
+			this.max = max;
+			this.timeTypeId = timeTypeId;
+		}
+
+		public Integer getMin() {
+			return min;
+		}
+
+		public Integer getMax() {
+			return max;
+		}
+
+		public Integer getTimeTypeId() {
+			return timeTypeId;
+		}
+
+	}
+
+	public static final List<ProcessingTime> PROCESSING_TIME_SPANS = Arrays.asList(
+			new ProcessingTime(1, 2, TIME_TYPES.indexOf("business days")+1),
+			new ProcessingTime(1, 3, TIME_TYPES.indexOf("business days")+1),
+			new ProcessingTime(3, 5, TIME_TYPES.indexOf("business days")+1),
+			new ProcessingTime(1, 2, TIME_TYPES.indexOf("weeks")+1),
+			new ProcessingTime(2, 3, TIME_TYPES.indexOf("weeks")+1),
+			new ProcessingTime(3, 4, TIME_TYPES.indexOf("weeks")+1),
+			new ProcessingTime(4, 6, TIME_TYPES.indexOf("weeks")+1),
+			new ProcessingTime(6, 8, TIME_TYPES.indexOf("weeks")+1)
+			);
+	
 	public static final List<String> INSTALL_RQLITE_SCRIPT_LINES =
 			Arrays.asList(
 					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",

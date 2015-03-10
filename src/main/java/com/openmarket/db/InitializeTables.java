@@ -3,7 +3,6 @@ package com.openmarket.db;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -11,6 +10,9 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.openmarket.db.Tables.Currency;
+import com.openmarket.db.Tables.TimeSpan;
+import com.openmarket.db.Tables.TimeType;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.TableConstants;
 import com.openmarket.tools.Tools;
@@ -90,7 +92,7 @@ public class InitializeTables {
 				log.info("Filling the tables, be aware that this will take ~20 minutes due to filling"
 						+ " over 16000 product categories from google's product taxonomy.");
 				createTables();
-//				fillTables();
+				fillTables();
 			}
 
 
@@ -138,15 +140,53 @@ public class InitializeTables {
 		log.info("Filling tables...");
 
 		setupCategories();
+		setupProcessingTimeSpans();
+		setupCurrencies();
 
 	}
 
 	public static void setupCategories() {
-		List<Entry<String, Integer>> list = Tools.readGoogleProductCategories();
+		List<Entry<String, Integer>> list = Tools.readGoogleProductCategories().subList(0, 40);
 		String s = Tools.googleProductCategoriesToInserts(list);
 
 		Tools.writeRQL(s);
 	}
+	
+	public static void setupCurrencies() {
+		
+		StringBuilder s = new StringBuilder();
+		for (Entry<String, String> e : TableConstants.CURRENCY_MAP.entrySet()) {
+			// Unicode still not working
+			String cmd = Currency.create("iso", e.getKey(), "desc", e.getValue(), 
+					"unicode" , TableConstants.CURRENCY_UNICODES.get(e.getKey())).toInsert();
+			s.append(cmd);
+		}
+		
+		Tools.writeRQL(s.toString());
+	}
+	
+	public static void setupProcessingTimeSpans() {
+		
+		StringBuilder s = new StringBuilder();
+		for (String e: TableConstants.TIME_TYPES) {
+			String cmd = TimeType.create("name", e).toInsert();
+			s.append(cmd);
+		}
+		Tools.writeRQL(s.toString());
+		
+		s = new StringBuilder();
+		
+		for (TableConstants.ProcessingTime e : TableConstants.PROCESSING_TIME_SPANS) {
+			String cmd = TimeSpan.create("time_type_id", e.getTimeTypeId(),
+					"min", e.getMin(),
+					"max", e.getMax()).toInsert();
+			s.append(cmd);
+		}
+		
+		Tools.writeRQL(s.toString());
+
+	}
+
 
 
 	//	public static void fillTables() {

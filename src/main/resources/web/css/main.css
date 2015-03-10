@@ -122,6 +122,7 @@ body.modal-open {
 
 .panel-picture-small {
   height: 225px;
+  width: 400px;
 }
 .panel-picture-large {
   height: 400px;
