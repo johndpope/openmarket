@@ -120,8 +120,6 @@ public class Tools {
 
 		StringBuilder s = new StringBuilder();
 
-		log.info("got here 2");
-
 		s.append("UPDATE " + tableName + " SET ");
 
 		for (int i = 0; i < namesAndValues.length - 1; i+=2) {
@@ -136,7 +134,20 @@ public class Tools {
 
 		s.append(" WHERE id = " + id + ";");
 
-		log.info("got here 3");
+
+		return s.toString();
+
+	}
+	
+	public static String toDelete(String tableName, String id) {
+
+
+		StringBuilder s = new StringBuilder();
+
+
+		s.append("DELETE FROM " + tableName + " ");
+		s.append("WHERE id = " + id + ";");
+
 
 		return s.toString();
 

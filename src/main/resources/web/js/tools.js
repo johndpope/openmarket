@@ -229,8 +229,9 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
         toastr.error(request.responseText);
       } else {
         toastr.error("Couldn't find endpoint " + url);
-        btn.button('reset');
+        
       }
+      btn.button('reset');
     }
   });
 

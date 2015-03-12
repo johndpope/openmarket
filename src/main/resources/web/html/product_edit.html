@@ -199,7 +199,7 @@
                           <input name="picture_url" class="form-control" placeholder="Picture URL" type="url" data-fv-uri-message="The website address is not valid" />
 
                           <span class="input-group-btn">
-                        <button id="removePictureBtn" type="" class="btn btn-danger btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash fa-2x'></i></button>
+                        <a href="#" type="" class="btn btn-danger removePictureBtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
                       </span>
 
                         </div>
@@ -330,7 +330,7 @@
                       <div id="processing_time" class="col-xs-2 pushdown">
                         <script id="processing_time_template" type="x-tmpl-mustache">
                           <select name="processing_time" class="">
-                            <option value="" disabled selected="selected">Ready to ship in</option>
+                            <option value="none" disabled selected="selected">Ready to ship in</option>
                             {{#.}}
                             <option name="{{time_span_string}}" value="{{id}}">{{time_span_string}}</option>
                             {{/.}}
@@ -363,7 +363,7 @@
                               <input name="bullet" class="form-control" placeholder="Bullet point" type="text" minlength="6" maxlength="90" />
 
                               <span class="input-group-btn">
-                        <button id="removePictureBtn" type="" class="btn btn-danger btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash fa-2x'></i></button>
+                        <a href="#" type="" class="btn btn-danger removeBulletBtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
                       </span>
 
                             </div>

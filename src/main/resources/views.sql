@@ -32,3 +32,21 @@ left join product_page on product.id = product_page.product_id
 left join product_price on product.id = product_price.product_id 
 left join currency on product_price.native_currency_id = currency.id 
 ;
+
+CREATE VIEW category_tree_view AS  
+SELECT t1.name AS name_1, t1.id AS id_1,
+t2.name AS name_2, t2.id AS id_2,
+t3.name AS name_3, t3.id AS id_3,
+t4.name AS name_4, t4.id AS id_4,
+t5.name AS name_5, t5.id AS id_5,
+t6.name AS name_6, t6.id AS id_6,
+t7.name AS name_7, t7.id AS id_7 
+FROM category AS t1 
+LEFT JOIN category AS t2 ON t2.parent = t1.id 
+LEFT JOIN category AS t3 ON t3.parent = t2.id 
+LEFT JOIN category AS t4 ON t4.parent = t3.id 
+LEFT JOIN category AS t5 ON t5.parent = t4.id 
+LEFT JOIN category AS t6 ON t6.parent = t5.id 
+LEFT JOIN category AS t7 ON t7.parent = t6.id 
+where t1.parent IS NULL 
+;

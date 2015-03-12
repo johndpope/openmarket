@@ -7,11 +7,17 @@ import static spark.Spark.get;
 
 
 
+
+
+
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+
+
+
 
 
 
@@ -24,16 +30,22 @@ import org.slf4j.LoggerFactory;
 
 
 
+
+
+
 import com.openmarket.db.Tables.Category;
 import com.openmarket.db.Tables.Country;
 import com.openmarket.db.Tables.Currency;
 import com.openmarket.db.Tables.Product;
+import com.openmarket.db.Tables.ProductBullet;
+import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductPrice;
 import com.openmarket.db.Tables.ProductView;
 import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.TimeSpan;
 import com.openmarket.db.Tables.TimeSpanView;
 import com.openmarket.db.Tables.User;
+import com.openmarket.db.actions.Actions.CategoryActions;
 import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
 import com.openmarket.tools.DataSources;
@@ -311,6 +323,62 @@ public class Platform {
 			}
 
 		});
+		
+		post("/delete_product_bullet/:productId/:bulletNum", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+				String bulletNum = req.params(":bulletNum");
+
+
+				Tools.dbInit();
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, productId);
+
+				message = SellerActions.deleteBullet(productId, bulletNum);
+
+				Tools.dbClose();
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
+		
+		post("/delete_picture/:productId/:pictureNum", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+				String pictureNum = req.params(":pictureNum");
+
+
+				Tools.dbInit();
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, productId);
+
+				message = SellerActions.deletePicture(productId, pictureNum);
+
+				Tools.dbClose();
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
 
 		post("/set_product_details/:productId", (req, res) -> {
 			try {
@@ -455,6 +523,17 @@ public class Platform {
 			}
 
 		});
+		
+		get("/category_tree/:id", (req, res) -> {
+			
+			String id = req.params(":id");
+			Tools.allowAllHeaders(req, res);
+			Tools.dbInit();
+			String json = CategoryActions.getCategoryTree(id);
+			Tools.dbClose();
+			return json;
+			
+		});
 
 		get("/time_spans", (req, res) -> { 
 			Tools.allowAllHeaders(req, res);
@@ -487,13 +566,35 @@ public class Platform {
 		});
 
 
-		get("/product/:productId", (req, res) -> { 
+		get("/get_product/:productId", (req, res) -> { 
 			Tools.allowAllHeaders(req, res);
 			Tools.dbInit();
 			String json = ProductView.findAll().toJson(false);
 			Tools.dbClose();
 			return json;
 
+
+		});
+
+		get("/get_product_bullets/:productId", (req, res) -> { 
+			Tools.allowAllHeaders(req, res);
+			String productId = req.params(":productId");
+			Tools.dbInit();
+			String json = ProductBullet.where("product_id = ?", productId).
+					orderBy("num_ asc").toJson(false);
+			Tools.dbClose();
+			return json;
+
+		});
+		
+		get("/get_product_pictures/:productId", (req, res) -> { 
+			Tools.allowAllHeaders(req, res);
+			String productId = req.params(":productId");
+			Tools.dbInit();
+			String json = ProductPicture.where("product_id = ?", productId).
+					orderBy("num_ asc").toJson(false);
+			Tools.dbClose();
+			return json;
 
 		});
 

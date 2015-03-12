@@ -62,5 +62,8 @@ public class Tables {
 	@Table("Category")
 	public static class Category extends Model {}
 	
+	@Table("category_tree_view")
+	public static class CategoryTreeView extends Model {}
 	
+
 }

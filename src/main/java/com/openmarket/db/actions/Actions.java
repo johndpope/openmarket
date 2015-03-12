@@ -15,6 +15,7 @@ import spark.Response;
 
 import com.google.common.collect.ImmutableMap;
 import com.openmarket.db.Tables.Auction;
+import com.openmarket.db.Tables.CategoryTreeView;
 import com.openmarket.db.Tables.Login;
 import com.openmarket.db.Tables.Product;
 import com.openmarket.db.Tables.ProductBullet;
@@ -427,10 +428,64 @@ public class Actions {
 
 			return message;
 		}
+
+		public static String deleteBullet(String productId, String bulletNum) {
+
+			ProductBullet p = ProductBullet.findFirst(
+					"product_id = ? and num_ = ?", productId, bulletNum);
+
+			String message;
+			String cmd;
+			if (p != null) {
+				cmd = Tools.toDelete("product_bullet", p.getId().toString());
+
+				Tools.writeRQL(cmd);
+
+				message = "Product bullet #" + bulletNum + " deleted";
+			} else {
+				message = "Couldn't find the bullet";
+			}
+
+			return message;
+
+		}
+
+		public static String deletePicture(String productId, String pictureNum) {
+			ProductPicture p = ProductPicture.findFirst(
+					"product_id = ? and num_ = ?", productId, pictureNum);
+
+			String message;
+			String cmd;
+			if (p != null) {
+				cmd = Tools.toDelete("product_picture", p.getId().toString());
+
+				Tools.writeRQL(cmd);
+
+				message = "Product picture #" + pictureNum + " deleted";
+			} else {
+				message = "Couldn't find the picture";
+			}
+
+			return message;
+		}	
 	}
 
 
-
+	public static class CategoryActions {
+		public static String getCategoryTree(String id) {
+			
+			CategoryTreeView c = CategoryTreeView.findFirst("id_1 = ? OR "
+					+ "id_2 = ? OR "
+					+ "id_3 = ? OR "
+					+ "id_4 = ? OR "
+					+ "id_5 = ? OR "
+					+ "id_6 = ? OR " 
+					+ "id_7 = ? ", id, id, id, id, id, id, id);
+			
+			return c.toJson(false);
+			
+		}
+	}
 
 
 	public static class WebActions {

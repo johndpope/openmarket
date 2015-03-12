@@ -24,17 +24,18 @@ $(document).ready(function() {
   // fillMustacheWithJson(data, templateHtml, divId)
   setupShippingForm();
 
-  categoryRecursive();
+
 
   setupCurrencySelects();
 
-  getJson('product/' + productId).done(function(e) {
+  getJson('get_product/' + productId).done(function(e) {
     var productData = JSON.parse(e)[0];
 
     console.log(productData);
 
     setupDetailsForm(productData);
     setupInfoForm(productData);
+    categoryRecursive(productData);
   });
 
 
@@ -52,54 +53,47 @@ var cCatId = 'null';
 var cCatNum = 1;
 
 
-function categoryRecursive() {
+function categoryRecursive(productData) {
 
-  if (cCatId != 'done') {
-    categoryFetch(cCatId, cCatNum).done(function(e) {
+  var productCategoryId = productData['category_id'];
 
+  getJson('category_tree/' + productCategoryId).done(function(e2) {
 
+    var catTree = JSON.parse(e2);
+    console.log('cat tree:');
+    console.log(catTree);
 
-      var data = JSON.parse(e);
-      // TODO this needs to be from a select
-      console.log(e);
-
-      console.log(cCatId, cCatNum);
-      var cCategoryNumbered = "#category_" + cCatNum;
-
-      if (data.length > 0) {
-        $(cCategoryNumbered).removeClass('hide');
-
-      } else {
-        $(cCategoryNumbered).remove();
-      }
-      var cNum = cCatNum;
-      $(cCategoryNumbered + ' select[name=category]').change(function(e1) {
-
-        var selectedId = $(this).val();
-        var url = 'set_product_category/' + productId + '/' + selectedId;
-        simplePost(url, null, null, null, null, null);
+    if (cCatId != 'done') {
+      categoryFetch(cCatId, cCatNum).done(function(e) {
 
 
-        cCatNum = cNum;
-        for (var k = 1; k < 6; k++) {
-          var catToDelete = '#category_' + (k + parseInt(cNum));
-          console.log(catToDelete);
-          $(catToDelete).remove();
-        }
+        var data = JSON.parse(e);
+        // TODO this needs to be from a select
 
+        console.log("cCat id = " + cCatId + " cCatNum = " + cCatNum);
+        console.log(data);
+        var cCategoryNumbered = "#category_" + cCatNum;
 
-        if (e == '[]') {
-          cCatId = 'done';
-          return false;
-          console.log('got here');
+        if (data.length > 0) {
+          $(cCategoryNumbered).removeClass('hide');
+
         } else {
+          $(cCategoryNumbered).remove();
+        }
+        var cNum = cCatNum;
 
-          // cCatId = JSON.parse(e)[0]['id'];
+        if (catTree['id_' + cCatNum] != null && cCatId != productCategoryId) {
+          cCatNum = cNum;
+          for (var k = 1; k < 6; k++) {
+            var catToDelete = '#category_' + (k + parseInt(cNum));
+            console.log(catToDelete);
+            $(catToDelete).remove();
+          }
 
-          var val = $(this).val();
-          console.log(val);
-
-          cCatId = val;
+          cCatId = catTree['id_' + cCatNum];
+          if (cCatId <= productCategoryId) {
+            $(cCategoryNumbered + ' select[name=category]').val(cCatId);
+          }
 
           var subCategory = $(cCategoryNumbered).clone();
           subCategory.attr("id", "category_" + ++cCatNum);
@@ -109,22 +103,63 @@ function categoryRecursive() {
           // console.log(childOptionsValues);
           subCategory.addClass('hide');
           subCategory.appendTo("#category_forms");
-          categoryRecursive();
-
+          categoryRecursive(productData);
         }
 
+
+        $(cCategoryNumbered + ' select[name=category]').change(function(e1) {
+
+          var selectedId = $(this).val();
+          var url = 'set_product_category/' + productId + '/' + selectedId;
+          simplePost(url, null, null, null, null, null);
+
+
+          cCatNum = cNum;
+          for (var k = 1; k < 6; k++) {
+            var catToDelete = '#category_' + (k + parseInt(cNum));
+            console.log(catToDelete);
+            $(catToDelete).remove();
+          }
+
+
+          if (e == '[]') {
+            cCatId = 'done';
+            return false;
+            console.log('got here');
+          } else {
+
+            // cCatId = JSON.parse(e)[0]['id'];
+
+            var val = $(this).val();
+            console.log(val);
+
+            cCatId = val;
+
+            var subCategory = $(cCategoryNumbered).clone();
+            subCategory.attr("id", "category_" + ++cCatNum);
+            // subCategory.addClass('hide');
+            // var childOptions = subCategory.attr('select[name=category] option');
+
+            // console.log(childOptionsValues);
+            subCategory.addClass('hide');
+            subCategory.appendTo("#category_forms");
+            categoryRecursive(productData);
+
+          }
+
+        });
+
+
       });
-
-
-    });
-  }
+    }
+  });
 }
 
 function categoryFetch(parentId, num) {
 
   return getJson('category/' + parentId).done(function(e) {
     var data = JSON.parse(e);
-    console.log(data);
+    // console.log(data);
     fillMustacheWithJson(data, categoryTemplate, '#category_' + num);
 
     // newPicture.attr("id", "picture_" + ++pictureNum + "_form");
@@ -230,7 +265,9 @@ function setupInfoForm(productData) {
     fillMustacheWithJson(data, processingTimeTemplate, '#processing_time');
 
     var processingTime = productData['processing_time_span_id'];
-    $("[name='processing_time']").val(processingTime);
+    if (processingTime != null) {
+      $("[name='processing_time']").val(processingTime);
+    }
 
     $("[name='processing_time']").change(function(e1) {
       standardFormPost('set_product_info/' + productId, "#info_form", null, null, null, null, null);
@@ -270,7 +307,7 @@ function setupInfoForm(productData) {
 function setupDetailsForm(productData) {
 
   if (productData['product_html'] != null) {
-  	var decoded = htmlDecode(productData['product_html']);
+    var decoded = htmlDecode(productData['product_html']);
     $('.summernote').code(decoded);
   }
 
@@ -284,38 +321,117 @@ function setupDetailsForm(productData) {
 
 function setupPicturesForm() {
 
-  pictureForm(1);
+  getJson('get_product_pictures/' + productId).done(function(e) {
+    pictureForm(1);
 
-  var pictureNum = 1;
-  $('#addPictureBtn').click(function() {
-    var newPicture = $("#picture_1_form").clone();
-    newPicture.attr("id", "picture_" + ++pictureNum + "_form");
-    newPicture.appendTo("#pictures_forms");
+    var pictures = JSON.parse(e);
 
-    pictureForm(pictureNum);
+    console.log(pictures);
+    var pictureNum = 1;
+    pictures.forEach(function(cPicture) {
+      console.log(cPicture);
+      var cURL = cPicture['url'];
+      var cNum = cPicture['num_'];
+      pictureNum = cNum;
+
+
+      if (cNum > 1) {
+        var newPicture = $("#picture_1_form").clone();
+        newPicture.attr("id", "picture_" + cNum + "_form");
+
+        var inp = newPicture.find("[name='picture_url']");
+        inp.val(cURL);
+        newPicture.appendTo("#pictures_forms");
+        pictureForm(cNum);
+
+      }
+
+
+
+    });
+
+    $('#addPictureBtn').click(function() {
+      var newPicture = $("#picture_1_form").clone();
+      newPicture.attr("id", "picture_" + ++pictureNum + "_form");
+      newPicture.appendTo("#pictures_forms");
+      var inp = newPicture.find("[name='picture_url']");
+      inp.val(null);
+      pictureForm(pictureNum);
+
+    });
 
   });
 
 }
 
 function setupBulletsForm() {
-  bulletForm(1);
 
-  var bulletNum = 1;
-  $('#addBulletBtn').click(function() {
-    var newBullet = $("#bullet_1_form").clone();
-    newBullet.attr("id", "bullet_" + ++bulletNum + "_form");
-    newBullet.appendTo("#bullets_forms");
 
-    bulletForm(bulletNum);
+  getJson('get_product_bullets/' + productId).done(function(e) {
+
+
+    bulletForm(1);
+
+
+
+
+    var bullets = JSON.parse(e);
+
+    console.log(bullets);
+    var bulletNum = 1;
+    bullets.forEach(function(cBullet) {
+      console.log(cBullet);
+      var cText = cBullet['text'];
+      var cNum = cBullet['num_'];
+      bulletNum = cNum;
+
+
+      if (cNum > 1) {
+        var newBullet = $("#bullet_1_form").clone();
+        newBullet.attr("id", "bullet_" + cNum + "_form");
+
+        var inp = newBullet.find("[name='bullet']");
+        inp.val(cText);
+        newBullet.appendTo("#bullets_forms");
+        bulletForm(cNum);
+
+      }
+
+
+
+    });
+
+
+    $('#addBulletBtn').click(function() {
+      var newBullet = $("#bullet_1_form").clone();
+      newBullet.attr("id", "bullet_" + ++bulletNum + "_form");
+      newBullet.appendTo("#bullets_forms");
+      var inp = newBullet.find("[name='bullet']");
+      inp.val(null);
+
+      bulletForm(bulletNum);
+
+    });
+
+
 
   });
 
 }
 
+
+
 function bulletForm(bulletNum) {
 
   var formName = '#bullet_' + bulletNum + '_form';
+  console.log('bullet form name = ' + formName);
+
+  $(formName + ' .removeBulletBtn').click(function() {
+    simplePost('delete_product_bullet/' + productId + "/" + bulletNum);
+    $(formName).remove();
+    return false;
+  });
+
   $(formName).bootstrapValidator({
       message: 'This value is not valid',
       excluded: [':disabled'],
@@ -332,8 +448,15 @@ function bulletForm(bulletNum) {
 }
 
 function pictureForm(pictureNum) {
-
   var formName = '#picture_' + pictureNum + '_form';
+
+  $(formName + ' .removePictureBtn').click(function() {
+    simplePost('delete_picture/' + productId + "/" + pictureNum);
+    $(formName).remove();
+    return false;
+  });
+
+
   $(formName).bootstrapValidator({
       message: 'This value is not valid',
       excluded: [':disabled'],

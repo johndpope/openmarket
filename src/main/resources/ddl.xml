@@ -847,6 +847,9 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="product" row="id" />
 </row>
+<row name="num_" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <row name="text" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>

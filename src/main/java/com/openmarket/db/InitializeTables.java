@@ -36,7 +36,7 @@ public class InitializeTables {
 
 		setupOrRejoinRQL();
 
-	
+
 
 
 		// For some reason, this needs to wait 5 seconds for the write locks to release
@@ -49,9 +49,9 @@ public class InitializeTables {
 		try {
 
 			Boolean rqlDirExists = new File(DataSources.RQL_DIR).exists();
-			
+
 			Boolean firstRqlRun = false;
-			
+
 			if (!rqlDirExists) {
 
 				log.info("Installing rqlite...(done only once to connect to the network)");
@@ -71,10 +71,10 @@ public class InitializeTables {
 
 					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT);
 				} 
-				
+
 				firstRqlRun = true;
-				
-				
+
+
 
 			}
 
@@ -83,10 +83,10 @@ public class InitializeTables {
 					TableConstants.RQLITE_STARTUP_SCRIPT_LINES);
 
 			RQLite.start();
-			
+
 			// Let it start up
 			Tools.sleep(5000);
-			
+
 			// This means you are the master node, so you need to set up the tables from scratch
 			if (DataSources.IS_MASTER_NODE && firstRqlRun) {
 				log.info("Filling the tables, be aware that this will take ~20 minutes due to filling"
@@ -123,7 +123,7 @@ public class InitializeTables {
 			if (!new File(DataSources.DB_FILE).exists()) {
 				log.info("Creating tables/running the DDL...");
 				Tools.runRQLFile(new File(DataSources.SQL_FILE));
-								Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE));
+				Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE));
 
 				log.info("Tables created successfully");
 			} else {
@@ -140,14 +140,14 @@ public class InitializeTables {
 		log.info("Filling tables...");
 
 		setupCategories();
-//		Tools.sleep(5000);
+		//		Tools.sleep(5000);
 		setupProcessingTimeSpans();
 		setupCurrencies();
-		
+
 		setupCountries();
 
 	}
-	
+
 	public static void setupCountries() {
 		List<Entry<String, String>> list = Tools.readCountries().subList(0, 25);
 		String s = Tools.countriesToInserts(list);
@@ -161,24 +161,24 @@ public class InitializeTables {
 
 		Tools.writeRQL(s);
 	}
-	
+
 	public static void setupCurrencies() {
-		
+
 		StringBuilder s = new StringBuilder();
 		Tools.dbInit();
 		for (Entry<String, String> e : TableConstants.CURRENCY_MAP.entrySet()) {
 			// Unicode still not working
-		
+
 			String cmd = Currency.create("iso", e.getKey(), "desc", e.getValue(), 
 					"unicode" , TableConstants.CURRENCY_UNICODES.get(e.getKey())).toInsert();
 			s.append(";\n");
 			s.append(cmd);
 		}
 		Tools.dbClose();
-		
+
 		Tools.writeRQL(s.toString());
 	}
-	
+
 	public static void setupProcessingTimeSpans() {
 		Tools.dbInit();
 		StringBuilder s = new StringBuilder();
@@ -189,10 +189,10 @@ public class InitializeTables {
 		}
 		Tools.dbClose();
 		Tools.writeRQL(s.toString());
-		
+
 		Tools.dbInit();
 		s = new StringBuilder();
-		
+
 		for (TableConstants.ProcessingTime e : TableConstants.PROCESSING_TIME_SPANS) {
 			String cmd = TimeSpan.create("time_type_id", e.getTimeTypeId(),
 					"min", e.getMin(),
