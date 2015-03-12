@@ -82,9 +82,6 @@
 <row name="title" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
-<row name="desc" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
 <row name="processing_time_span_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="time_span" row="id" />
@@ -243,7 +240,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="437" y="584" name="cart_item">
+<table x="432" y="585" name="cart_item">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -363,7 +360,7 @@
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="country_code" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>

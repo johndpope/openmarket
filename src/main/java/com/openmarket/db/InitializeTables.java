@@ -123,7 +123,7 @@ public class InitializeTables {
 			if (!new File(DataSources.DB_FILE).exists()) {
 				log.info("Creating tables/running the DDL...");
 				Tools.runRQLFile(new File(DataSources.SQL_FILE));
-				//				Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE));
+								Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE));
 
 				log.info("Tables created successfully");
 			} else {
@@ -140,13 +140,23 @@ public class InitializeTables {
 		log.info("Filling tables...");
 
 		setupCategories();
+//		Tools.sleep(5000);
 		setupProcessingTimeSpans();
 		setupCurrencies();
+		
+		setupCountries();
 
+	}
+	
+	public static void setupCountries() {
+		List<Entry<String, String>> list = Tools.readCountries().subList(0, 25);
+		String s = Tools.countriesToInserts(list);
+
+		Tools.writeRQL(s);
 	}
 
 	public static void setupCategories() {
-		List<Entry<String, Integer>> list = Tools.readGoogleProductCategories().subList(0, 40);
+		List<Entry<String, Integer>> list = Tools.readGoogleProductCategories().subList(0, 25);
 		String s = Tools.googleProductCategoriesToInserts(list);
 
 		Tools.writeRQL(s);
@@ -155,25 +165,32 @@ public class InitializeTables {
 	public static void setupCurrencies() {
 		
 		StringBuilder s = new StringBuilder();
+		Tools.dbInit();
 		for (Entry<String, String> e : TableConstants.CURRENCY_MAP.entrySet()) {
 			// Unicode still not working
+		
 			String cmd = Currency.create("iso", e.getKey(), "desc", e.getValue(), 
 					"unicode" , TableConstants.CURRENCY_UNICODES.get(e.getKey())).toInsert();
+			s.append(";\n");
 			s.append(cmd);
 		}
+		Tools.dbClose();
 		
 		Tools.writeRQL(s.toString());
 	}
 	
 	public static void setupProcessingTimeSpans() {
-		
+		Tools.dbInit();
 		StringBuilder s = new StringBuilder();
 		for (String e: TableConstants.TIME_TYPES) {
 			String cmd = TimeType.create("name", e).toInsert();
 			s.append(cmd);
+			s.append(";\n");
 		}
+		Tools.dbClose();
 		Tools.writeRQL(s.toString());
 		
+		Tools.dbInit();
 		s = new StringBuilder();
 		
 		for (TableConstants.ProcessingTime e : TableConstants.PROCESSING_TIME_SPANS) {
@@ -181,8 +198,9 @@ public class InitializeTables {
 					"min", e.getMin(),
 					"max", e.getMax()).toInsert();
 			s.append(cmd);
+			s.append(";\n");
 		}
-		
+		Tools.dbClose();
 		Tools.writeRQL(s.toString());
 
 	}

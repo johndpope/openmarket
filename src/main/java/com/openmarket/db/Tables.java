@@ -29,6 +29,9 @@ public class Tables {
 	@Table("Product")
 	public static class Product extends Model {}
 	
+	@Table("Product_view")
+	public static class ProductView extends Model {}
+	
 	@Table("Product_picture")
 	public static class ProductPicture extends Model {}
 	
@@ -38,6 +41,8 @@ public class Tables {
 	@Table("Product_price")
 	public static class ProductPrice extends Model {}
 	
+	@Table("Product_bullet")
+	public static class ProductBullet extends Model {}
 	
 	@Table("Auction")
 	public static class Auction extends Model {}
@@ -50,6 +55,12 @@ public class Tables {
 	
 	@Table("Time_span")
 	public static class TimeSpan extends Model {}
+	
+	@Table("Time_span_view")
+	public static class TimeSpanView extends Model {}
+	
+	@Table("Category")
+	public static class Category extends Model {}
 	
 	
 }

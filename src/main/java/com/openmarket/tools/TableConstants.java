@@ -138,6 +138,6 @@ public class TableConstants {
 					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
 					"cd " + DataSources.RQL_DIR,
 					"export GOPATH=$PWD",
-					"$GOPATH/bin/rqlite -p " + DataSources.RQL_PORT + " data");
+					"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_PORT + " data");
 }
 

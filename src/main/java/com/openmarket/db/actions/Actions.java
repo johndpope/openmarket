@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableMap;
 import com.openmarket.db.Tables.Auction;
 import com.openmarket.db.Tables.Login;
 import com.openmarket.db.Tables.Product;
+import com.openmarket.db.Tables.ProductBullet;
 import com.openmarket.db.Tables.ProductPage;
 import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductPrice;
@@ -208,6 +209,10 @@ public class Actions {
 			User user = UserActions.getUserFromSessionId(req);
 			Seller seller = SellerActions.getSeller(user.getId().toString());
 
+			if (seller == null) {
+				throw new NoSuchElementException("Seller not logged in");
+			}
+
 			return seller;
 		}
 
@@ -371,6 +376,56 @@ public class Actions {
 
 			return message;
 
+		}
+
+		public static String saveProductCategory(String productId,
+				String productCategory) {
+
+			String cmd = Tools.toUpdate("product", productId, 
+					"category_id", productCategory);
+
+			Tools.writeRQL(cmd);
+
+			String message = "Product category set";
+
+			return message;
+		}
+
+		public static void ensureSellerOwnsProduct(Request req, String productId) {
+			Seller seller = getSellerFromSessionId(req);
+
+			Product p = Product.findFirst("id = ?", productId);
+
+			if (!p.getString("seller_id").equals(seller.getId().toString())) {
+				throw new NoSuchElementException("You don't own this product");
+			}
+
+		}
+
+		public static String saveBullet(String productId, String bulletNum,
+				String bullet) {
+			// See if the picture first exists
+			ProductBullet p = ProductBullet.findFirst(
+					"product_id = ? and num_ = ?", productId, bulletNum);
+
+			String cmd;
+			if (p != null) {
+				cmd = Tools.toUpdate("product_bullet", p.getId().toString(),
+						"product_id", productId, 
+						"num_", bulletNum,
+						"text", bullet);
+			} else {
+				cmd = ProductBullet.create("product_id", productId, 
+						"num_", bulletNum,
+						"text", bullet).toInsert();
+			}
+
+
+			Tools.writeRQL(cmd);
+
+			String message = "Product bullet #" + bulletNum + " saved";
+
+			return message;
 		}
 	}
 

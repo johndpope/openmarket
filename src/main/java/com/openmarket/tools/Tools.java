@@ -44,6 +44,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -252,12 +253,12 @@ public class Tools {
 		//		res.header("Access-Control-Allow-Origin", "*");
 		//		res.header("Access-Control-Allow-Credentials", "true");
 
-		
+
 		if (!isLocalIP(req.ip())) {
 			throw new NoSuchElementException("Not a local ip, can't access");
 		}
 	}
-	
+
 	public static Boolean isLocalIP(String ip) {
 		Boolean isLocalIP = (ip.equals("127.0.0.1") || ip.equals("0:0:0:0:0:0:0:1"));
 		return isLocalIP;
@@ -402,10 +403,11 @@ public class Tools {
 
 	public static String reformatSQLForRQL(String sql) {
 
-		String reformat = sql.replace("\n", "").replace("\r", "").replace("'", "\"").replace(");", ");\n");
+		String reformat = sql.replace("\n", "").replace("\r", "").replace("'", "\"")
+				.replace(");",");\n").replace("\n;", ";\n");
 
 
-		return reformat;
+				return reformat;
 	}
 
 	public static String writeRQL(String cmd) {
@@ -580,6 +582,64 @@ public class Tools {
 		} finally {
 			out.close();
 		}
+	}
+	public static List<Map.Entry<String,String>> readCountries() {
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ";";
+
+
+		// The resulting list
+		List<Map.Entry<String,String>> countryList = new ArrayList<Map.Entry<String,String>>();
+		try {
+
+			br = new BufferedReader(new FileReader(DataSources.COUNTRIES_LIST));
+
+			while ((line = br.readLine()) != null) {
+
+				String[] vars = line.split(cvsSplitBy);
+
+				String name = WordUtils.capitalizeFully(vars[0].toLowerCase().replace("'", ""));
+				String code = vars[1];
+
+				Map.Entry<String,String> nameAndCode = 
+						new java.util.AbstractMap.SimpleEntry<>(name, code);
+
+
+				// Add to the adjency list
+				countryList.add(nameAndCode);
+
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+
+		return countryList;
+	}
+
+	public static String countriesToInserts(
+			List<Map.Entry<String,String>> countryList) {
+
+		StringBuilder s = new StringBuilder();
+
+		for (Entry<String, String> e : countryList) {
+			s.append("INSERT INTO country (name,country_code) "
+					+ "VALUES ('" + e.getKey() + "','" + e.getValue() + "');");
+			s.append("\n");
+		}
+
+		return s.toString();
+
 	}
 
 	public static List<Map.Entry<String,Integer>> readGoogleProductCategories() {

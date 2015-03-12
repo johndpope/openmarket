@@ -10,7 +10,7 @@ var pageNumbers = {};
 // var cookie_path_name = "/";
 
 
-function getJson(shortUrl, noToast, external) {
+function getJson(shortUrl, noToast, external){
 
   noToast = (typeof noToast === "undefined") ? false : noToast;
   external = (typeof external === "undefined") ? false : external;
@@ -29,7 +29,7 @@ function getJson(shortUrl, noToast, external) {
 
 }
 
-function simpleAjax(url, noToast) {
+function simpleAjax(url, noToast){
   return $.ajax({
     type: "GET",
     url: url,
@@ -453,7 +453,7 @@ function fillMustacheFromJson(url, templateHtml, divId) {
     },
     // data: seriesData, 
     success: function(data, status, xhr) {
-      console.log(data);
+      // console.log(data);
       // var jsonObj = JSON.parse(data);
       // JSON.useDateParser();
       // var jsonObj = jQuery.parseJSON(data);
@@ -477,6 +477,28 @@ function fillMustacheFromJson(url, templateHtml, divId) {
     }
   });
 
+}
+
+function fillMustacheWithJson(data, templateHtml, divId) {
+
+      $.extend(data, standardDateFormatObj);
+      Mustache.parse(templateHtml); // optional, speeds up future uses
+      var rendered = Mustache.render(templateHtml, data);
+      $(divId).html(rendered);
+
+      // console.log(rendered);
+
+}
+
+function mustacheFunctions(data) {
+  $.extend(data, standardDateFormatObj);
+      Mustache.parse(templateHtml); // optional, speeds up future uses
+      var rendered = Mustache.render(templateHtml, data);
+      $(divId).html(rendered);
+
+      // console.log(jsonObj);
+      // console.log(templateHtml);
+      // console.log(rendered);
 }
 
 
@@ -666,3 +688,7 @@ var delay = (function() {
     timer = setTimeout(callback, ms);
   };
 })();
+
+function htmlDecode(value){ 
+  return $('<div/>').html(value).text(); 
+}
