@@ -191,21 +191,32 @@
                 <div class="panel-body">
                   <h4 class="less-margins"> Pictures</h4>
                   <br>
+
                   <div id="pictures_forms">
                     <form id="picture_1_form" class="form-horizontal">
-                      <div class="form-group col-md-12">
-                        <div class="input-group">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group col-xs-6">
+                            <div class="input-group">
 
-                          <input name="picture_url" class="form-control" placeholder="Picture URL" type="url" data-fv-uri-message="The website address is not valid" />
+                              <input name="picture_url" class="form-control" placeholder="Picture URL" type="url" data-fv-uri-message="The website address is not valid" />
 
-                          <span class="input-group-btn">
+                              <span class="input-group-btn">
                         <a href="#" type="" class="btn btn-danger removePictureBtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
                       </span>
 
-                        </div>
+                            </div>
 
+                          </div>
+                          <div class="col-xs-6">
+                            <a href="#" class="thumbnail">
+                              <img class="picture_image" src="" alt="...">
+                            </a>
+                          </div>
+                        </div>
                       </div>
                     </form>
+
                   </div>
 
                   <button id="addPictureBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add Another</button>
@@ -251,7 +262,7 @@
                           <div class="form-group">
                             <div id="ships_from" class="col-md-12">
                               <script id="ships_from_template" type="x-tmpl-mustache">
-                                <select name="country" class="">
+                                <select name="from_country" class="">
                                   <option value="" disabled selected="selected">Ships From</option>
                                   {{#.}}
                                   <option name="{{name}}" value="{{id}}">{{name}}</option>
@@ -260,13 +271,15 @@
                               </script>
                             </div>
                           </div>
+                        </form>
 
-                          <div id="shipping_locations">
-                            <div id="shipping_location_1" class="form-group">
-                              <div class="col-xs-12 pushdown">
+                        <div id="shipping_cost_forms">
+                          <form id="shipping_cost_1_form" class="form-horizontal">
+                            <div class="form-group">
+                              <div class="col-xs-5 pushdown">
                                 <div id="ships_to">
                                   <script id="ships_to_template" type="x-tmpl-mustache">
-                                    <select name="country" class="">
+                                    <select name="to_country" class="">
                                       <option value="" disabled selected="selected">Ships to</option>
                                       {{#.}}
                                       <option name="{{name}}" value="{{id}}">{{name}}</option>
@@ -275,10 +288,10 @@
                                   </script>
                                 </div>
                               </div>
-                              <div class="col-xs-6">
+                              <div class="col-xs-3">
                                 <input name="shipping_cost" type="text" class="form-control" placeholder="Cost" data-bv-greaterthan="true" data-bv-greaterthan-value="0" data-bv-greaterthan-message="Must be > 0" />
                               </div>
-                              <div class="col-xs-6 pushdown currency-select">
+                              <div class="col-xs-3 pushdown currency-select">
                                 <script id="currency_template" type="x-tmpl-mustache">
                                   <select name="currency" class="">
                                     {{#.}}
@@ -286,13 +299,20 @@
                                     {{/.}}
                                   </select>
                                 </script>
+
+                              </div>
+                              <div class="col-xs-1">
+                                <a href="#" type="" class="btn btn-danger removeShippingBtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
                               </div>
 
 
-                            </div>
+
+                          </form>
                           </div>
-                          <a href="#" id="addShippingBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add Another</a>
-                        </form>
+
+                        </div>
+                        <a href="#" id="addShippingBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add Another</a>
+
                       </div>
 
 
@@ -409,10 +429,12 @@
                             <div class="col-sm-12">
                               <div class="input-group">
                                 <label class="radio">
-                                  <input id="variable_price" type="checkbox" name="variable_price" value="1"> Let the buyer change the amount
+                                  <input type="hidden" value="0" name="check_variable_price">
+                                  <input type="checkbox" value="1" name="check_variable_price"> Let the buyer change the amount
                                 </label>
                                 <label class="radio">
-                                  <input id="suggested_amounts" type="checkbox" name="price_select" value="1"> Add some suggested amounts
+                                  <input type="hidden" name="check_price_select" value="0">
+                                  <input type="checkbox" name="check_price_select" value="1"> Add some suggested amounts
                                 </label>
                                 <div id="variable_prices" class="hide">
                                   <br>
@@ -445,7 +467,8 @@
                             <div class="col-sm-12">
                               <div class="input-group">
                                 <label class="radio">
-                                  <input id="auction_radio" type="checkbox" name="is_auction" value="1"> Hold an Auction?
+                                  <input type="hidden" name="is_auction" value="0">
+                                  <input type="checkbox" name="is_auction" value="1"> Hold an Auction?
                                 </label>
 
                                 <div id="auction_info" class="hide">

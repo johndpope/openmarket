@@ -80,9 +80,12 @@ public class Tools {
 	public static final Gson GSON2 = new GsonBuilder().setPrettyPrinting().create();
 
 
+
+	public static final DateTimeFormatter DTF = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").
+			withZone(DateTimeZone.UTC);
 	public static final DateTimeFormatter DTF2 = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").
 			withZone(DateTimeZone.UTC);
-	public static final DateTimeFormatter DTF = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").
+	public static final DateTimeFormatter DTF3 = DateTimeFormat.forPattern("yyyy-MM-dd").
 			withZone(DateTimeZone.UTC);
 
 	public static final StrongPasswordEncryptor PASS_ENCRYPT = new StrongPasswordEncryptor();

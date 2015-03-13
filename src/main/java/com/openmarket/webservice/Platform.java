@@ -10,11 +10,15 @@ import static spark.Spark.get;
 
 
 
+
+
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+
+
 
 
 
@@ -33,6 +37,8 @@ import org.slf4j.LoggerFactory;
 
 
 
+
+
 import com.openmarket.db.Tables.Category;
 import com.openmarket.db.Tables.Country;
 import com.openmarket.db.Tables.Currency;
@@ -42,6 +48,8 @@ import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductPrice;
 import com.openmarket.db.Tables.ProductView;
 import com.openmarket.db.Tables.Seller;
+import com.openmarket.db.Tables.Shipping;
+import com.openmarket.db.Tables.ShippingCost;
 import com.openmarket.db.Tables.TimeSpan;
 import com.openmarket.db.Tables.TimeSpanView;
 import com.openmarket.db.Tables.User;
@@ -323,7 +331,39 @@ public class Platform {
 			}
 
 		});
-		
+
+		post("/set_product_shipping/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+
+				log.info("vars = " + vars.toString());
+				String productId = req.params(":productId");
+
+				String fromCountryId = vars.get("from_country");
+
+				Tools.dbInit();
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, productId);
+
+				message = SellerActions.saveShipping(productId, fromCountryId);
+
+
+				Tools.dbClose();
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
+
 		post("/set_product_shipping_cost/:productId/:shippingNum", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -331,13 +371,13 @@ public class Platform {
 
 				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
 
+				log.info("vars = " + vars.toString());
 				String productId = req.params(":productId");
 				String shippingNum = req.params(":shippingNum");
-				
-				String fromCountryId = vars.get("from_country_id");
-				String toCountryId = vars.get("to_country_id");
-				String price = vars.get("price");
-				String nativeCurrId = vars.get("native_currency_id");
+
+				String toCountryId = vars.get("to_country");
+				String price = vars.get("shipping_cost");
+				String nativeCurrId = vars.get("currency");
 
 
 				Tools.dbInit();
@@ -345,7 +385,7 @@ public class Platform {
 				String message = null;
 				SellerActions.ensureSellerOwnsProduct(req, productId);
 
-				message = SellerActions.saveShippingCost(productId, shippingNum, fromCountryId, toCountryId,
+				message = SellerActions.saveShippingCost(productId, shippingNum, toCountryId,
 						price, nativeCurrId);
 
 
@@ -360,7 +400,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/delete_product_shipping_cost/:productId/:shippingNum", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -375,7 +415,7 @@ public class Platform {
 				String message = null;
 				SellerActions.ensureSellerOwnsProduct(req, productId);
 
-				message = SellerActions.deleteShipping(productId, shippingNum);
+				message = SellerActions.deleteShippingCost(productId, shippingNum);
 
 				Tools.dbClose();
 
@@ -388,7 +428,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/delete_product_bullet/:productId/:bulletNum", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -416,7 +456,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/delete_picture/:productId/:pictureNum", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -492,8 +532,8 @@ public class Platform {
 
 				String price = vars.get("price");
 				String currIso = vars.get("currency");
-				String variablePrice = vars.get("variable_price");
-				String priceSelect = vars.get("price_select");
+				String variablePrice = vars.get("check_variable_price");
+				String priceSelect = vars.get("check_price_select");
 				String price1 = vars.get("price_1");
 				String price2 = vars.get("price_2");
 				String price3 = vars.get("price_3");
@@ -501,7 +541,10 @@ public class Platform {
 				String price5 = vars.get("price_5");
 
 				String isAuction = vars.get("is_auction");
-				String auctionExpirationDate = vars.get("expiration_time");
+
+				String exprStr = vars.get("expiration_time");
+				String auctionExpirationDate = (exprStr != null) ? Long.toString(Tools.DTF3.parseMillis(exprStr
+						)) : null;
 				String auctionStartPrice = vars.get("start_amount_auction");
 				String auctionReservePrice = vars.get("reserve_amount_auction");
 
@@ -588,16 +631,16 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/category_tree/:id", (req, res) -> {
-			
+
 			String id = req.params(":id");
 			Tools.allowAllHeaders(req, res);
 			Tools.dbInit();
 			String json = CategoryActions.getCategoryTree(id);
 			Tools.dbClose();
 			return json;
-			
+
 		});
 
 		get("/time_spans", (req, res) -> { 
@@ -634,7 +677,8 @@ public class Platform {
 		get("/get_product/:productId", (req, res) -> { 
 			Tools.allowAllHeaders(req, res);
 			Tools.dbInit();
-			String json = ProductView.findAll().toJson(false);
+			String productId = req.params(":productId");
+			String json = ProductView.where("id = ?", productId).toJson(false);
 			Tools.dbClose();
 			return json;
 
@@ -651,13 +695,44 @@ public class Platform {
 			return json;
 
 		});
-		
+
 		get("/get_product_pictures/:productId", (req, res) -> { 
 			Tools.allowAllHeaders(req, res);
 			String productId = req.params(":productId");
 			Tools.dbInit();
 			String json = ProductPicture.where("product_id = ?", productId).
 					orderBy("num_ asc").toJson(false);
+			Tools.dbClose();
+			return json;
+
+		});
+
+		get("/get_shipping/:productId", (req, res) -> { 
+			Tools.allowAllHeaders(req, res);
+			String productId = req.params(":productId");
+			Tools.dbInit();
+
+			Shipping s = Shipping.findFirst("product_id = ?", productId);
+			String json = s.toJson(false);
+
+			Tools.dbClose();
+			return json;
+
+		});
+
+		get("/get_shipping_costs/:productId", (req, res) -> { 
+			Tools.allowAllHeaders(req, res);
+			String productId = req.params(":productId");
+			Tools.dbInit();
+
+			String json;
+			Shipping s = Shipping.findFirst("product_id = ?", productId);
+			if (s != null) {
+				json = ShippingCost.where("shipping_id = ?", s.getId().toString()).toJson(false);
+			} else {
+				json = "[]";
+			}
+
 			Tools.dbClose();
 			return json;
 

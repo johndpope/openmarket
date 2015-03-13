@@ -472,15 +472,14 @@ public class Actions {
 		}
 
 		public static String saveShippingCost(String productId,
-				String shippingNum, String fromCountryId, String toCountryId, String price,
+				String shippingNum, String toCountryId, String price,
 				String nativeCurrId) {
 
 			// First, create or fetch the shipping row(its not the product row)
 			Shipping s = Shipping.findFirst("product_id = ?", productId);
 			String cmd;
 			if (s == null) {
-				cmd = Shipping.create("product_id", productId, 
-						"from_country_id", fromCountryId).toInsert();
+				cmd = Shipping.create("product_id", productId).toInsert();
 				Tools.writeRQL(cmd);
 				s = Shipping.findFirst("product_id = ?", productId);
 			}
@@ -490,7 +489,7 @@ public class Actions {
 
 			// See if the shipping cost first exists
 			ShippingCost p = ShippingCost.findFirst(
-					"shipping_ = ? and num_ = ?", shippingId, shippingNum);
+					"shipping_id = ? and num_ = ?", shippingId, shippingNum);
 
 			cmd = new String();
 			if (p != null) {
@@ -515,14 +514,14 @@ public class Actions {
 
 			return message;
 		}	
-		
-		public static String deleteShipping(String productId, String shippingNum) {
-			
+
+		public static String deleteShippingCost(String productId, String shippingNum) {
+
 			Shipping s = Shipping.findFirst("product_id = ?", productId);
 			String shippingId = s.getId().toString();
-			
+
 			ShippingCost p = ShippingCost.findFirst(
-					"shipping_ = ? and num_ = ?", shippingId, shippingNum);
+					"shipping_id = ? and num_ = ?", shippingId, shippingNum);
 
 			String message;
 			String cmd;
@@ -535,6 +534,29 @@ public class Actions {
 			} else {
 				message = "Couldn't find that shipping info";
 			}
+
+			return message;
+		}
+
+		public static String saveShipping(String productId, String fromCountryId) {
+
+			// See if the shipping first exists
+			Shipping a = Shipping.findFirst(
+					"product_id = ?", productId);
+
+			String cmd;
+			if (a != null) {
+				cmd = Tools.toUpdate("shipping", a.getId().toString(),
+						"product_id", productId, 
+						"from_country_id", fromCountryId);
+			} else {
+				cmd = Shipping.create("product_id", productId, 
+						"from_country_id", fromCountryId).toInsert();
+			}
+
+			Tools.writeRQL(cmd);
+
+			String message = "Shipping saved";
 
 			return message;
 		}

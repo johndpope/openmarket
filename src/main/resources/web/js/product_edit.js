@@ -15,19 +15,20 @@ $(document).ready(function() {
 
 
   setupPicturesForm();
-
-
-
-
   setupBulletsForm();
 
   // fillMustacheWithJson(data, templateHtml, divId)
 
   $.when(setupCurrencySelects(),
-      getJson('get_product_shipping/' + productId))
-    .done(function(e, e1) {
-    	var shippingData = JSON.parse(e1[0])[0];
-      setupShippingForm(shippingData);
+      getJson('get_shipping/' + productId),
+      getJson('get_shipping_costs/' + productId))
+    .done(function(e, e1, e2) {
+      console.log(e1);
+      var shippingData = JSON.parse(e1[0]);
+      console.log(shippingData);
+
+      var shippingCosts = JSON.parse(e2[0]);
+      setupShippingForm(shippingData, shippingCosts);
     });
 
 
@@ -178,25 +179,93 @@ function categoryFetch(parentId, num) {
   });
 }
 
-function setupShippingForm(shippingData) {
+function setupShippingForm(shippingData, shippingCostsData) {
   getJson('countries').done(function(e) {
     var data = JSON.parse(e);
+
+    console.log(shippingData);
+    console.log(shippingCostsData);
 
     fillMustacheWithJson(data, shipsToTemplate, '#ships_to');
     fillMustacheWithJson(data, shipsFromTemplate, '#ships_from');
 
-    
+    $("[name='from_country']").val(shippingData['from_country_id']);
 
-    var shippingNum = 1;
-    $('#addShippingBtn').click(function() {
-
-      var newshipping = $("#shipping_location_1").clone();
-      newshipping.attr("id", "shipping_location_" + ++shippingNum);
-      newshipping.appendTo("#shipping_locations");
-      console.log(newshipping);
-      // shippingForm(shippingNum);
-      return false;
+    $("#ships_from [name='from_country']").change(function(e1) {
+      standardFormPost('set_product_shipping/' + productId, "#shipping_form", null, null, null, null, null);
     });
+
+
+
+    shippingForm(1);
+
+
+
+    console.log(shippingCostsData);
+    var shippingNum = 1;
+    shippingCostsData.forEach(function(cShipping) {
+      console.log(cShipping);
+      var price = cShipping['price'];
+      var curr = (cShipping['native_currency_id'] != null) ? cShipping['native_currency_id'] : 1;
+      var toCountry = cShipping['to_country_id'];
+
+
+      var cNum = cShipping['num_'];
+      shippingNum = cNum;
+
+
+
+      if (cNum > 1) {
+        var newShipping = $("#shipping_cost_1_form").clone();
+        newShipping.attr("id", "shipping_cost_" + cNum + "_form");
+
+        var priceInp = newShipping.find("[name='shipping_cost']");
+        priceInp.val(price);
+
+        var currInp = newShipping.find("[name='currency']");
+        currInp.val(curr);
+
+        var toCountryInp = newShipping.find("[name='to_country']");
+        toCountryInp.val(toCountry);
+
+
+        newShipping.appendTo("#shipping_cost_forms");
+        shippingForm(cNum);
+
+      } else if (cNum == 1) {
+        $("#shipping_cost_1_form [name='shipping_cost']").val(price);
+        $("#shipping_cost_1_form [name='currency']").val(curr);
+        $("#shipping_cost_1_form [name='to_country']").val(toCountry);
+      }
+
+
+
+    });
+
+
+    $('#addShippingBtn').click(function() {
+      var newShipping = $("#shipping_cost_1_form").clone();
+      newShipping.attr("id", "shipping_cost_" + ++shippingNum + "_form");
+      newShipping.appendTo("#shipping_cost_forms");
+
+      var priceInp = newShipping.find("[name='shipping_cost']");
+      priceInp.val(null);
+
+      var currInp = newShipping.find("[name='currency']");
+      currInp.val(1);
+
+      var toCountryInp = newShipping.find("[name='to_country']");
+      toCountryInp.val(null);
+
+      shippingForm(shippingNum);
+
+      return false;
+
+    });
+
+
+
+
 
   });
 
@@ -209,28 +278,50 @@ function setupShippingForm(shippingData) {
 function setupPriceForm(productData) {
 
   $("#price_form [name='price']").val(productData['price']);
-  $("#price_form [name='currency']").val(productData['native_currency_id']);
-  $("#price_form [name='price_select']").val(productData['price_select']);
-  $("#price_form [name='variable_price']").val(productData['variable_price']);
+
+  var currId = (productData['native_currency_id'] != null) ? productData['native_currency_id'] : 1;
+  console.log('curr id = ' + currId);
+  $("#price_form [name='currency']").val(currId);
+
+
+  if (productData['variable_price'] != null) {
+    $("#price_form [name='check_variable_price']").prop('checked', productData['variable_price']);
+  }
+
+  if (productData['price_select'] != null) {
+    $("#price_form [name='check_price_select']").prop('checked', productData['price_select']);
+  }
+
+  if (productData['auction'] != null) {
+    $("#price_form [name='is_auction']").prop('checked', productData['auction']);
+  }
+
   $("#price_form [name='price_1']").val(productData['price_1']);
   $("#price_form [name='price_2']").val(productData['price_2']);
   $("#price_form [name='price_3']").val(productData['price_3']);
   $("#price_form [name='price_4']").val(productData['price_4']);
   $("#price_form [name='price_5']").val(productData['price_5']);
 
-  $("#price_form [name='is_auction']").val(productData['auction']);
-  $("#price_form [name='reserve_amount']").val(productData['reserve_amount']);
-  $("#price_form [name='currency']").val(productData['native_currency_id']);
+
+  $("#price_form [name='reserve_amount_auction']").val(productData['reserve_amount']);
+  $("#price_form [name='start_amount_auction']").val(productData['start_amount']);
+
+  if (productData['expire_time'] != null) {
+    var exprString = new Date(parseInt(productData['expire_time'])).toISOString().substring(0, 10);
+    console.log(exprString);
+
+    $("#price_form [name='expiration_time']").val(exprString);
+  }
 
 
-  if ($('#auction_radio').is(':checked')) {
+  if ($("[name='is_auction']").is(':checked')) {
     $('#auction_info').removeClass('hide');
     $('#pricing_advanced').removeClass('hide');
   } else {
     $('#auction_info').addClass('hide');
   }
 
-  if ($('#suggested_amounts').is(':checked')) {
+  if ($("[name='check_price_select']").is(':checked')) {
     $('#variable_prices').removeClass('hide');
     $('#pricing_advanced').removeClass('hide');
   } else {
@@ -254,12 +345,12 @@ function setupPriceForm(productData) {
 
 
 
-  $('#variable_price').click(function() {
+  $("[name='check_variable_price']").click(function() {
     standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
   });
 
-  $('#suggested_amounts').click(function() {
-    if ($('#suggested_amounts').is(':checked')) {
+  $("[name='check_price_select']").click(function() {
+    if ($("[name='check_price_select']").is(':checked')) {
       $('#variable_prices').removeClass('hide');
     } else {
       $('#variable_prices').addClass('hide');
@@ -269,8 +360,8 @@ function setupPriceForm(productData) {
 
 
 
-  $('#auction_radio').click(function() {
-    if ($('#auction_radio').is(':checked')) {
+  $("[name='is_auction']").click(function() {
+    if ($("[name='is_auction']").is(':checked')) {
       $('#auction_info').removeClass('hide');
     } else {
       $('#auction_info').addClass('hide');
@@ -392,6 +483,8 @@ function setupPicturesForm() {
       var cNum = cPicture['num_'];
       pictureNum = cNum;
 
+      console.log(cNum);
+
 
       if (cNum > 1) {
         var newPicture = $("#picture_1_form").clone();
@@ -399,9 +492,18 @@ function setupPicturesForm() {
 
         var inp = newPicture.find("[name='picture_url']");
         inp.val(cURL);
+
+        var pic = newPicture.find(".picture_image");
+        pic.attr('src', cURL);
+
         newPicture.appendTo("#pictures_forms");
+
         pictureForm(cNum);
 
+      } else if (cNum == 1) {
+        $("#picture_1_form [name='picture_url']").val(cURL);
+        console.log($("#picture_1_form .picture_image"));
+        $("#picture_1_form .picture_image").attr('src', cURL);
       }
 
 
@@ -414,6 +516,11 @@ function setupPicturesForm() {
       newPicture.appendTo("#pictures_forms");
       var inp = newPicture.find("[name='picture_url']");
       inp.val(null);
+
+      var pic = newPicture.find(".picture_image");
+      pic.attr('src', null);
+
+
       pictureForm(pictureNum);
 
     });
@@ -429,8 +536,6 @@ function setupBulletsForm() {
 
 
     bulletForm(1);
-
-
 
 
     var bullets = JSON.parse(e);
@@ -453,6 +558,8 @@ function setupBulletsForm() {
         newBullet.appendTo("#bullets_forms");
         bulletForm(cNum);
 
+      } else if (cNum == 1) {
+        $("#bullet_1_form [name='bullet']").val(cText);
       }
 
 
@@ -524,6 +631,43 @@ function pictureForm(pictureNum) {
       event.preventDefault();
       delay(function() {
         standardFormPost('set_product_picture/' + productId + "/" + pictureNum, formName, null, null, null, null, null);
+        var pictureURL = $(formName).find('input[name="picture_url"]').val();
+        console.log(pictureURL);
+        $(formName).find('.picture_image').attr('src', pictureURL);
+      }, 500);
+
+
+    });
+}
+
+function shippingForm(shippingNum) {
+
+  var formName = '#shipping_cost_' + shippingNum + "_form";
+  console.log('shipping form name = ' + formName);
+
+  $(formName + ' .removeShippingBtn').click(function() {
+    simplePost('delete_product_shipping_cost/' + productId + "/" + shippingNum);
+    $(formName).remove();
+    return false;
+  });
+
+  $(formName + " [name='to_country']").change(function(e1) {
+    standardFormPost('set_product_shipping_cost/' + productId + "/" + shippingNum, formName, null, null, null, null, null);
+  });
+
+  $(formName + " [name='currency']").change(function(e1) {
+    standardFormPost('set_product_shipping_cost/' + productId + "/" + shippingNum, formName, null, null, null, null, null);
+  });
+
+  $(formName).bootstrapValidator({
+      message: 'This value is not valid',
+      excluded: [':disabled'],
+      submitButtons: 'button[type="submit"]'
+    })
+    .on('success.field.bv', function(event) {
+      event.preventDefault();
+      delay(function() {
+        standardFormPost('set_product_shipping_cost/' + productId + "/" + shippingNum, formName, null, null, null, null, null);
       }, 500);
 
 
