@@ -324,6 +324,71 @@ public class Platform {
 
 		});
 		
+		post("/set_product_shipping_cost/:productId/:shippingNum", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+
+				String productId = req.params(":productId");
+				String shippingNum = req.params(":shippingNum");
+				
+				String fromCountryId = vars.get("from_country_id");
+				String toCountryId = vars.get("to_country_id");
+				String price = vars.get("price");
+				String nativeCurrId = vars.get("native_currency_id");
+
+
+				Tools.dbInit();
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, productId);
+
+				message = SellerActions.saveShippingCost(productId, shippingNum, fromCountryId, toCountryId,
+						price, nativeCurrId);
+
+
+				Tools.dbClose();
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
+		
+		post("/delete_product_shipping_cost/:productId/:shippingNum", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+				String shippingNum = req.params(":shippingNum");
+
+
+				Tools.dbInit();
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, productId);
+
+				message = SellerActions.deleteShipping(productId, shippingNum);
+
+				Tools.dbClose();
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
+		
 		post("/delete_product_bullet/:productId/:bulletNum", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -426,7 +491,7 @@ public class Platform {
 
 
 				String price = vars.get("price");
-				String currIso = vars.get("price_currency_iso");
+				String currIso = vars.get("currency");
 				String variablePrice = vars.get("variable_price");
 				String priceSelect = vars.get("price_select");
 				String price1 = vars.get("price_1");

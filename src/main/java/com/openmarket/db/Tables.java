@@ -44,6 +44,12 @@ public class Tables {
 	@Table("Product_bullet")
 	public static class ProductBullet extends Model {}
 	
+	@Table("Shipping")
+	public static class Shipping extends Model {}
+	
+	@Table("Shipping_cost")
+	public static class ShippingCost extends Model {}
+	
 	@Table("Auction")
 	public static class Auction extends Model {}
 

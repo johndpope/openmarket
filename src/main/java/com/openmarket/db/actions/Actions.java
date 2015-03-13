@@ -23,6 +23,8 @@ import com.openmarket.db.Tables.ProductPage;
 import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductPrice;
 import com.openmarket.db.Tables.Seller;
+import com.openmarket.db.Tables.Shipping;
+import com.openmarket.db.Tables.ShippingCost;
 import com.openmarket.db.Tables.User;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.TableConstants;
@@ -296,7 +298,7 @@ public class Actions {
 		}
 
 		public static String saveProductPrice(String productId,
-				String price, String currIso, String variablePrice,
+				String price, String currId, String variablePrice,
 				String priceSelect, String price1, String price2,
 				String price3, String price4, String price5) {
 
@@ -309,7 +311,7 @@ public class Actions {
 				cmd = Tools.toUpdate("product_price", p.getId().toString(),
 						"product_id", productId, 
 						"price", price,
-						"native_currency_id", currIso,
+						"native_currency_id", currId,
 						"variable_price", variablePrice,
 						"price_select", priceSelect,
 						"price_1", price1,
@@ -320,7 +322,7 @@ public class Actions {
 			} else {
 				cmd = ProductPrice.create("product_id", productId, 
 						"price", price,
-						"native_currency_id", currIso,
+						"native_currency_id", currId,
 						"variable_price", variablePrice,
 						"price_select", priceSelect,
 						"price_1", price1,
@@ -467,13 +469,86 @@ public class Actions {
 			}
 
 			return message;
+		}
+
+		public static String saveShippingCost(String productId,
+				String shippingNum, String fromCountryId, String toCountryId, String price,
+				String nativeCurrId) {
+
+			// First, create or fetch the shipping row(its not the product row)
+			Shipping s = Shipping.findFirst("product_id = ?", productId);
+			String cmd;
+			if (s == null) {
+				cmd = Shipping.create("product_id", productId, 
+						"from_country_id", fromCountryId).toInsert();
+				Tools.writeRQL(cmd);
+				s = Shipping.findFirst("product_id = ?", productId);
+			}
+
+			String shippingId = s.getId().toString();
+
+
+			// See if the shipping cost first exists
+			ShippingCost p = ShippingCost.findFirst(
+					"shipping_ = ? and num_ = ?", shippingId, shippingNum);
+
+			cmd = new String();
+			if (p != null) {
+				cmd = Tools.toUpdate("shipping_cost", p.getId().toString(),
+						"shipping_id", shippingId, 
+						"num_", shippingNum,
+						"to_country_id", toCountryId,
+						"price", price,
+						"native_currency_id", nativeCurrId);
+			} else {
+				cmd = ShippingCost.create("shipping_id", shippingId, 
+						"num_", shippingNum,
+						"to_country_id", toCountryId,
+						"price", price,
+						"native_currency_id", nativeCurrId).toInsert();
+			}
+
+
+			Tools.writeRQL(cmd);
+
+			String message = "Product Shipping cost  #" + shippingNum + " saved";
+
+			return message;
 		}	
+		
+		public static String deleteShipping(String productId, String shippingNum) {
+			
+			Shipping s = Shipping.findFirst("product_id = ?", productId);
+			String shippingId = s.getId().toString();
+			
+			ShippingCost p = ShippingCost.findFirst(
+					"shipping_ = ? and num_ = ?", shippingId, shippingNum);
+
+			String message;
+			String cmd;
+			if (p != null) {
+				cmd = Tools.toDelete("shipping_cost", p.getId().toString());
+
+				Tools.writeRQL(cmd);
+
+				message = "Product shipping #" + shippingNum + " deleted";
+			} else {
+				message = "Couldn't find that shipping info";
+			}
+
+			return message;
+		}
 	}
 
 
 	public static class CategoryActions {
 		public static String getCategoryTree(String id) {
-			
+
+
+			if (id.equals("null")) {
+				return CategoryTreeView.findFirst("id_1 = ?", 1).toJson(false, "id_1");
+			} 
+
 			CategoryTreeView c = CategoryTreeView.findFirst("id_1 = ? OR "
 					+ "id_2 = ? OR "
 					+ "id_3 = ? OR "
@@ -481,9 +556,9 @@ public class Actions {
 					+ "id_5 = ? OR "
 					+ "id_6 = ? OR " 
 					+ "id_7 = ? ", id, id, id, id, id, id, id);
-			
+
 			return c.toJson(false);
-			
+
 		}
 	}
 

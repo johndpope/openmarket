@@ -25,12 +25,23 @@ price_2,
 price_3,
 price_4,
 price_5,
+expire_time,
+start_amount,
+reserve_amount,
+currency_id as auction_currency_id,
+currency2.iso as auction_currency_iso,
+shipping.id as shipping_id, 
+from_country_id, 
 product_html 
 FROM product 
 left join time_span_view on product.processing_time_span_id = time_span_view.id 
 left join product_page on product.id = product_page.product_id 
 left join product_price on product.id = product_price.product_id 
+left join auction on product.id = auction.product_id 
 left join currency on product_price.native_currency_id = currency.id 
+left join currency as currency2 on auction.currency_id = currency2.id 
+left join shipping on product.id = shipping.product_id 
+left join country on shipping.from_country_id = country.id 
 ;
 
 CREATE VIEW category_tree_view AS  

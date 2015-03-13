@@ -331,6 +331,9 @@
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
+<key type="UNIQUE" name="">
+<part>product_id</part>
+</key>
 </table>
 <table x="47" y="1366" name="currency">
 <row name="id" null="1" autoincrement="1">
@@ -794,7 +797,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="580" y="1651" name="shipping">
+<table x="607" y="1656" name="shipping">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -812,8 +815,11 @@
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
+<key type="UNIQUE" name="">
+<part>product_id</part>
+</key>
 </table>
-<table x="765" y="1649" name="shipping_cost">
+<table x="782" y="1620" name="shipping_cost">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -825,6 +831,9 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="country" row="id" />
 </row>
+<row name="num_" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <row name="price" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -839,7 +848,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="442" y="1908" name="product_bullet">
+<table x="508" y="1846" name="product_bullet">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>

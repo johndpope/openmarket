@@ -17,32 +17,42 @@ $(document).ready(function() {
   setupPicturesForm();
 
 
-  setupPriceForm();
+
 
   setupBulletsForm();
 
   // fillMustacheWithJson(data, templateHtml, divId)
-  setupShippingForm();
+
+  $.when(setupCurrencySelects(),
+      getJson('get_product_shipping/' + productId))
+    .done(function(e, e1) {
+    	var shippingData = JSON.parse(e1[0])[0];
+      setupShippingForm(shippingData);
+    });
 
 
 
-  setupCurrencySelects();
 
-  getJson('get_product/' + productId).done(function(e) {
-    var productData = JSON.parse(e)[0];
+  $.when(setupCurrencySelects(),
+      getJson('get_product/' + productId))
+    .done(function(e, e1) {
+      var productData = JSON.parse(e1[0])[0];
 
-    console.log(productData);
 
-    setupDetailsForm(productData);
-    setupInfoForm(productData);
-    categoryRecursive(productData);
-  });
+      console.log(productData);
+
+      setupDetailsForm(productData);
+      setupInfoForm(productData);
+      categoryRecursive(productData);
+      setupPriceForm(productData);
+
+    });
 
 
 });
 
 function setupCurrencySelects() {
-  getJson('currencies').done(function(e) {
+  return getJson('currencies').done(function(e) {
     var data = JSON.parse(e);
 
     fillMustacheWithJson(data, currencyTemplate, '.currency-select');
@@ -56,6 +66,7 @@ var cCatNum = 1;
 function categoryRecursive(productData) {
 
   var productCategoryId = productData['category_id'];
+
 
   getJson('category_tree/' + productCategoryId).done(function(e2) {
 
@@ -167,12 +178,14 @@ function categoryFetch(parentId, num) {
   });
 }
 
-function setupShippingForm() {
+function setupShippingForm(shippingData) {
   getJson('countries').done(function(e) {
     var data = JSON.parse(e);
 
     fillMustacheWithJson(data, shipsToTemplate, '#ships_to');
     fillMustacheWithJson(data, shipsFromTemplate, '#ships_from');
+
+    
 
     var shippingNum = 1;
     $('#addShippingBtn').click(function() {
@@ -193,7 +206,42 @@ function setupShippingForm() {
 }
 
 
-function setupPriceForm() {
+function setupPriceForm(productData) {
+
+  $("#price_form [name='price']").val(productData['price']);
+  $("#price_form [name='currency']").val(productData['native_currency_id']);
+  $("#price_form [name='price_select']").val(productData['price_select']);
+  $("#price_form [name='variable_price']").val(productData['variable_price']);
+  $("#price_form [name='price_1']").val(productData['price_1']);
+  $("#price_form [name='price_2']").val(productData['price_2']);
+  $("#price_form [name='price_3']").val(productData['price_3']);
+  $("#price_form [name='price_4']").val(productData['price_4']);
+  $("#price_form [name='price_5']").val(productData['price_5']);
+
+  $("#price_form [name='is_auction']").val(productData['auction']);
+  $("#price_form [name='reserve_amount']").val(productData['reserve_amount']);
+  $("#price_form [name='currency']").val(productData['native_currency_id']);
+
+
+  if ($('#auction_radio').is(':checked')) {
+    $('#auction_info').removeClass('hide');
+    $('#pricing_advanced').removeClass('hide');
+  } else {
+    $('#auction_info').addClass('hide');
+  }
+
+  if ($('#suggested_amounts').is(':checked')) {
+    $('#variable_prices').removeClass('hide');
+    $('#pricing_advanced').removeClass('hide');
+  } else {
+    $('#variable_prices').addClass('hide');
+  }
+
+
+  $("#price_form [name='currency']").change(function(e1) {
+    console.log('native curr id = ' + $(this).val());
+    standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
+  });
 
   $('.input-group.date').datepicker({
     format: 'yyyy-mm-dd'
@@ -203,6 +251,8 @@ function setupPriceForm() {
     $('#pricing_advanced').toggleClass('hide');
     return false;
   });
+
+
 
   $('#variable_price').click(function() {
     standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
@@ -214,7 +264,10 @@ function setupPriceForm() {
     } else {
       $('#variable_prices').addClass('hide');
     }
+    standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
   });
+
+
 
   $('#auction_radio').click(function() {
     if ($('#auction_radio').is(':checked')) {
@@ -222,6 +275,11 @@ function setupPriceForm() {
     } else {
       $('#auction_info').addClass('hide');
     }
+    standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
+  });
+
+  $("#price_form [name='expiration_time']").change(function() {
+    standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
   });
 
   $('#price_form').bootstrapValidator({

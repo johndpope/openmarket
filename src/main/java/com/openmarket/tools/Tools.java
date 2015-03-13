@@ -125,7 +125,11 @@ public class Tools {
 		for (int i = 0; i < namesAndValues.length - 1; i+=2) {
 			Object field = namesAndValues[i];
 			Object value = namesAndValues[i+1];
-			s.append(field + " = " + "'" + value + "'");
+			if (value != null) {
+				s.append(field + " = " + "'" + value + "'");
+			} else {
+				s.append(field + " = null" );
+			}
 
 			if (i+2 < namesAndValues.length) {
 				s.append(" , ");
@@ -138,7 +142,7 @@ public class Tools {
 		return s.toString();
 
 	}
-	
+
 	public static String toDelete(String tableName, String id) {
 
 
@@ -418,7 +422,7 @@ public class Tools {
 				.replace(");",");\n").replace("\n;", ";\n");
 
 
-				return reformat;
+		return reformat;
 	}
 
 	public static String writeRQL(String cmd) {
