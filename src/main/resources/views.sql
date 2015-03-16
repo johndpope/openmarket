@@ -8,6 +8,7 @@ left join time_type on time_span.time_type_id = time_type.id
 CREATE VIEW product_view AS 
 SELECT product.id,
 seller_id,
+seller_name,
 category_id,
 buy,
 auction,
@@ -43,6 +44,29 @@ left join currency as currency2 on auction.currency_id = currency2.id
 left join shipping on product.id = shipping.product_id 
 left join country on shipping.from_country_id = country.id 
 ;
+
+CREATE VIEW product_thumbnail_view AS 
+SELECT 
+product.id as product_id,
+title,
+seller_id,
+shop_name, 
+count(review.id) as number_of_reviews,
+auction,
+CASE WHEN auction='1'
+	THEN (select max(bid.amount) from bid where bid.auction_id = auction.id) 
+	ELSE max(price) 
+END as price, 
+currency.iso as price_iso 
+FROM product 
+inner join currency on product_price.native_currency_id = currency.id 
+left join seller on product.seller_id = seller.id 
+left join auction on product.id = auction.product_id 
+left join review on review.product_id = product.id 
+left join product_price on product_price.product_id = product.id 
+group by product.id
+;
+
 
 CREATE VIEW category_tree_view AS  
 SELECT t1.name AS name_1, t1.id AS id_1,

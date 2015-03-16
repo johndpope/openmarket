@@ -12,11 +12,18 @@ import static spark.Spark.get;
 
 
 
+
+
+
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
+
+
+
 
 
 
@@ -39,6 +46,11 @@ import org.slf4j.LoggerFactory;
 
 
 
+
+
+
+import com.openmarket.db.Tables.ProductThumbnailView;
+import com.openmarket.db.Transformations;
 import com.openmarket.db.Tables.Category;
 import com.openmarket.db.Tables.Country;
 import com.openmarket.db.Tables.Currency;
@@ -713,8 +725,13 @@ public class Platform {
 			Tools.dbInit();
 
 			Shipping s = Shipping.findFirst("product_id = ?", productId);
-			String json = s.toJson(false);
 
+			String json;
+			if (s != null) {
+				json = s.toJson(false);
+			} else {
+				json = "[]";
+			}
 			Tools.dbClose();
 			return json;
 
@@ -738,7 +755,29 @@ public class Platform {
 
 		});
 
-
+		get("/product_thumbnails", (req, res) -> {
+			
+			try {
+			Tools.allowAllHeaders(req, res);
+			
+			Tools.dbInit();
+			Seller seller = SellerActions.getSellerFromSessionId(req);
+			
+			List<ProductThumbnailView> pvs = ProductThumbnailView.where(
+					"seller_id = ?", seller.getId().toString());
+					
+			String json = Tools.convertNodeToJson(
+					Transformations.productThumbnailViewJson(pvs));
+			
+			Tools.dbClose();
+			
+			return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		});
 
 		get("/product_edit/:productId", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);	

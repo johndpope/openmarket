@@ -1,10 +1,31 @@
+var productsTemplate = $('#products_template').html();
+
 $(document).ready(function() {
 
   setupWizard();
   saveShopName();
   addNewItem();
-
+  tabLoad();
+  fillCurrentProducts();
 });
+
+function tabLoad() {
+  // Javascript to enable link to tab
+  var hash = document.location.hash;
+  var prefix = "tab_";
+  if (hash) {
+  	console.log('hash');
+    $('.nav-tabs a[href=' + hash.replace(prefix, "") + ']').tab('show');
+     $('#rootwizard').find("a[href*='" + hash + "']").trigger('click');
+  }
+
+  // Change hash for page-reload
+  $('.nav-tabs a').on('shown.bs.tab', function(e) {
+  	console.log('got here2');
+    window.location.hash = e.target.hash.replace("#", "#" + prefix);
+    $('#rootwizard').find("a[href*='" + hash + "']").trigger('click');
+  });
+}
 
 function setupWizard() {
   $('#rootwizard').bootstrapWizard({
@@ -53,7 +74,17 @@ function addNewItem() {
   });
 }
 
+function fillCurrentProducts() {
+getJson('product_thumbnails').done(function(e) {
+    var data = JSON.parse(e);
+    console.log(data);
+    fillMustacheWithJson(data, productsTemplate, '#products');
+    $('.pic_num-1').addClass('active');
+
+  });
+}
+
 function newItemRedirect(productId) {
-	var url = sparkService + 'product_edit/' + productId;
-	window.location.replace(url);
+  var url = sparkService + 'product_edit/' + productId;
+  window.location.replace(url);
 }

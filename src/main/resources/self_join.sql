@@ -69,7 +69,7 @@ t3.name AS name_3, t3.id AS id_3,
 t4.name AS name_4, t4.id AS id_4,
 t5.name AS name_5, t5.id AS id_5,
 t6.name AS name_6, t6.id AS id_6,
-t7.name AS name_7, t7.id AS id_7,
+t7.name AS name_7, t7.id AS id_7
 
 FROM category AS t1
 LEFT JOIN category AS t2 ON t2.parent = t1.id
@@ -79,7 +79,10 @@ LEFT JOIN category AS t5 ON t5.parent = t4.id
 LEFT JOIN category AS t6 ON t6.parent = t5.id
 LEFT JOIN category AS t7 ON t7.parent = t6.id
 where 
-t1.parent IS NULL AND
+t1.parent IS NULL;
+
+
+ AND
 
 (t1.id = 4 OR
 t2.id = 4 OR

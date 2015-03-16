@@ -149,7 +149,7 @@
     </nav>
 
     <!-- The full page with teh sidebar -->
-    <div class="container-fluid">
+    <div class="container-fluid main-page hide">
 
       <!-- The Page -->
       <div class="row-fluid">
@@ -291,7 +291,7 @@
                               <div class="col-xs-3">
                                 <input name="shipping_cost" type="text" class="form-control" placeholder="Cost" data-bv-greaterthan="true" data-bv-greaterthan-value="0" data-bv-greaterthan-message="Must be > 0" />
                               </div>
-                              <div class="col-xs-3 pushdown currency-select">
+                              <div class="col-xs-2 pushdown currency-select">
                                 <script id="currency_template" type="x-tmpl-mustache">
                                   <select name="currency" class="">
                                     {{#.}}
@@ -301,8 +301,8 @@
                                 </script>
 
                               </div>
-                              <div class="col-xs-1">
-                                <a href="#" type="" class="btn btn-danger removeShippingBtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
+                              <div class="col-xs-2">
+                                <a href="#" type="" class="btn btn-danger removeShippingBtn pull-right" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
                               </div>
 
 
@@ -510,7 +510,7 @@
                 </div>
               </div>
 
-
+              <button id="nextPageBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add more products</button>
 
 
 

@@ -32,6 +32,9 @@ public class Tables {
 	@Table("Product_view")
 	public static class ProductView extends Model {}
 	
+	@Table("Product_thumbnail_view")
+	public static class ProductThumbnailView extends Model {}
+	
 	@Table("Product_picture")
 	public static class ProductPicture extends Model {}
 	

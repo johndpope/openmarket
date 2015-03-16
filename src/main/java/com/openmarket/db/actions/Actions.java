@@ -1,12 +1,15 @@
 package com.openmarket.db.actions;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import net.tomp2p.connection.Reservation;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,9 +226,11 @@ public class Actions {
 			Product p = Product.create("seller_id", seller.getId().toString());
 
 			Tools.writeRQL(p.toInsert());
-			p = Product.findFirst("seller_id = ?", seller.getId().toString());
+			//			p = Product.findFirst("seller_id = ?, max(created_at)", seller.getId().toString());
+			List<Product> ps = Product.where("seller_id = ?", seller.getId().toString())
+					.orderBy("created_at desc");
+			return ps.get(0);
 
-			return p;
 		}
 
 		public static String setProductInfo(String productId, String title, 
@@ -347,7 +352,7 @@ public class Actions {
 
 			// First update the product to say that its an auction
 			String updateProduct = Tools.toUpdate("product", productId, 
-					"auction", "1");
+					"auction", isAuction);
 
 			Tools.writeRQL(updateProduct);
 

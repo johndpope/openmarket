@@ -247,10 +247,27 @@
                 <div class="row">
                   <div class="col-md-12">
 
+                    <!-- The add new one -->
                     <div class="col-md-4">
                       <div class="panel panel-default">
-                        <div class="panel-body img-responsive center-block">
-                          <img class="scale" src="holder.js/800x600/social">
+                        <div class="panel-body">
+
+                          <div class="carousel slide derp" data-ride="carousel" data-interval="false">
+                            <div class="carousel-inner" role="listbox">
+                              <div class="item active img-responsive center-block">
+                                <img class="panel-picture-small scale" src="holder.js/800x600/social">
+                              </div>
+                              <div class="item img-responsive center-block">
+                                <img class="panel-picture-small scale" src="holder.js/800x600">
+                              </div>
+                            </div>
+                            <a class="left carousel-control" href=".derp" role="button" data-slide="prev">
+                              <span class="icon-prev"></span>
+                            </a>
+                            <a class="right carousel-control" href=".derp" role="button" data-slide="next">
+                              <span class="icon-next"></span>
+                            </a>
+                          </div>
                         </div>
                         <div class="panel-footer">
                           <div class="row">
@@ -277,7 +294,69 @@
                       </div>
                     </div>
 
+                    <div id="products">
+                      <script id="products_template" type="x-tmpl-mustache">
+                        {{#products}}
+                        <div class="col-md-4">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <div class="carousel slide item-{{product_id}}" data-ride="carousel" data-interval="false">
+                                <div class="carousel-inner" role="listbox">
+                                  {{#pictures}}
+                                  <div class="item pic_num-{{num_}} img-responsive center-block">
+                                    <img class="panel-picture-small scale" src="{{url}}">
+                                  </div>
+                                  {{/pictures}}
+                                  {{^pictures}}
+                                  <div class="item pic_num-1 img-responsive center-block">
+                                    <img class="panel-picture-small scale" src="http://i.ytimg.com/vi/G5pxWdJnnYg/maxresdefault.jpg">
+                                  </div>
+                                  {{/pictures}}
 
+                                  
+
+                                </div>
+                                
+                                <a class="left carousel-control" href=".item-{{product_id}}" role="button" data-slide="prev">
+                                  <span class="icon-prev"></span>
+                                </a>
+                                <a class="right carousel-control" href=".item-{{product_id}}" role="button" data-slide="next">
+                                  <span class="icon-next"></span>
+                                </a>
+                               
+                              </div>
+                            </div>
+                            <div class="panel-footer">
+
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="text-center text-overflow">
+                                    <a href="{{edit_url}}">{{title}}</a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="spacer"></div>
+
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <div class="text-center text-muted text-overflow"> {{shop_name}}</div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="text-info text-center"> {{number_of_reviews}} <i class="fa fa-star"></i>
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="text-success text-right"> {{price}} <small>{{price_iso}}</small></div>
+                                </div>
+                              </div>
+                              <div class="font-spacer">&nbsp;</div>
+                            </div>
+                          </div>
+                        </div>
+                        {{/products}}
+                      </script>
+
+                    </div>
 
                   </div>
                 </div>

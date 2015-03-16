@@ -7,6 +7,7 @@ var processingTimeTemplate = $('#processing_time_template').html();
 
 $(document).ready(function() {
 
+  setupNextPageBtn();
   setupSummerNoteNormal();
 
   // setupSummerNoteAir();
@@ -29,6 +30,7 @@ $(document).ready(function() {
 
       var shippingCosts = JSON.parse(e2[0]);
       setupShippingForm(shippingData, shippingCosts);
+
     });
 
 
@@ -51,6 +53,12 @@ $(document).ready(function() {
 
 
 });
+
+function setupNextPageBtn() {
+	$('#nextPageBtn').click(function(e) {
+		window.location.replace('/seller_setup#list_items')
+	})
+}
 
 function setupCurrencySelects() {
   return getJson('currencies').done(function(e) {
@@ -116,6 +124,7 @@ function categoryRecursive(productData) {
           subCategory.addClass('hide');
           subCategory.appendTo("#category_forms");
           categoryRecursive(productData);
+           $('.main-page').removeClass('hide');
         }
 
 
@@ -336,6 +345,8 @@ function setupPriceForm(productData) {
 
   $('.input-group.date').datepicker({
     format: 'yyyy-mm-dd'
+  }).on('changeDate', function(e) {
+  	standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
   });
 
   $('#show_advanced').click(function() {
@@ -369,9 +380,9 @@ function setupPriceForm(productData) {
     standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
   });
 
-  $("#price_form [name='expiration_time']").change(function() {
-    standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
-  });
+  // $("#price_form [name='expiration_time']").change(function() {
+  //   standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
+  // });
 
   $('#price_form').bootstrapValidator({
       message: 'This value is not valid',
@@ -382,7 +393,7 @@ function setupPriceForm(productData) {
       event.preventDefault();
       delay(function() {
         standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
-      }, 500);
+      }, 1500);
 
 
     });
@@ -447,7 +458,7 @@ function setupInfoForm(productData) {
       event.preventDefault();
       delay(function() {
         standardFormPost('set_product_info/' + productId, "#info_form", null, null, null, null, null);
-      }, 500);
+      }, 1500);
 
 
     });
@@ -606,7 +617,7 @@ function bulletForm(bulletNum) {
       event.preventDefault();
       delay(function() {
         standardFormPost('set_product_bullet/' + productId + "/" + bulletNum, formName, null, null, null, null, null);
-      }, 500);
+      }, 1500);
 
 
     });
@@ -634,7 +645,7 @@ function pictureForm(pictureNum) {
         var pictureURL = $(formName).find('input[name="picture_url"]').val();
         console.log(pictureURL);
         $(formName).find('.picture_image').attr('src', pictureURL);
-      }, 500);
+      }, 1500);
 
 
     });
@@ -668,7 +679,7 @@ function shippingForm(shippingNum) {
       event.preventDefault();
       delay(function() {
         standardFormPost('set_product_shipping_cost/' + productId + "/" + shippingNum, formName, null, null, null, null, null);
-      }, 500);
+      }, 1500);
 
 
     });

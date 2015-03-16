@@ -52,6 +52,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DBException;
@@ -79,7 +82,7 @@ public class Tools {
 	public static final Gson GSON = new Gson();
 	public static final Gson GSON2 = new GsonBuilder().setPrettyPrinting().create();
 
-
+	public static final ObjectMapper MAPPER = new ObjectMapper();
 
 	public static final DateTimeFormatter DTF = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").
 			withZone(DateTimeZone.UTC);
@@ -458,6 +461,21 @@ public class Tools {
 		log.info(message);
 		return message;
 	}
+	
+	public static JsonNode jsonToNode(String json) {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+
+			JsonNode root = mapper.readTree(json);
+
+			return root;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static void initializeDBAndSetupDirectories(Boolean delete) {
 
@@ -741,7 +759,15 @@ public class Tools {
 
 	}
 
-
+	public static String convertNodeToJson(ObjectNode a) {
+		try {
+			return Tools.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(a);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 
 }
