@@ -759,7 +759,17 @@ public class Tools {
 
 	}
 
-	public static String convertNodeToJson(ObjectNode a) {
+	public static String nodeToJson(ObjectNode a) {
+		try {
+			return Tools.MAPPER.writeValueAsString(a);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String nodeToJsonPretty(ObjectNode a) {
 		try {
 			return Tools.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(a);
 		} catch (IOException e) {

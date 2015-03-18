@@ -110,13 +110,17 @@
 <part>id</part>
 </key>
 </table>
-<table x="276" y="801" name="review">
+<table x="278" y="801" name="review">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="product_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="product" row="id" />
+</row>
+<row name="user_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="user" row="id" />
 </row>
 <row name="stars" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -132,6 +136,10 @@
 <default>CURRENT_TIMESTAMP</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
+</key>
+<key type="UNIQUE" name="">
+<part>product_id</part>
+<part>user_id</part>
 </key>
 </table>
 <table x="290" y="297" name="wishlist">
@@ -210,7 +218,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="620" y="797" name="feedback">
+<table x="627" y="808" name="feedback">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>

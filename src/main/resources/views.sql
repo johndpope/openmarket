@@ -8,7 +8,7 @@ left join time_type on time_span.time_type_id = time_type.id
 CREATE VIEW product_view AS 
 SELECT product.id,
 seller_id,
-seller_name,
+shop_name,
 category_id,
 buy,
 auction,
@@ -30,9 +30,11 @@ expire_time,
 start_amount,
 reserve_amount,
 currency_id as auction_currency_id,
-currency2.iso as auction_currency_iso,
+auction_currency.iso as auction_currency_iso,
 shipping.id as shipping_id, 
 from_country_id, 
+from_country.name as from_country, 
+count(review.id) as number_of_reviews, 
 product_html 
 FROM product 
 left join time_span_view on product.processing_time_span_id = time_span_view.id 
@@ -40,9 +42,12 @@ left join product_page on product.id = product_page.product_id
 left join product_price on product.id = product_price.product_id 
 left join auction on product.id = auction.product_id 
 left join currency on product_price.native_currency_id = currency.id 
-left join currency as currency2 on auction.currency_id = currency2.id 
+left join currency as auction_currency on auction.currency_id = auction_currency.id 
 left join shipping on product.id = shipping.product_id 
-left join country on shipping.from_country_id = country.id 
+left join country as from_country on shipping.from_country_id = from_country.id 
+left join review on review.product_id = product.id 
+left join seller on product.seller_id = seller.id  
+group by product.id
 ;
 
 CREATE VIEW product_thumbnail_view AS 
@@ -64,7 +69,7 @@ left join seller on product.seller_id = seller.id
 left join auction on product.id = auction.product_id 
 left join review on review.product_id = product.id 
 left join product_price on product_price.product_id = product.id 
-group by product.id
+group by product.id 
 ;
 
 
@@ -84,4 +89,36 @@ LEFT JOIN category AS t5 ON t5.parent = t4.id
 LEFT JOIN category AS t6 ON t6.parent = t5.id 
 LEFT JOIN category AS t7 ON t7.parent = t6.id 
 where t1.parent IS NULL 
+;
+
+CREATE VIEW review_view AS 
+select *,
+SUM(case when vote = 1 then 1 else -1 end) as votes_sum,
+count(review_vote.id) as votes_count 
+from review 
+left join review_vote 
+on review.id = review_vote.review_id 
+group by review.id 
+;
+
+CREATE VIEW question_view AS 
+select *, 
+SUM(case when vote = 1 then 1 else -1 end) as votes_sum 
+from question 
+left join question_vote 
+on question.id = question_vote.question_id 
+group by question.id 
+;
+
+CREATE VIEW shipping_cost_view AS 
+select shipping_cost.id,
+shipping_id, 
+to_country_id, 
+num_,
+price, 
+name as to_country,
+iso as shipping_cost_iso 
+from shipping_cost 
+left join country on shipping_cost.to_country_id = country.id 
+left join currency on shipping_cost.native_currency_id = currency.id 
 ;

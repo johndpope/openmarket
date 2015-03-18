@@ -6,8 +6,17 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import com.openmarket.db.Tables.Answer;
+import com.openmarket.db.Tables.ProductBullet;
 import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductThumbnailView;
+import com.openmarket.db.Tables.ProductView;
+import com.openmarket.db.Tables.QuestionView;
+import com.openmarket.db.Tables.ReviewComment;
+import com.openmarket.db.Tables.ReviewView;
+import com.openmarket.db.Tables.Shipping;
+import com.openmarket.db.Tables.ShippingCost;
+import com.openmarket.db.Tables.ShippingCostView;
 import com.openmarket.tools.Tools;
 
 public class Transformations {
@@ -44,6 +53,175 @@ public class Transformations {
 			ab.add(productThumbnailViewJson(pv));
 
 		}
+
+		return a;
+	}
+
+	public static ObjectNode productViewJson(ProductView pv) {
+
+		String productId = pv.getString("id");
+
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		JsonNode c = Tools.jsonToNode(pv.toJson(false));
+
+		ObjectNode on = Tools.MAPPER.valueToTree(c);
+		a.putAll(on);
+
+
+
+		// add the pictures
+		List<ProductPicture> pps = ProductPicture.find("product_id = ?", productId);
+
+		ArrayNode an = a.putArray("pictures");
+
+		for (ProductPicture pp : pps) {
+			an.add(Tools.jsonToNode(pp.toJson(false)));
+		}
+
+		// Add the bullets
+		List<ProductBullet> pbs = ProductBullet.find("product_id = ?", productId);
+
+		ArrayNode ab = a.putArray("bullets");
+
+		for (ProductBullet pp : pbs) {
+			ab.add(Tools.jsonToNode(pp.toJson(false)));
+		}
+
+		// Add shipping info
+		List<ShippingCostView> scs = ShippingCostView.find("shipping_id = ?", pv.getString("shipping_id"));
+
+		ArrayNode as = a.putArray("shipping_costs");
+
+		for (ShippingCostView sc : scs) {
+			as.add(Tools.jsonToNode(sc.toJson(false)));
+		}
+
+
+		// Add 3 reviews
+		List<ReviewView> rvs = ReviewView.where("product_id = ?", productId).limit(3);
+		ObjectNode reviewNodes = reviewViewJson(rvs);
+
+		a.putAll(reviewNodes);
+
+		// Add 3 questions
+		List<QuestionView> qvs = QuestionView.where("product_id = ?", productId).limit(3);
+		ObjectNode questionNodes = questionViewJson(qvs);
+
+		a.putAll(questionNodes);
+
+		// Add 4 other sellers products
+		List<ProductThumbnailView> otherProducts = 
+				ProductThumbnailView.find("seller_id = ? and product_id != ?", 
+						pv.getString("seller_id"),
+						pv.getId().toString()).limit(4);
+
+		ObjectNode otherProductsNode = productThumbnailViewJson(otherProducts);
+
+		a.putAll(otherProductsNode);
+
+		return a;
+
+	}
+
+	public static ObjectNode reviewViewJson(List<ReviewView> rvs) {
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("reviews");
+
+		for (ReviewView rv : rvs) {
+			ab.add(reviewViewJson(rv));
+		}
+
+		return a;
+
+	}
+
+	public static ObjectNode reviewViewJson(ReviewView rv) {
+
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		JsonNode c = Tools.jsonToNode(rv.toJson(false));
+
+		List<ReviewComment> rcs = ReviewComment.find("review_id = ?", rv.getString("id"));
+
+		ObjectNode on = Tools.MAPPER.valueToTree(c);
+		a.putAll(on);
+
+		ArrayNode an = a.putArray("comments");
+
+		for (ReviewComment rc : rcs) {
+			an.add(Tools.jsonToNode(rc.toJson(false)));
+		}
+
+
+		return a;
+	}
+
+	public static ObjectNode yourReviewsViewJson(ReviewView rv) {
+
+		JsonNode c = Tools.jsonToNode(rv.toJson(false));
+		
+		ObjectNode on = Tools.MAPPER.valueToTree(c);
+		
+		ProductThumbnailView ptv = ProductThumbnailView.findFirst
+				("product_id = ?", rv.getString("product_id"));
+		ObjectNode pvj = productThumbnailViewJson(ptv);
+
+		on.putAll(pvj);
+		
+		return on;
+	}
+	
+	public static ObjectNode yourReviewsViewJson(List<ReviewView> rvs) {
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("reviews");
+
+		for (ReviewView rv : rvs) {
+			ab.add(yourReviewsViewJson(rv));
+		}
+
+		return a;
+
+	}
+
+	public static ObjectNode questionViewJson(List<QuestionView> qvs) {
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("questions");
+
+		for (QuestionView qv : qvs) {
+			ab.add(questionViewJson(qv));
+		}
+
+		return a;
+
+	}
+
+	public static ObjectNode questionViewJson(QuestionView qv) {
+
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		JsonNode c = Tools.jsonToNode(qv.toJson(false));
+
+		List<Answer> rcs = Answer.find("question_id = ?", qv.getString("id"));
+
+		ObjectNode on = Tools.MAPPER.valueToTree(c);
+		a.putAll(on);
+
+		ArrayNode an = a.putArray("answers");
+
+		for (Answer rc : rcs) {
+			an.add(Tools.jsonToNode(rc.toJson(false)));
+		}
+
 
 		return a;
 	}

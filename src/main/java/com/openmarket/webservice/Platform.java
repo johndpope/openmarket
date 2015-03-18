@@ -15,12 +15,14 @@ import static spark.Spark.get;
 
 
 
+
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+
 
 
 
@@ -49,6 +51,7 @@ import org.slf4j.LoggerFactory;
 
 
 
+
 import com.openmarket.db.Tables.ProductThumbnailView;
 import com.openmarket.db.Transformations;
 import com.openmarket.db.Tables.Category;
@@ -59,6 +62,7 @@ import com.openmarket.db.Tables.ProductBullet;
 import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductPrice;
 import com.openmarket.db.Tables.ProductView;
+import com.openmarket.db.Tables.ReviewView;
 import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.Shipping;
 import com.openmarket.db.Tables.ShippingCost;
@@ -618,6 +622,48 @@ public class Platform {
 			}
 
 		});
+		
+		post("/save_product_review/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				log.info(vars.toString());
+
+				String productId = req.params(":productId");
+				
+				String stars = vars.get("stars");
+				String headline = vars.get("headline");
+				String textHtml = vars.get("text_html");
+				
+				
+
+				Tools.dbInit();
+				//				
+				String message = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+				
+	
+				message = UserActions.saveProductReview(productId, 
+						user.getId().toString(), 
+						stars, 
+						headline, 
+						textHtml);
+
+
+				Tools.dbClose();
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
 
 		get("/category/:parentId", (req, res) -> {
 			try {
@@ -686,16 +732,16 @@ public class Platform {
 		});
 
 
-		get("/get_product/:productId", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			Tools.dbInit();
-			String productId = req.params(":productId");
-			String json = ProductView.where("id = ?", productId).toJson(false);
-			Tools.dbClose();
-			return json;
-
-
-		});
+//		get("/get_product/:productId", (req, res) -> { 
+//			Tools.allowAllHeaders(req, res);
+//			Tools.dbInit();
+//			String productId = req.params(":productId");
+//			String json = ProductView.where("id = ?", productId).toJson(false);
+//			Tools.dbClose();
+//			return json;
+//
+//
+//		});
 
 		get("/get_product_bullets/:productId", (req, res) -> { 
 			Tools.allowAllHeaders(req, res);
@@ -766,7 +812,7 @@ public class Platform {
 			List<ProductThumbnailView> pvs = ProductThumbnailView.where(
 					"seller_id = ?", seller.getId().toString());
 					
-			String json = Tools.convertNodeToJson(
+			String json = Tools.nodeToJson(
 					Transformations.productThumbnailViewJson(pvs));
 			
 			Tools.dbClose();
@@ -778,10 +824,66 @@ public class Platform {
 				return e.getMessage();
 			}
 		});
+		
+		get("/get_product/:productId", (req, res) -> {
+			
+			try {
+			Tools.allowAllHeaders(req, res);
+			
+			Tools.dbInit();
+			String productId = req.params(":productId");
+			
+			ProductView pv = ProductView.findFirst(
+					"id = ?", productId);
+					
+			String json = Tools.nodeToJson(
+					Transformations.productViewJson(pv));
+			
+			Tools.dbClose();
+			
+			return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		});
+		
+		get("/get_your_reviews", (req, res) -> {
+			
+			try {
+			Tools.allowAllHeaders(req, res);
+			
+			Tools.dbInit();
+			User user = UserActions.getUserFromSessionId(req);
+			
+			List<ReviewView> rvs = ReviewView.where("user_id = ?", user.getId().toString())
+					.orderBy("created_at desc");
+			
+					
+			String json = Tools.nodeToJson(
+					Transformations.yourReviewsViewJson(rvs));
+			
+			Tools.dbClose();
+			
+			return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		});
+		
+		
 
-		get("/product_edit/:productId", (req, res) -> {
+		get("/product/edit/:productId", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);	
 			return Tools.readFile(DataSources.PAGES("product_edit"));
+		});
+		
+		get("/product/:productId", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			return Tools.readFile(DataSources.PAGES("product"));
 		});
 
 

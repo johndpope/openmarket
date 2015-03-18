@@ -25,6 +25,7 @@ import com.openmarket.db.Tables.ProductBullet;
 import com.openmarket.db.Tables.ProductPage;
 import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductPrice;
+import com.openmarket.db.Tables.Review;
 import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.Shipping;
 import com.openmarket.db.Tables.ShippingCost;
@@ -178,6 +179,37 @@ public class Actions {
 			} else {
 				throw new NoSuchElementException("Incorrect email code");
 			}
+
+
+		}
+		
+		public static String saveProductReview(String productId, String userId,
+				String stars, String headline, String textHtml) {
+
+			// See if the review first exists
+			Review r = Review.findFirst(
+					"product_id = ? and user_id = ?", productId, userId);
+
+			String cmd;
+			if (r != null) {
+				cmd = Tools.toUpdate("review", r.getId().toString(),
+						"stars", stars,
+						"headline", headline,
+						"text_html", textHtml);
+			} else {
+				cmd = Review.create("product_id", productId, 
+						"user_id", userId,
+						"stars", stars,
+						"headline", headline,
+						"text_html", textHtml).toInsert();
+			}
+
+
+			Tools.writeRQL(cmd);
+
+			String message = "Product review saved";
+
+			return message;
 
 
 		}

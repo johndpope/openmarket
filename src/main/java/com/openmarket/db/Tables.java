@@ -53,6 +53,9 @@ public class Tables {
 	@Table("Shipping_cost")
 	public static class ShippingCost extends Model {}
 	
+	@Table("Shipping_cost_view")
+	public static class ShippingCostView extends Model {}
+	
 	@Table("Auction")
 	public static class Auction extends Model {}
 
@@ -73,6 +76,36 @@ public class Tables {
 	
 	@Table("category_tree_view")
 	public static class CategoryTreeView extends Model {}
+	
+	@Table("Review")
+	public static class Review extends Model {}
+	
+	@Table("Review_view")
+	public static class ReviewView extends Model {}
+	
+	@Table("Review_vote")
+	public static class ReviewVote extends Model {}
+	
+	@Table("Review_comment")
+	public static class ReviewComment extends Model {}
+	
+	@Table("Question")
+	public static class Question extends Model {}
+	
+	@Table("Question_view")
+	public static class QuestionView extends Model {}
+	
+	@Table("Question_vote")
+	public static class QuestionVote extends Model {}
+	
+	@Table("Answer")
+	public static class Answer extends Model {}
+	
+	@Table("Answer_vote")
+	public static class AnswerVote extends Model {}
+	
+	
+	
 	
 
 }

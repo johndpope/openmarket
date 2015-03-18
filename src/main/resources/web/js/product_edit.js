@@ -39,7 +39,7 @@ $(document).ready(function() {
   $.when(setupCurrencySelects(),
       getJson('get_product/' + productId))
     .done(function(e, e1) {
-      var productData = JSON.parse(e1[0])[0];
+      var productData = JSON.parse(e1[0]);
 
 
       console.log(productData);

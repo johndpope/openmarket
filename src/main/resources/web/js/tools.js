@@ -4,13 +4,15 @@ var externalSparkService = 'http://96.28.13.51:4567/';
 
 
 
-
+var sparkServiceObj = {
+  sparkUrl: sparkService
+};
 
 var pageNumbers = {};
 // var cookie_path_name = "/";
 
 
-function getJson(shortUrl, noToast, external){
+function getJson(shortUrl, noToast, external) {
 
   noToast = (typeof noToast === "undefined") ? false : noToast;
   external = (typeof external === "undefined") ? false : external;
@@ -29,7 +31,7 @@ function getJson(shortUrl, noToast, external){
 
 }
 
-function simpleAjax(url, noToast){
+function simpleAjax(url, noToast) {
   return $.ajax({
     type: "GET",
     url: url,
@@ -229,7 +231,7 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
         toastr.error(request.responseText);
       } else {
         toastr.error("Couldn't find endpoint " + url);
-        
+
       }
       btn.button('reset');
     }
@@ -462,11 +464,14 @@ function fillMustacheFromJson(url, templateHtml, divId) {
       // var jsonObj = JSON.parseWithDate(data);
 
       $.extend(data, standardDateFormatObj);
+      $.extend(data, sparkServiceObj);
+      $.extend(data, currencyFormatter);
+      $.extend(data, htmlDecoder);
       Mustache.parse(templateHtml); // optional, speeds up future uses
       var rendered = Mustache.render(templateHtml, data);
       $(divId).html(rendered);
 
-      // console.log(jsonObj);
+      console.log(data);
       // console.log(templateHtml);
       // console.log(rendered);
 
@@ -482,24 +487,27 @@ function fillMustacheFromJson(url, templateHtml, divId) {
 
 function fillMustacheWithJson(data, templateHtml, divId) {
 
-      $.extend(data, standardDateFormatObj);
-      Mustache.parse(templateHtml); // optional, speeds up future uses
-      var rendered = Mustache.render(templateHtml, data);
-      $(divId).html(rendered);
+  $.extend(data, standardDateFormatObj);
+  $.extend(data, sparkServiceObj);
+  $.extend(data, currencyFormatter);
+  $.extend(data, htmlDecoder);
+  Mustache.parse(templateHtml); // optional, speeds up future uses
+  var rendered = Mustache.render(templateHtml, data);
+  $(divId).html(rendered);
 
-      // console.log(rendered);
+  // console.log(rendered);
 
 }
 
 function mustacheFunctions(data) {
   $.extend(data, standardDateFormatObj);
-      Mustache.parse(templateHtml); // optional, speeds up future uses
-      var rendered = Mustache.render(templateHtml, data);
-      $(divId).html(rendered);
+  Mustache.parse(templateHtml); // optional, speeds up future uses
+  var rendered = Mustache.render(templateHtml, data);
+  $(divId).html(rendered);
 
-      // console.log(jsonObj);
-      // console.log(templateHtml);
-      // console.log(rendered);
+  // console.log(jsonObj);
+  // console.log(templateHtml);
+  // console.log(rendered);
 }
 
 
@@ -587,6 +595,23 @@ var standardDateFormatObj = {
     }
   }
 };
+
+var currencyFormatter = {
+  "toFixed": function() {
+    return function(num, render) {
+      return parseFloat(render(num)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+  }
+};
+
+var htmlDecoder = {
+  "htmlDecode": function() {
+    return function(text, render) {
+      return $('<div/>').html(render(text)).text();
+    }
+  }
+};
+
 
 Date.prototype.customFormat = function(formatString) {
   var YYYY, YY, MMMM, MMM, MM, M, DDDD, DDD, DD, D, hhh, hh, h, mm, m, ss, s, ampm, AMPM, dMod, th;
@@ -690,6 +715,6 @@ var delay = (function() {
   };
 })();
 
-function htmlDecode(value){ 
-  return $('<div/>').html(value).text(); 
+function htmlDecode(value) {
+  return $('<div/>').html(value).text();
 }

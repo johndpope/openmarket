@@ -85,6 +85,6 @@ getJson('product_thumbnails').done(function(e) {
 }
 
 function newItemRedirect(productId) {
-  var url = sparkService + 'product_edit/' + productId;
+  var url = sparkService + 'product/edit/' + productId;
   window.location.replace(url);
 }

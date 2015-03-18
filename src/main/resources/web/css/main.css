@@ -139,14 +139,19 @@ body.modal-open {
 .fa-6 {
   font-size: 10em;
 }
+
+.panel-picture-smallest {
+  height: 100px !important;
+}
+
 .panel-picture-smaller {
-  height: 150px;
+  height: 150px !important;
 }
 .panel-picture-small {
   height: 200px !important;
 }
 .panel-picture-large {
-  height: 400px;
+  height: 321px !important;
 }
 .font-spacer {
   /*height: 2px; */
@@ -376,8 +381,11 @@ img {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url('bootstrap-dist/fonts/glyphicons-halflings-regular.eot');
-  src: url('bootstrap-dist/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('bootstrap-dist/fonts/glyphicons-halflings-regular.woff') format('woff'), url('bootstrap-dist/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('bootstrap-dist/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+  src: url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot');
+  src: url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') 
+  format('embedded-opentype'), url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.woff') 
+  format('woff'), url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.ttf') 
+  format('truetype'), url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 }
 .pager-footer {
   height: 41px;
