@@ -16,12 +16,14 @@ import static spark.Spark.get;
 
 
 
+
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+
 
 
 
@@ -52,7 +54,9 @@ import org.slf4j.LoggerFactory;
 
 
 
+
 import com.openmarket.db.Tables.ProductThumbnailView;
+import com.openmarket.db.Tables.Review;
 import com.openmarket.db.Transformations;
 import com.openmarket.db.Tables.Category;
 import com.openmarket.db.Tables.Country;
@@ -623,6 +627,37 @@ public class Platform {
 
 		});
 		
+		post("/create_product_review/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+				
+				Tools.dbInit();
+						
+				String reviewId = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+				
+				Review r = UserActions.createProductReview(productId, 
+						user.getId().toString());
+
+				reviewId = r.getId().toString();
+				
+				Tools.dbClose();
+
+				return reviewId;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
+		
+		
 		post("/save_product_review/:productId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -645,13 +680,39 @@ public class Platform {
 
 				User user = UserActions.getUserFromSessionId(req);
 				
-	
 				message = UserActions.saveProductReview(productId, 
 						user.getId().toString(), 
 						stars, 
 						headline, 
 						textHtml);
 
+
+				Tools.dbClose();
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			}
+
+		});
+		
+		post("/delete_product_review/:reviewId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+				
+				String reviewId = req.params(":reviewId");
+
+				Tools.dbInit();
+				
+				String message = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+				
+				message = UserActions.deleteProductReview(reviewId, user.getId().toString());
 
 				Tools.dbClose();
 

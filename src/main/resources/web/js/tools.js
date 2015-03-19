@@ -180,7 +180,7 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
   var formData = $(formId).serializeArray();
   // console.log(formData);
 
-  var btn = $(".btn", formId);
+  var btn = $("[type=submit]", formId);
 
   // Loading
   btn.button('loading');
@@ -467,6 +467,7 @@ function fillMustacheFromJson(url, templateHtml, divId) {
       $.extend(data, sparkServiceObj);
       $.extend(data, currencyFormatter);
       $.extend(data, htmlDecoder);
+      $.extend(data, numToStars);
       Mustache.parse(templateHtml); // optional, speeds up future uses
       var rendered = Mustache.render(templateHtml, data);
       $(divId).html(rendered);
@@ -491,6 +492,7 @@ function fillMustacheWithJson(data, templateHtml, divId) {
   $.extend(data, sparkServiceObj);
   $.extend(data, currencyFormatter);
   $.extend(data, htmlDecoder);
+  $.extend(data, numToStars);
   Mustache.parse(templateHtml); // optional, speeds up future uses
   var rendered = Mustache.render(templateHtml, data);
   $(divId).html(rendered);
@@ -608,6 +610,28 @@ var htmlDecoder = {
   "htmlDecode": function() {
     return function(text, render) {
       return $('<div/>').html(render(text)).text();
+    }
+  }
+};
+
+var numToStars = {
+  "numToStars": function() {
+    return function(text, render) {
+      var t = render(text);
+      var num = parseFloat(t);
+      var num2 = parseInt(Math.floor(num));
+      var frac = (num2 % 2);
+      var starText = "";
+
+      for (var i = 0; i < num2; i++) {
+        starText += '<i class="fa fa-star"></i>';
+      }
+
+      if (frac > 0) {
+        starText += '<i class="fa fa-star-half-o"></i>';
+      }
+
+      return starText;
     }
   }
 };

@@ -17,9 +17,12 @@ public class JsonTest extends TestCase {
 
 
 
+		String s2="Drop view product_thumbnail_view;";
+		Tools.writeRQL(s2);
 
-String s="CREATE VIEW review_view AS \nselect *,\nSUM(case when vote = 1 then 1 else -1 end) as votes_sum,\ncount(review_vote.id) as votes_count \nfrom review \nleft join review_vote \non review.id = review_vote.review_id \ngroup by review.id \n;";
+		String s="CREATE VIEW product_thumbnail_view AS \nSELECT \nproduct.id as product_id,\ntitle,\nseller_id,\nshop_name, \ncount(review.id) as number_of_reviews, \navg(review.stars) as review_avg, \nauction,\nCASE WHEN auction=\'1\'\n\tTHEN (select max(bid.amount) from bid where bid.auction_id = auction.id) \n\tELSE max(price) \nEND as price, \ncurrency.iso as price_iso \nFROM product \ninner join currency on product_price.native_currency_id = currency.id \nleft join seller on product.seller_id = seller.id \nleft join auction on product.id = auction.product_id \nleft join review on review.product_id = product.id \nleft join product_price on product_price.product_id = product.id \ngroup by product.id \n;";
 		Tools.writeRQL(s);
+
 
 		Tools.dbInit();
 		ProductView pv = ProductView.findFirst(

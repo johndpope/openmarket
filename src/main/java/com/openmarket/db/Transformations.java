@@ -171,7 +171,7 @@ public class Transformations {
 				("product_id = ?", rv.getString("product_id"));
 		ObjectNode pvj = productThumbnailViewJson(ptv);
 
-		on.putAll(pvj);
+		on.put("thumbnail", pvj);
 		
 		return on;
 	}

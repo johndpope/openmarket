@@ -182,7 +182,16 @@ public class Actions {
 
 
 		}
-		
+
+		public static Review createProductReview(String productId, String userId) {
+
+			Review r = Review.create("product_id", productId, "user_id", userId);
+			Tools.writeRQL(r.toInsert());
+			r = Review.findFirst(
+					"product_id = ? and user_id = ?", productId, userId);
+			return r;
+		}
+
 		public static String saveProductReview(String productId, String userId,
 				String stars, String headline, String textHtml) {
 
@@ -211,6 +220,24 @@ public class Actions {
 
 			return message;
 
+
+		}
+		public static String deleteProductReview(String reviewId, String userId) {
+
+			String message;
+			Review r = Review.findFirst("id = ?", reviewId);
+			
+			if (r != null) {
+			
+				String cmd = Tools.toDelete("review", r.getId().toString());
+				Tools.writeRQL(cmd);
+				
+				message = "review deleted";
+			} else {
+				message = "BLARP";
+			}
+			
+			return message;
 
 		}
 

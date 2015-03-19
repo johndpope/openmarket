@@ -200,13 +200,7 @@
                         <ul class="nav nav-tabs" role="tablist">
                           <li role="presentation" class="active"><a href="#detailsTab" aria-controls="home" role="tab" data-toggle="tab">Details</a>
                           </li>
-                          <li role="presentation"><a href="#reviewsTab" aria-controls="profile" role="tab" data-toggle="tab">Reviews <span class="text-info"> ({{number_of_reviews}} 
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-half-o"></i>
-                      )</span></a>
+                          <li role="presentation"><a href="#reviewsTab" aria-controls="profile" role="tab" data-toggle="tab">Reviews <span class="text-info"> ({{number_of_reviews}})</span></a>
                           </li>
                           <li role="presentation"><a href="#questionsTab" aria-controls="profile" role="tab" data-toggle="tab">Questions</a>
                           </li>
@@ -226,22 +220,15 @@
                           <!-- The Reviews tab -->
                           <div role="tabpanel" class="tab-pane" id="reviewsTab">
                             <h2> Customer Reviews <small class="text-info"> {{number_of_reviews}}
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-half-o"></i>
+                      {{#numToStars}} {{review_avg}} {{/numToStars}}
                         </small></h2>
 
                             <!-- The reviews -->
                             {{#reviews}}
                             <span class="text-muted">{{votes_sum}} of {{votes_count}} people found the following review helpful</span>
                             <h4>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
+
+                      {{#numToStars}} {{stars}} {{/numToStars}}
                       {{headline}}
                       </h4>
                             <span class="text-muted">By blank on {{created_at}}</span>
@@ -372,7 +359,8 @@
                           <h4 class="text-success text-left"> {{#toFixed}}{{price}}{{/toFixed}} <small class="text-success">{{price_iso}}</small></h4>
                         </div>
                         <div class="col-xs-4">
-                          <h4 class="text-info text-center"> {{number_of_reviews}}<i class="fa fa-star"></i>
+                          <h4 class="text-info text-center"> {{number_of_reviews}} {{#numToStars}} {{review_avg}} 
+                          {{/numToStars}}
                       </h4>
                         </div>
 
@@ -481,7 +469,7 @@
                             <div class="row">
 
                               <div class="col-md-6">
-                                <div class="text-info text-center"> {{number_of_reviews}} <small><i class="fa fa-star"></i></small>
+                                <div class="text-info text-center"> {{number_of_reviews}} <small> {{#numToStars}} {{review_avg}} {{/numToStars}}</small>
                                 </div>
                               </div>
                               <div class="col-md-6">
