@@ -11,23 +11,39 @@ $(document).ready(function() {
     $('.pic_num-1').addClass('active');
 
     writeReviewBtn();
+    askQuestionBtn();
 
+    voteBtn();
 
+    // Fill the potential users info, stuff like vote buttons, etc
+    if (loggedIn()) {
+      console.log('your logged in');
+      var reviews = data['reviews'];
+      fillReviewVotes(reviews);
+    }
 
   });
 
 });
 
-function writeReviewBtn() {
-
-  $('#writeReviewBtn').click(function(e1) {
-    simplePost('create_product_review/' + productId, null, null, reviewRedirect, null, null);
 
 
-  });
-
+function reviewRedirect() {
+  var url = sparkService + 'your_reviews';
+  window.location.replace(url);
 }
-function reviewRedirect(){
-    var url = sparkService + 'your_reviews';
-    window.location.replace(url);
+
+function askQuestionBtn() {
+  var formName = '#question_form';
+  $(formName).bootstrapValidator({
+      message: 'This value is not valid',
+      excluded: [':disabled'],
+      submitButtons: 'button[type="submit"]'
+    })
+    .on('success.form.bv', function(event) {
+      event.preventDefault();
+
+      standardFormPost('ask_question/' + productId, formName, null, null, null, null, null);
+
+    });
 }

@@ -110,12 +110,23 @@ group by review.id
 ;
 
 CREATE VIEW question_view AS 
-select *, 
-SUM(case when vote = 1 then 1 else -1 end) as votes_sum 
+select question.id, question.user_id, product_id, text, question.created_at, 
+SUM(case when vote = 1 then 1 when vote = -1 then -1 else 0 end) as votes_sum, 
+count(question_vote.id) as votes_count 
 from question 
 left join question_vote 
 on question.id = question_vote.question_id 
 group by question.id 
+;
+
+CREATE VIEW answer_view AS 
+select answer.id, answer.user_id, question_id, text, answer.created_at, 
+SUM(case when vote = 1 then 1 when vote = -1 then -1 else 0 end) as votes_sum, 
+count(answer_vote.id) as votes_count 
+from answer 
+left join answer_vote 
+on answer.id = answer_vote.answer_id 
+group by answer.id 
 ;
 
 CREATE VIEW shipping_cost_view AS 

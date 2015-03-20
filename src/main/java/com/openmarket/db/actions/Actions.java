@@ -17,6 +17,7 @@ import spark.Request;
 import spark.Response;
 
 import com.google.common.collect.ImmutableMap;
+import com.openmarket.db.Tables.AnswerVote;
 import com.openmarket.db.Tables.Auction;
 import com.openmarket.db.Tables.CategoryTreeView;
 import com.openmarket.db.Tables.Login;
@@ -25,7 +26,10 @@ import com.openmarket.db.Tables.ProductBullet;
 import com.openmarket.db.Tables.ProductPage;
 import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductPrice;
+import com.openmarket.db.Tables.Question;
+import com.openmarket.db.Tables.QuestionVote;
 import com.openmarket.db.Tables.Review;
+import com.openmarket.db.Tables.ReviewVote;
 import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.Shipping;
 import com.openmarket.db.Tables.ShippingCost;
@@ -226,19 +230,108 @@ public class Actions {
 
 			String message;
 			Review r = Review.findFirst("id = ?", reviewId);
-			
+
 			if (r != null) {
-			
+
 				String cmd = Tools.toDelete("review", r.getId().toString());
 				Tools.writeRQL(cmd);
-				
+
 				message = "review deleted";
 			} else {
 				message = "BLARP";
 			}
-			
+
 			return message;
 
+		}
+		public static String voteOnReview(String reviewId, String userId,
+				String vote) {
+
+			Integer voteInt = (vote.equals("up")) ? 1 : 0;
+			// See if the review first exists
+			ReviewVote r = ReviewVote.findFirst(
+					"review_id = ? and user_id = ?", reviewId, userId);
+
+			String cmd;
+			if (r != null) {
+				cmd = Tools.toUpdate("review_vote", r.getId().toString(),
+						"vote", voteInt);
+			} else {
+				cmd = ReviewVote.create("review_id", reviewId, 
+						"user_id", userId,
+						"vote", voteInt).toInsert();
+			}
+
+
+			Tools.writeRQL(cmd);
+
+			String message = "Review vote saved";
+
+			return message;
+		}
+		
+		public static String voteOnQuestion(String questionId, String userId,
+				String vote) {
+
+			Integer voteInt = (vote.equals("up")) ? 1 : 0;
+			// See if the review first exists
+			QuestionVote r = QuestionVote.findFirst(
+					"question_id = ? and user_id = ?", questionId, userId);
+
+			String cmd;
+			if (r != null) {
+				cmd = Tools.toUpdate("question_vote", r.getId().toString(),
+						"vote", voteInt);
+			} else {
+				cmd = QuestionVote.create("question_id", questionId, 
+						"user_id", userId,
+						"vote", voteInt).toInsert();
+			}
+
+
+			Tools.writeRQL(cmd);
+
+			String message = "Question vote saved";
+
+			return message;
+		}
+		
+		public static String voteOnAnswer(String answerId, String userId,
+				String vote) {
+
+			Integer voteInt = (vote.equals("up")) ? 1 : 0;
+			// See if the review first exists
+			AnswerVote r = AnswerVote.findFirst(
+					"question_id = ? and user_id = ?", answerId, userId);
+
+			String cmd;
+			if (r != null) {
+				cmd = Tools.toUpdate("answer_vote", r.getId().toString(),
+						"vote", voteInt);
+			} else {
+				cmd = AnswerVote.create("answer_id", answerId, 
+						"user_id", userId,
+						"vote", voteInt).toInsert();
+			}
+
+
+			Tools.writeRQL(cmd);
+
+			String message = "Answer vote saved";
+
+			return message;
+		}
+		
+		public static String askQuestion(String productId, String userId,
+				String text) {
+			
+			Question q = Question.create("product_id", productId, "user_id", userId, "text", text);
+			Tools.writeRQL(q.toInsert());
+		
+			String message = "Question saved";
+			
+			return message;
+			
 		}
 
 	}

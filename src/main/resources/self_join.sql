@@ -92,3 +92,6 @@ t5.id = 4 OR
 t6.id = 4 OR
 t7.id = 4);
 
+
+-- a recursive join to get all the children.
+WITH RECURSIVE t(n) AS (VALUES(3) UNION select id from category, t where parent=t.n) SELECT * from t;

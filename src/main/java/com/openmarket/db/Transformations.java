@@ -7,6 +7,7 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
 import com.openmarket.db.Tables.Answer;
+import com.openmarket.db.Tables.AnswerView;
 import com.openmarket.db.Tables.ProductBullet;
 import com.openmarket.db.Tables.ProductPicture;
 import com.openmarket.db.Tables.ProductThumbnailView;
@@ -211,14 +212,14 @@ public class Transformations {
 
 		JsonNode c = Tools.jsonToNode(qv.toJson(false));
 
-		List<Answer> rcs = Answer.find("question_id = ?", qv.getString("id"));
+		List<AnswerView> rcs = AnswerView.find("question_id = ?", qv.getString("id"));
 
 		ObjectNode on = Tools.MAPPER.valueToTree(c);
 		a.putAll(on);
 
 		ArrayNode an = a.putArray("answers");
 
-		for (Answer rc : rcs) {
+		for (AnswerView rc : rcs) {
 			an.add(Tools.jsonToNode(rc.toJson(false)));
 		}
 

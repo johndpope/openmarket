@@ -1,61 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-
-
   <title>OpenMarket</title>
-
   <!-- favicon -->
   <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
-
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
-
   <!-- Link to font awesome -->
   <!-- <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"> -->
   <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-
   <!-- Bootstrap social css -->
   <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
-
   <!--   Bootstrap validator -->
   <link rel="stylesheet" href="../bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
-
   <!--   toastr css -->
   <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
-
   <!--   typeahead css -->
   <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
-
   <!-- Pickadate -->
   <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
   <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
-
   <!-- Summernote -->
   <link href="../bower_components/summernote/dist/summernote.css" rel="stylesheet" />
-
   <!-- Bootstrap datepicker -->
   <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
-
   <!-- This main css -->
   <link href="../css/main.css" rel="stylesheet">
-
-
 </head>
 
 <body>
   <!-- Navbars -->
-
   <!-- the start of the doc -->
   <div id="wrapper" class="wrapper hide">
-
     <!-- header -->
     <nav class="navbar navbar-default navbar-top" role="navigation">
       <div class="container-fluid">
@@ -69,11 +51,9 @@
           </button>
           <a class="navbar-brand" href="/">OpenMarket</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-
             <form id="creator_search" class="navbar-form navbar-left navbar-input-group" role="search">
               <div class="input-group">
                 <div class="input-group-btn">
@@ -89,7 +69,6 @@
               </span>
               </div>
             </form>
-
             <li class="dropdown">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
@@ -100,25 +79,17 @@
                 </ul>
               </div>
             </li>
-
-
-
           </ul>
-
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#login">Wishlist <span class="caret"></span></a>
             </li>
-
             <li><a href="/about">Cart <span class="caret"></span></a>
             </li>
             <li class="dropdown logged-out">
               <div class="navbar-form">
-
                 <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
-
               </div>
             </li>
-
             <li class="dropdown logged-in">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
@@ -137,26 +108,19 @@
                 </ul>
               </div>
             </li>
-
-
           </ul>
-
-
         </div>
         <!-- /.navbar-collapse -->
       </div>
       <!-- /.container-fluid -->
     </nav>
-
     <!-- The full page with teh sidebar -->
     <div class="container-fluid">
-
       <!-- The Page -->
       <div id="product_div">
         <script id="product_template" type="x-tmpl-mustache">
           <div class="row-fluid">
             <div class="col-md-7">
-
               <div class="row">
                 <div class="col-md-12">
                   <div class="panel panel-default">
@@ -172,57 +136,45 @@
                             <img class="panel-picture-large scale" src="http://i.ytimg.com/vi/G5pxWdJnnYg/maxresdefault.jpg">
                           </div>
                           {{/pictures}}
-
-
-
                         </div>
-
                         <a class="left carousel-control" href=".item-{{id}}" role="button" data-slide="prev">
                           <span class="icon-prev"></span>
                         </a>
                         <a class="right carousel-control" href=".item-{{id}}" role="button" data-slide="next">
                           <span class="icon-next"></span>
                         </a>
-
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-12">
                   <div class="panel panel-danger">
                     <div class="panel-body">
                       <div role="tabpanel">
-
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
                           <li role="presentation" class="active"><a href="#detailsTab" aria-controls="home" role="tab" data-toggle="tab">Details</a>
                           </li>
                           <li role="presentation"><a href="#reviewsTab" aria-controls="profile" role="tab" data-toggle="tab">Reviews <span class="text-info"> ({{number_of_reviews}})</span></a>
                           </li>
-                          <li role="presentation"><a href="#questionsTab" aria-controls="profile" role="tab" data-toggle="tab">Questions</a>
+                          <li role="presentation"><a href="#questionsTab" aria-controls="profile" role="tab" data-toggle="tab">Questions <span class="text-info"> ({{questions.length}})</span></a>
                           </li>
                           <li role="presentation"><a href="#shippingTab" aria-controls="profile" role="tab" data-toggle="tab">Shipping</a>
                           </li>
                         </ul>
-
                         <!-- Tab panes -->
                         <div class="tab-content">
-
                           <!-- Details tab -->
                           <div role="tabpanel" class="tab-pane active" id="detailsTab">
-
                             {{#htmlDecode}} {{{product_html}}} {{/htmlDecode}}
                           </div>
-
                           <!-- The Reviews tab -->
                           <div role="tabpanel" class="tab-pane" id="reviewsTab">
                             <h2> Customer Reviews <small class="text-info"> {{number_of_reviews}}
                       {{#numToStars}} {{review_avg}} {{/numToStars}}
                         </small></h2>
-
                             <!-- The reviews -->
                             {{#reviews}}
                             <span class="text-muted">{{votes_sum}} of {{votes_count}} people found the following review helpful</span>
@@ -232,93 +184,87 @@
                       {{headline}}
                       </h4>
                             <span class="text-muted">By blank on {{created_at}}</span>
-                            <br>
-                            {{{text_html}}}
-
-                            <a href="">41 Comments <span class="caret"></a>
+                            <br> {{{text_html}}}
+                            <a href="" id="review_comments_btn_{{id}}">{{comments.length}} Comments <span class="caret"></a>
                             <span class="text-muted">&nbsp;&nbsp;&nbsp;</span>
-                            <span class="btn btn-sm btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-thumbs-o-up'> Helpful</i>
+                            <span id="review_vote_helpful_{{id}}" class="btn btn-sm btn-default vote-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>" type="submit"><i class='fa fa-thumbs-o-up'> Helpful</i>
                       </span>
+                            <span id="review_vote_not_helpful_{{id}}" class="btn btn-sm btn-default vote-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>" type="submit"><i class='fa fa-thumbs-o-down'> Not Helpful</i>
+                      </span>
+                            <div id="review_comments_div_{{id}}" {{^comments.0}}class="hide"{{/comments.0}}>
 
-                            <span class="btn btn-sm btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-thumbs-o-down'> Not Helpful</i>
-                      </span>
-                      {{/reviews}}
+                              {{#comments}}
+                              <p>comment here {{comment}}</p>
+                              {{/comments}}
+                            </div>
+                            {{/reviews}}
                             <br>
                             <br>
-                            <a href=""> See all {{number_of_reviews}} reviews</a>
+                            <a href="/product/review/{{id}}"> See all {{number_of_reviews}} reviews</a>
                             <br>
                             <br>
                             <button id="writeReviewBtn" class="btn btn-block btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Write a review
                             </button>
-
-
                           </div>
-
-                          <!-- Questions tab -->
-                          <div role="tabpanel" class="tab-pane" id="questionsTab">
-
-                            <h2> Questions and Answers</h2>
-
-                            <div class="row">
-                              <div class="col-md-12">
-
-                                <form id="question_form" class="form-inline">
-                                  <div class="form-group col-xs-10">
-                                    <input name="question" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="Ask a question for the owners" />
-                                  </div>
-                                  <div class="">
-                                    <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Ask</button>
-                                  </div>
-                                </form>
+                         <!-- Questions tab -->
+                      <div role="tabpanel" class="tab-pane" id="questionsTab">
+                        <h2> Questions and Answers</h2>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <form id="question_form" class="form-inline">
+                              <div class="form-group col-xs-10">
+                                <input name="question" type="inputEmail3" class="form-control" minlength="6" maxlength="90" placeholder="Ask a question for the owners" />
                               </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                              <div class="col-md-1 vertical-line">
-                                <a href=""><i class='fa fa-arrow-up fa-fw'></i></a>
-                                <br> 187
+                              <div class="">
+                                <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Ask</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                         {{#questions}}
+                          <div class="col-md-1 vertical-line">
+                            <a id="question_vote_up_{{id}}" href=""><i class='fa fa-arrow-up fa-fw'></i></a>
+                            <div class="text-center">{{votes_sum}} </div>
+                            
+                            <a id="question_vote_down_{{id}}" href=""><i class='fa fa-arrow-down fa-fw'></i></a>
+                          </div>
+                          <div class="col-md-11">
+                            <h4><a href="" >{{text}}</a></h4>
+                            {{#answers}}
+                            <div class="col-md-1">
+                              <p class=" text-left"> <a id="answer_vote_up_{{id}}" href=""><i class='fa fa-arrow-up fa-fw'></i></a>
+                                <br>  &nbsp; {{votes_sum}}
                                 <br>
-                                <a href=""><i class='fa fa-arrow-down fa-fw'></i></a>
-                              </div>
-                              <div class="col-md-11">
-                                <h4><a href="">Can the Instant Pot be used for canning? </a></h4>
-                                <div class="col-md-1">
-                                  <p class="text-muted text-left"><i class='fa fa-thumbs-o-up fa-2x'></i>
-                                  </p>
-                                </div>
-                                <div class="col-md-11">
-
-                                  <p>There are two types of canning: boiling-water canning at 100°C/212°F (for acid fruits, tomatoes, pickles and jellied products) and pressure canning at 115~121°C/240~250°F (for low acid vegetables, meat and poultry). Please refer to "USDA Complete Guide to Home Canning" for more details. Instant Pot can be used for boi…
-                                    <br>
-                                    <span class="text-muted">Bob answered on January 06, 2014 &nbsp;| &nbsp;</span>
-                                    <span class=""><a href="">See all 10 answers</a></span>
-                                  </p>
-                                </div>
-
-
-                              </div>
-
+                                <a id="answer_vote_down_{{id}}" href=""><i class='fa fa-arrow-down fa-fw'></i></a>
+                              </p>
                             </div>
-
-
-
+                            <div class="col-md-11">
+                              <p>There are two types of canning: boiling-water canning at 100°C/212°F (for acid fruits, tomatoes, pickles and jellied products) and pressure canning at 115~121°C/240~250°F (for low acid vegetables, meat and poultry). Please refer to "USDA Complete Guide to Home Canning" for more details. Instant Pot can be used for boi…
+                                <br>
+                                <span class="text-muted">Bob answered on January 06, 2014 &nbsp;| &nbsp;</span>
+                                <span class=""><a href="">See all 10 answers</a></span>
+                              </p>
+                            </div>
+                            {{/answers}}
+                          {{/questions}}
+                          <span class=""><a href="/product/question/{{id}}">See all {{questions.length}} questions</a></span>
                           </div>
-
+                        </div>
+                      </div>
                           <!-- Shipping tab -->
                           <div role="tabpanel" class="tab-pane" id="shippingTab">
-
                             <h2> Shipping</h2>
-
                             <div class="row">
                               <div class="col-md-12">
                                 <p>
                                   Ready to ship in <b>{{time_span_string}}</b>.
                                 </p>
-
                                 <p>
                                   Ships from <b>{{from_country}}</b>.
                                 </p>
-
                                 <ul>
                                   {{#shipping_costs}}
                                   <li>
@@ -328,32 +274,22 @@
                                 </ul>
                               </div>
                             </div>
-
                           </div>
-
-
-
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
-
             <div class="col-md-5">
-
               <div class="row">
                 <div class="col-md-12">
-
                   <div class="panel panel-success">
                     <div class="panel-body">
-
                       <h3 class="text-left">
                   {{title}}
                   </h3>
-
                       <div class="row">
                         <div class="col-xs-4">
                           <h4 class="text-success text-left"> {{#toFixed}}{{price}}{{/toFixed}} <small class="text-success">{{price_iso}}</small></h4>
@@ -363,16 +299,11 @@
                           {{/numToStars}}
                       </h4>
                         </div>
-
                         <div class="col-xs-4">
-
                           <div class="btn btn-sm btn-default pull-right pushdown" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-heart'> Wishlist</i>
                           </div>
                         </div>
-
-
                       </div>
-
                       <br>
                       <div class="row">
                         <div class="col-md-6">
@@ -382,29 +313,21 @@
                           <p class="less-margins text-muted text-right"> In Stock</p>
                         </div>
                       </div>
-
                       <div class="row">
                         <div class="col-md-12">
-
                           <ul class="text-muted">
                             {{#bullets}}
                             <li>
                               <h5>{{text}}</h5>
                             </li>
                             {{/bullets}}
-
                           </ul>
                         </div>
                       </div>
                       <br>
-
                       <button id="addToCart" type="submit" class="btn btn-default btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Add to Cart</button>
-
                     </div>
-
-
                   </div>
-
                   <div class="panel panel-info">
                     <div class="panel-body">
                       <span>
@@ -417,7 +340,6 @@
                 </span>
                     </div>
                   </div>
-
                   <div class="panel panel-warning">
                     <div class="panel-body">
                       <h2 class="text-center"> <a href="">{{shop_name}}</a>
@@ -441,22 +363,16 @@
                                   <img class="panel-picture-smallest scale" src="http://i.ytimg.com/vi/G5pxWdJnnYg/maxresdefault.jpg">
                                 </div>
                                 {{/pictures}}
-
-
-
                               </div>
-
                               <a class="left carousel-control" href=".item-{{product_id}}" role="button" data-slide="prev">
                                 <span class="icon-prev"></span>
                               </a>
                               <a class="right carousel-control" href=".item-{{product_id}}" role="button" data-slide="next">
                                 <span class="icon-next"></span>
                               </a>
-
                             </div>
                           </div>
                           <div class="panel-footer">
-
                             <div class="row">
                               <div class="col-md-12">
                                 <div class="text-center text-overflow">
@@ -465,9 +381,7 @@
                               </div>
                             </div>
                             <div class="spacer"></div>
-
                             <div class="row">
-
                               <div class="col-md-6">
                                 <div class="text-info text-center"> {{number_of_reviews}} <small> {{#numToStars}} {{review_avg}} {{/numToStars}}</small>
                                 </div>
@@ -482,35 +396,18 @@
                         </div>
                       </div>
                       {{/products}}
-
-
                     </div>
                   </div>
-
-
-
-
-
-
                 </div>
-
                 <!-- end of wrapper -->
               </div>
-
-
-
             </div>
           </div>
-
         </script>
       </div>
-
       <!-- Modals -->
-
-
       <div id="userDisclaimerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
@@ -528,25 +425,18 @@
                   <li> Your bitcoin wallet may charge you a small fee for making a deposit. </li>
                 </ul>
               </div>
-
-
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal">Okay, I accept</button>
             </div>
-
           </div>
         </div>
       </div>
-
-
       <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-body">
-
               <div role="tabpanel">
-
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                   <li role="presentation" class="active"><a href="#loginTab" aria-controls="home" role="tab" data-toggle="tab">Log in</a>
@@ -554,14 +444,11 @@
                   <li role="presentation"><a href="#signupTab" aria-controls="profile" role="tab" data-toggle="tab">Sign Up</a>
                   </li>
                 </ul>
-
                 <!-- Tab panes -->
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane active" id="loginTab">
-
                     <h1 class="text-center"> Log in </h1>
                     <br>
-
                     <form id="login_form_modal" class="form-horizontal" role="form">
                       <div id="userLoginDiv" class="form-group">
                         <label for="inputUsername3" class="col-sm-12">Email</label>
@@ -575,59 +462,34 @@
                           <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username">
                         </div>
                       </div>
-
-
                       <div class="form-group">
                         <div class="col-sm-12">
                           <button id="signinBtn" type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign in</button>
                         </div>
                       </div>
                     </form>
-
                   </div>
-
                   <!-- The sign up tab -->
                   <div role="tabpanel" class="tab-pane" id="signupTab">
-
                     <h1 class="text-center"> Sign up </h1>
                     <br>
-
                     <form id="signup_form_modal" class="form-horizontal">
                       <div class="form-group">
                         <label for="inputUsername3" class="col-sm-12">Email</label>
-
                         <div class="col-sm-12">
                           <input name="email" type="inputEmail3" class="form-control" placeholder="Email Address" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
                         </div>
                       </div>
-
                       <button type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign Up</button>
-
                     </form>
                   </div>
-
                 </div>
               </div>
             </div>
-
-
-
-
-
-
-
-
           </div>
         </div>
       </div>
       <!-- end of login modal -->
-
-
-
-
-
-
-
       <!-- Bootstrap core JavaScript
 
       ================================================== -->
@@ -648,14 +510,10 @@
       <script src="../bower_components/summernote/dist/summernote.min.js"></script>
       <script src="../bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
       <script src="../bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
-
       <!-- my scripts -->
       <script src="../js/tools.js"></script>
       <script src="../js/common.js"></script>
       <script src="../js/product.js"></script>
-
-
-
 </body>
 
 </html>

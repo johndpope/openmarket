@@ -742,3 +742,100 @@ var delay = (function() {
 function htmlDecode(value) {
   return $('<div/>').html(value).text();
 }
+
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function(str) {
+    return this.slice(0, str.length) == str;
+  };
+}
+
+function loggedIn() {
+  var sessionId = getCookie("authenticated_session_id");
+
+  var ret = (sessionId != null) ? true : false;
+
+  return ret;
+
+}
+
+
+function writeReviewBtn() {
+
+  $('#writeReviewBtn').click(function(e1) {
+    simplePost('create_product_review/' + productId, null, null, reviewRedirect, null, null);
+
+
+  });
+
+}
+function voteBtn() {
+  $('.vote-btn').click(function(e) {
+    var id = '#' + this.id;
+    console.log("id = " + id);
+
+    // Voting on reviews
+    if (id.startsWith("#review_vote")) {
+      //review_vote_helpful_number
+      //review_vote_not_helpful_number
+      var reviewId = id.split('_').pop();
+      console.log('review id = ' + reviewId);
+
+
+      if (id.startsWith('#review_vote_helpful_')) {
+        // Get the opposite one to remove a potential success class from it:
+
+        var voteUrl = 'review_vote/' + reviewId + '/up';
+        simplePost(voteUrl, null, null, (function() {
+
+          var downVoteId = '#review_vote_not_helpful_' + reviewId;
+          $(id).addClass('btn-success');
+          $(downVoteId).removeClass('btn-danger');
+        }), null, null);
+
+
+      } else {
+        // Get the opposite one to remove a potential success class from it:
+        var voteUrl = 'review_vote/' + reviewId + '/down';
+
+        simplePost(voteUrl, null, null, (function() {
+          var upVoteId = '#review_vote_helpful_' + reviewId;
+          $(id).addClass('btn-danger');
+          $(upVoteId).removeClass('btn-success');
+        }), null, null);
+
+      }
+
+
+
+    }
+
+
+  });
+}
+
+function fillReviewVotes(reviews) {
+
+  reviews.forEach(function(e) {
+    var reviewId = e['id'];
+
+    // get the users vote on that review
+    var url = 'get_review_vote/' + reviewId;
+
+    getJson(url).done(function(e1) {
+      var reviewVote = JSON.parse(e1);
+      var voteInt = reviewVote['vote'];
+      console.log(reviewVote);
+
+      console.log(voteInt);
+      if (voteInt == 1) {
+        $('#review_vote_helpful_' + reviewId).addClass('btn-success');
+      } else {
+        $('#review_vote_not_helpful_' + reviewId).addClass('btn-danger');
+      }
+
+    });
+
+
+  });
+
+}

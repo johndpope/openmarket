@@ -1,78 +1,33 @@
 package com.openmarket.webservice;
 
-import static spark.Spark.post;
 import static spark.Spark.get;
+import static spark.Spark.post;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import java.io.File;
-import java.io.FileReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import com.openmarket.db.Tables.ProductThumbnailView;
-import com.openmarket.db.Tables.Review;
-import com.openmarket.db.Transformations;
+import com.openmarket.db.Tables.AnswerVote;
 import com.openmarket.db.Tables.Category;
 import com.openmarket.db.Tables.Country;
 import com.openmarket.db.Tables.Currency;
 import com.openmarket.db.Tables.Product;
 import com.openmarket.db.Tables.ProductBullet;
 import com.openmarket.db.Tables.ProductPicture;
-import com.openmarket.db.Tables.ProductPrice;
+import com.openmarket.db.Tables.ProductThumbnailView;
 import com.openmarket.db.Tables.ProductView;
+import com.openmarket.db.Tables.QuestionVote;
+import com.openmarket.db.Tables.Review;
 import com.openmarket.db.Tables.ReviewView;
+import com.openmarket.db.Tables.ReviewVote;
 import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.Shipping;
 import com.openmarket.db.Tables.ShippingCost;
-import com.openmarket.db.Tables.TimeSpan;
 import com.openmarket.db.Tables.TimeSpanView;
 import com.openmarket.db.Tables.User;
+import com.openmarket.db.Transformations;
 import com.openmarket.db.actions.Actions.CategoryActions;
 import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
@@ -109,7 +64,6 @@ public class Platform {
 
 				String message = UserActions.sendSignUpEmail(user);
 
-				Tools.dbClose();
 
 				return message;
 
@@ -117,6 +71,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -146,7 +102,7 @@ public class Platform {
 				}
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -154,6 +110,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -171,7 +129,7 @@ public class Platform {
 
 				String message = UserActions.userLogin(email, password, res);
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -179,6 +137,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -193,7 +153,7 @@ public class Platform {
 				// remove the key, and save the map
 				Tools.dbInit();
 				String message = UserActions.userLogout(auth);
-				Tools.dbClose();
+
 
 
 				return message;
@@ -202,6 +162,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -220,7 +182,7 @@ public class Platform {
 
 				String message = SellerActions.saveShopName(seller, shopName);
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -228,6 +190,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -244,7 +208,7 @@ public class Platform {
 				Product p = SellerActions.createNewProduct(seller);
 
 				String message = p.getId().toString();
-				Tools.dbClose();
+
 
 				return message;
 
@@ -252,6 +216,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -276,7 +242,7 @@ public class Platform {
 				message = SellerActions.setProductInfo(productId, title, quantity, processingTime);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -284,6 +250,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -308,7 +276,7 @@ public class Platform {
 				message = SellerActions.savePicture(productId, pictureNum, url);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -316,6 +284,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -340,7 +310,7 @@ public class Platform {
 				message = SellerActions.saveBullet(productId, bulletNum, bullet);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -348,6 +318,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -372,7 +344,7 @@ public class Platform {
 				message = SellerActions.saveShipping(productId, fromCountryId);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -380,6 +352,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -409,7 +383,7 @@ public class Platform {
 						price, nativeCurrId);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -417,6 +391,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -437,7 +413,6 @@ public class Platform {
 
 				message = SellerActions.deleteShippingCost(productId, shippingNum);
 
-				Tools.dbClose();
 
 				return message;
 
@@ -445,6 +420,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -465,7 +442,7 @@ public class Platform {
 
 				message = SellerActions.deleteBullet(productId, bulletNum);
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -473,6 +450,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -493,7 +472,7 @@ public class Platform {
 
 				message = SellerActions.deletePicture(productId, pictureNum);
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -501,6 +480,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -522,7 +503,7 @@ public class Platform {
 				message = SellerActions.saveProductDetails(productId, summerNoteHtml);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -530,6 +511,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -586,7 +569,6 @@ public class Platform {
 
 
 
-				Tools.dbClose();
 
 				return message;
 
@@ -594,6 +576,8 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
@@ -615,7 +599,7 @@ public class Platform {
 				message = SellerActions.saveProductCategory(productId, productCategory);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -623,29 +607,31 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
-		
+
 		post("/create_product_review/:productId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.logRequestInfo(req);
 
 				String productId = req.params(":productId");
-				
+
 				Tools.dbInit();
-						
+
 				String reviewId = null;
 
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				Review r = UserActions.createProductReview(productId, 
 						user.getId().toString());
 
 				reviewId = r.getId().toString();
-				
-				Tools.dbClose();
+
+
 
 				return reviewId;
 
@@ -653,11 +639,13 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
-		
-		
+
+
 		post("/save_product_review/:productId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -667,19 +655,19 @@ public class Platform {
 				log.info(vars.toString());
 
 				String productId = req.params(":productId");
-				
+
 				String stars = vars.get("stars");
 				String headline = vars.get("headline");
 				String textHtml = vars.get("text_html");
-				
-				
+
+
 
 				Tools.dbInit();
 				//				
 				String message = null;
 
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				message = UserActions.saveProductReview(productId, 
 						user.getId().toString(), 
 						stars, 
@@ -687,7 +675,7 @@ public class Platform {
 						textHtml);
 
 
-				Tools.dbClose();
+
 
 				return message;
 
@@ -695,26 +683,27 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
-		
+
 		post("/delete_product_review/:reviewId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.logRequestInfo(req);
-				
+
 				String reviewId = req.params(":reviewId");
 
 				Tools.dbInit();
-				
+
 				String message = null;
 
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				message = UserActions.deleteProductReview(reviewId, user.getId().toString());
 
-				Tools.dbClose();
 
 				return message;
 
@@ -722,9 +711,259 @@ public class Platform {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
+
+		post("/review_vote/:reviewId/:vote", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String reviewId = req.params(":reviewId");
+				String vote = req.params(":vote");
+
+				Tools.dbInit();
+
+				String message = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				message = UserActions.voteOnReview(reviewId, user.getId().toString(), vote);
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+		post("/question_vote/:questionId/:vote", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String questionId = req.params(":questionId");
+				String vote = req.params(":vote");
+
+				Tools.dbInit();
+
+				String message = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				message = UserActions.voteOnQuestion(questionId, user.getId().toString(), vote);
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+		post("/answer_vote/:answerId/:vote", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String answerId = req.params(":answerId");
+				String vote = req.params(":vote");
+
+				Tools.dbInit();
+
+				String message = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				message = UserActions.voteOnAnswer(answerId, user.getId().toString(), vote);
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+		post("/ask_question/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+
+				log.info("vars = " + vars.toString());
+				String productId = req.params(":productId");
+
+				String text = vars.get("question");
+
+
+				Tools.dbInit();
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, productId);
+
+				message = UserActions.askQuestion(productId, user.getId().toString(), text);
+
+
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+		get("/get_review_vote/:reviewId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+				String reviewId = req.params(":reviewId");
+
+				Tools.dbInit();
+
+				String json = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				ReviewVote rv = ReviewVote.findFirst("user_id = ? and id = ?",
+						user.getId().toString(),
+						reviewId);
+
+				json = rv.toJson(false);
+
+
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+		get("/get_question_vote/:questionId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+				String questionId = req.params(":questionId");
+
+				Tools.dbInit();
+
+				String json = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				QuestionVote rv = QuestionVote.findFirst("user_id = ? and id = ?",
+						user.getId().toString(),
+						questionId);
+
+				json = rv.toJson(false);
+
+
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+		get("/get_answer_vote/:answerId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+				String answerId = req.params(":answerId");
+
+				Tools.dbInit();
+
+				String json = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				AnswerVote rv = AnswerVote.findFirst("user_id = ? and id = ?",
+						user.getId().toString(),
+						answerId);
+
+				json = rv.toJson(false);
+
+
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+		get("/get_reviews/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+				Tools.dbInit();
+
+				String json = null;
+
+				List<ReviewView> rvs = ReviewView.find("product_id = ?", productId);
+
+				json = Tools.nodeToJson(Transformations.reviewViewJson(rvs));
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
+
 
 		get("/category/:parentId", (req, res) -> {
 			try {
@@ -741,207 +980,286 @@ public class Platform {
 				} else {
 					json = Category.find("parent = ?", parentId).toJson(false, "id", "name", "parent");
 				}
-				Tools.dbClose();
+
 				return json;
 			} catch (Exception e) {
 				res.status(666);
 				e.printStackTrace();
 				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
 
 		});
 
 		get("/category_tree/:id", (req, res) -> {
 
-			String id = req.params(":id");
-			Tools.allowAllHeaders(req, res);
-			Tools.dbInit();
-			String json = CategoryActions.getCategoryTree(id);
-			Tools.dbClose();
-			return json;
+			try {
+				String id = req.params(":id");
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				String json = CategoryActions.getCategoryTree(id);
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
 
 		});
 
 		get("/time_spans", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			Tools.dbInit();
-			String json = TimeSpanView.findAll().toJson(false);
-			Tools.dbClose();
-			return json;
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				String json = TimeSpanView.findAll().toJson(false);
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
 
 
 		});
 
 		get("/countries", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			Tools.dbInit();
-			String json = Country.findAll().toJson(false);
-			Tools.dbClose();
-			return json;
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				String json = Country.findAll().toJson(false);
 
+				return json;
 
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
 		});
 
 		get("/currencies", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			Tools.dbInit();
-			String json = Currency.findAll().toJson(false);
-			Tools.dbClose();
-			return json;
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				String json = Currency.findAll().toJson(false);
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
 
 
 		});
 
 
-//		get("/get_product/:productId", (req, res) -> { 
-//			Tools.allowAllHeaders(req, res);
-//			Tools.dbInit();
-//			String productId = req.params(":productId");
-//			String json = ProductView.where("id = ?", productId).toJson(false);
-//			Tools.dbClose();
-//			return json;
-//
-//
-//		});
+		//		get("/get_product/:productId", (req, res) -> { 
+		//			Tools.allowAllHeaders(req, res);
+		//			Tools.dbInit();
+		//			String productId = req.params(":productId");
+		//			String json = ProductView.where("id = ?", productId).toJson(false);
+		//			Tools.dbClose();
+		//			return json;
+		//
+		//
+		//		});
 
 		get("/get_product_bullets/:productId", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			String productId = req.params(":productId");
-			Tools.dbInit();
-			String json = ProductBullet.where("product_id = ?", productId).
-					orderBy("num_ asc").toJson(false);
-			Tools.dbClose();
-			return json;
+			try {
+				Tools.allowAllHeaders(req, res);
+				String productId = req.params(":productId");
+				Tools.dbInit();
+				String json = ProductBullet.where("product_id = ?", productId).
+						orderBy("num_ asc").toJson(false);
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
 
 		});
 
 		get("/get_product_pictures/:productId", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			String productId = req.params(":productId");
-			Tools.dbInit();
-			String json = ProductPicture.where("product_id = ?", productId).
-					orderBy("num_ asc").toJson(false);
-			Tools.dbClose();
-			return json;
+			try {
+				Tools.allowAllHeaders(req, res);
+				String productId = req.params(":productId");
+				Tools.dbInit();
+				String json = ProductPicture.where("product_id = ?", productId).
+						orderBy("num_ asc").toJson(false);
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
 
 		});
 
 		get("/get_shipping/:productId", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			String productId = req.params(":productId");
-			Tools.dbInit();
+			try {
+				Tools.allowAllHeaders(req, res);
+				String productId = req.params(":productId");
+				Tools.dbInit();
 
-			Shipping s = Shipping.findFirst("product_id = ?", productId);
+				Shipping s = Shipping.findFirst("product_id = ?", productId);
 
-			String json;
-			if (s != null) {
-				json = s.toJson(false);
-			} else {
-				json = "[]";
+				String json;
+				if (s != null) {
+					json = s.toJson(false);
+				} else {
+					json = "[]";
+				}
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
-			Tools.dbClose();
-			return json;
 
 		});
 
 		get("/get_shipping_costs/:productId", (req, res) -> { 
-			Tools.allowAllHeaders(req, res);
-			String productId = req.params(":productId");
-			Tools.dbInit();
+			try {
+				Tools.allowAllHeaders(req, res);
+				String productId = req.params(":productId");
+				Tools.dbInit();
 
-			String json;
-			Shipping s = Shipping.findFirst("product_id = ?", productId);
-			if (s != null) {
-				json = ShippingCost.where("shipping_id = ?", s.getId().toString()).toJson(false);
-			} else {
-				json = "[]";
+				String json;
+				Shipping s = Shipping.findFirst("product_id = ?", productId);
+				if (s != null) {
+					json = ShippingCost.where("shipping_id = ?", s.getId().toString()).toJson(false);
+				} else {
+					json = "[]";
+				}
+
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
 			}
-
-			Tools.dbClose();
-			return json;
 
 		});
 
 		get("/product_thumbnails", (req, res) -> {
-			
-			try {
-			Tools.allowAllHeaders(req, res);
-			
-			Tools.dbInit();
-			Seller seller = SellerActions.getSellerFromSessionId(req);
-			
-			List<ProductThumbnailView> pvs = ProductThumbnailView.where(
-					"seller_id = ?", seller.getId().toString());
-					
-			String json = Tools.nodeToJson(
-					Transformations.productThumbnailViewJson(pvs));
-			
-			Tools.dbClose();
-			
-			return json;
-			} catch (Exception e) {
-				res.status(666);
-				e.printStackTrace();
-				return e.getMessage();
-			}
-		});
-		
-		get("/get_product/:productId", (req, res) -> {
-			
-			try {
-			Tools.allowAllHeaders(req, res);
-			
-			Tools.dbInit();
-			String productId = req.params(":productId");
-			
-			ProductView pv = ProductView.findFirst(
-					"id = ?", productId);
-					
-			String json = Tools.nodeToJson(
-					Transformations.productViewJson(pv));
-			
-			Tools.dbClose();
-			
-			return json;
-			} catch (Exception e) {
-				res.status(666);
-				e.printStackTrace();
-				return e.getMessage();
-			}
-		});
-		
-		get("/get_your_reviews", (req, res) -> {
-			
-			try {
-			Tools.allowAllHeaders(req, res);
-			
-			Tools.dbInit();
-			User user = UserActions.getUserFromSessionId(req);
-			
-			List<ReviewView> rvs = ReviewView.where("user_id = ?", user.getId().toString())
-					.orderBy("created_at desc");
-			
-					
-			String json = Tools.nodeToJson(
-					Transformations.yourReviewsViewJson(rvs));
-			
-			Tools.dbClose();
-			
-			return json;
-			} catch (Exception e) {
-				res.status(666);
-				e.printStackTrace();
-				return e.getMessage();
-			}
-		});
-		
-		
 
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				Seller seller = SellerActions.getSellerFromSessionId(req);
+
+				List<ProductThumbnailView> pvs = ProductThumbnailView.where(
+						"seller_id = ?", seller.getId().toString());
+
+				String json = Tools.nodeToJson(
+						Transformations.productThumbnailViewJson(pvs));
+
+
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
+
+		get("/get_product/:productId", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				String productId = req.params(":productId");
+
+				ProductView pv = ProductView.findFirst(
+						"id = ?", productId);
+
+				String json = Tools.nodeToJson(
+						Transformations.productViewJson(pv));
+
+
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
+
+		get("/get_your_reviews", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+
+				List<ReviewView> rvs = ReviewView.where("user_id = ?", user.getId().toString())
+						.orderBy("created_at desc");
+
+
+				String json = Tools.nodeToJson(
+						Transformations.yourReviewsViewJson(rvs));
+
+
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
+
+
+
+		// All the webpages
 		get("/product/edit/:productId", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);	
 			return Tools.readFile(DataSources.PAGES("product_edit"));
 		});
-		
+
+		get("/product/review/:productId", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			return Tools.readFile(DataSources.PAGES("review"));
+		});
+
 		get("/product/:productId", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);	
 			return Tools.readFile(DataSources.PAGES("product"));
@@ -955,6 +1273,7 @@ public class Platform {
 			String pageName = req.params(":page");
 			return Tools.readFile(DataSources.PAGES(pageName));
 		});
+
 
 		get("/", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);

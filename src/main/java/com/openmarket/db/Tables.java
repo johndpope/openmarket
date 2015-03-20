@@ -101,6 +101,9 @@ public class Tables {
 	@Table("Answer")
 	public static class Answer extends Model {}
 	
+	@Table("Answer_view")
+	public static class AnswerView extends Model {}
+	
 	@Table("Answer_vote")
 	public static class AnswerVote extends Model {}
 	
