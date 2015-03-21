@@ -1,5 +1,5 @@
-// var productId = getLastUrlPath();
-var productId = 1;
+var productId = getLastUrlPath();
+// var productId = 1;
 var productTemplate = $('#product_template').html();
 
 $(document).ready(function() {
@@ -15,11 +15,22 @@ $(document).ready(function() {
 
     voteBtn();
 
+    replyBtn();
+
     // Fill the potential users info, stuff like vote buttons, etc
     if (loggedIn()) {
       console.log('your logged in');
       var reviews = data['reviews'];
       fillReviewVotes(reviews);
+
+      var questions = data['questions'];
+      fillQuestionVotes(questions);
+
+      questions.forEach(function(question) {
+        var answers = question['answers'];
+        fillAnswerVotes(questions);
+      })
+
     }
 
   });

@@ -840,6 +840,43 @@ public class Platform {
 			}
 
 		});
+		
+		post("/answer_question/:questionId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+
+				log.info("vars = " + vars.toString());
+				String questionId = req.params(":questionId");
+
+				String answer = vars.get("answer");
+
+
+				Tools.dbInit();
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, questionId);
+
+				message = UserActions.answerQuestion(questionId, user.getId().toString(), answer);
+
+
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
 
 		get("/get_review_vote/:reviewId", (req, res) -> {
 			try {
@@ -857,7 +894,11 @@ public class Platform {
 						user.getId().toString(),
 						reviewId);
 
-				json = rv.toJson(false);
+				if (rv != null) {
+					json = rv.toJson(false); }
+				else {
+					json = "[]";
+				}
 
 
 
@@ -889,7 +930,11 @@ public class Platform {
 						user.getId().toString(),
 						questionId);
 
-				json = rv.toJson(false);
+				if (rv != null) {
+					json = rv.toJson(false); }
+				else {
+					json = "[]";
+				}
 
 
 
@@ -920,8 +965,12 @@ public class Platform {
 				AnswerVote rv = AnswerVote.findFirst("user_id = ? and id = ?",
 						user.getId().toString(),
 						answerId);
-
-				json = rv.toJson(false);
+				
+				if (rv != null) {
+					json = rv.toJson(false); }
+				else {
+					json = "[]";
+				}
 
 
 

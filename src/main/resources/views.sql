@@ -35,7 +35,7 @@ shipping.id as shipping_id,
 from_country_id, 
 from_country.name as from_country, 
 count(review.id) as number_of_reviews, 
-avg(review.stars) as review_avg, 
+ifnull(avg(review.stars),0) as review_avg, 
 product_html 
 FROM product 
 left join time_span_view on product.processing_time_span_id = time_span_view.id 
@@ -58,7 +58,7 @@ title,
 seller_id,
 shop_name, 
 count(review.id) as number_of_reviews, 
-avg(review.stars) as review_avg, 
+ifnull(avg(review.stars),0) as review_avg, 
 auction,
 CASE WHEN auction='1'
 	THEN (select max(bid.amount) from bid where bid.auction_id = auction.id) 
@@ -101,7 +101,7 @@ stars,
 headline,
 text_html, 
 review.created_at, 
-SUM(case when vote = 1 then 1 else 0 end) as votes_sum,
+SUM(vote) as votes_sum, 
 count(review_vote.id) as votes_count 
 from review 
 left join review_vote 
@@ -111,7 +111,7 @@ group by review.id
 
 CREATE VIEW question_view AS 
 select question.id, question.user_id, product_id, text, question.created_at, 
-SUM(case when vote = 1 then 1 when vote = -1 then -1 else 0 end) as votes_sum, 
+SUM(vote) as votes_sum, 
 count(question_vote.id) as votes_count 
 from question 
 left join question_vote 

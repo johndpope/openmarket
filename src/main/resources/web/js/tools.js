@@ -768,8 +768,10 @@ function writeReviewBtn() {
   });
 
 }
+
 function voteBtn() {
   $('.vote-btn').click(function(e) {
+    e.preventDefault();
     var id = '#' + this.id;
     console.log("id = " + id);
 
@@ -804,11 +806,111 @@ function voteBtn() {
         }), null, null);
 
       }
+    }
 
+    // Voting on questions
+    else if (id.startsWith("#question_vote")) {
+
+      var questionId = id.split('_').pop();
+      console.log('question id = ' + questionId);
+
+      var voteNumber = parseInt($('#question_vote_number_' + questionId).text());
+
+      if (id.startsWith('#question_vote_up_')) {
+        // Get the opposite one to remove a potential success class from it:
+
+        var voteUrl = 'question_vote/' + questionId + '/up';
+        simplePost(voteUrl, null, null, (function() {
+
+          var downVoteId = '#question_vote_down_' + questionId;
+          $(id).addClass('btn-success');
+          $(downVoteId).removeClass('btn-danger');
+          $('#question_vote_number_' + questionId).text(++voteNumber);
+
+        }), null, null);
+
+
+      } else {
+        // Get the opposite one to remove a potential success class from it:
+        var voteUrl = 'question_vote/' + questionId + '/down';
+
+        simplePost(voteUrl, null, null, (function() {
+          var upVoteId = '#question_vote_up_' + questionId;
+          $(id).addClass('btn-danger');
+          $(upVoteId).removeClass('btn-success');
+          $('#question_vote_number_' + questionId).text(--voteNumber);
+        }), null, null);
+
+      }
+    }
+       // Voting on answers
+    else if (id.startsWith("#answer_vote")) {
+
+      var answerId = id.split('_').pop();
+      console.log('answer id = ' + answerId);
+
+      var voteNumber = parseInt($('#answer_vote_number_' + answerId).text());
+
+      if (id.startsWith('#answer_vote_up_')) {
+        // Get the opposite one to remove a potential success class from it:
+
+        var voteUrl = 'answer_vote/' + answerId + '/up';
+        simplePost(voteUrl, null, null, (function() {
+
+          var downVoteId = '#answer_vote_down_' + answerId;
+          $(id).addClass('btn-success');
+          $(downVoteId).removeClass('btn-danger');
+          $('#answer_vote_number_' + answerId).text(++voteNumber);
+
+        }), null, null);
+
+
+      } else {
+        // Get the opposite one to remove a potential success class from it:
+        var voteUrl = 'answer_vote/' + answerId + '/down';
+
+        simplePost(voteUrl, null, null, (function() {
+          var upVoteId = '#answer_vote_up_' + answerId;
+          $(id).addClass('btn-danger');
+          $(upVoteId).removeClass('btn-success');
+          $('#answer_vote_number_' + answerId).text(--voteNumber);
+        }), null, null);
+
+      }
 
 
     }
 
+
+
+  });
+}
+
+function replyBtn() {
+
+
+  $('.reply-btn').click(function(e) {
+    e.preventDefault();
+    var id = '#' + this.id;
+    console.log("id = " + id);
+
+    var questionId = id.split('_').pop();
+
+    // unhide the reply form
+    var formName = '#question_reply_form_' + questionId;
+    $(formName).removeClass('hide');
+
+    $(formName).bootstrapValidator({
+        message: 'This value is not valid',
+        excluded: [':disabled'],
+        submitButtons: 'button[type="submit"]'
+      })
+      .on('success.form.bv', function(event) {
+        event.preventDefault();
+
+        standardFormPost('answer_question/' + questionId, formName, null, null, null, null, null);
+
+      });
 
   });
 }
@@ -833,6 +935,62 @@ function fillReviewVotes(reviews) {
         $('#review_vote_not_helpful_' + reviewId).addClass('btn-danger');
       }
 
+    });
+
+
+  });
+
+}
+
+function fillQuestionVotes(questions) {
+
+  questions.forEach(function(e) {
+    var questionId = e['id'];
+
+    // get the users vote on that review
+    var url = 'get_question_vote/' + questionId;
+
+    getJson(url).done(function(e1) {
+      if (e1 != '[]') {
+        var questionVote = JSON.parse(e1);
+        var voteInt = questionVote['vote'];
+        console.log(questionVote);
+
+        console.log(voteInt);
+        if (voteInt == 1) {
+          $('#question_vote_up_' + questionId).addClass('btn-success');
+        } else {
+          $('#question_vote_down_' + questionId).addClass('btn-danger');
+        }
+      }
+    });
+
+
+  });
+
+}
+
+function fillAnswerVotes(answers) {
+
+  answers.forEach(function(e) {
+    var answerId = e['id'];
+
+    // get the users vote on that review
+    var url = 'get_answer_vote/' + answerId;
+
+    getJson(url).done(function(e1) {
+      if (e1 != '[]') {
+        var answerVote = JSON.parse(e1);
+        var voteInt = answerVote['vote'];
+        console.log(answerVote);
+
+        console.log(voteInt);
+        if (voteInt == 1) {
+          $('#answer_vote_up_' + answerId).addClass('btn-success');
+        } else {
+          $('#answer_vote_down_' + answerId).addClass('btn-danger');
+        }
+      }
     });
 
 

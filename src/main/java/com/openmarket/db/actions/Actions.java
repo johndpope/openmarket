@@ -17,6 +17,7 @@ import spark.Request;
 import spark.Response;
 
 import com.google.common.collect.ImmutableMap;
+import com.openmarket.db.Tables.Answer;
 import com.openmarket.db.Tables.AnswerVote;
 import com.openmarket.db.Tables.Auction;
 import com.openmarket.db.Tables.CategoryTreeView;
@@ -273,7 +274,7 @@ public class Actions {
 		public static String voteOnQuestion(String questionId, String userId,
 				String vote) {
 
-			Integer voteInt = (vote.equals("up")) ? 1 : 0;
+			Integer voteInt = (vote.equals("up")) ? 1 : -1;
 			// See if the review first exists
 			QuestionVote r = QuestionVote.findFirst(
 					"question_id = ? and user_id = ?", questionId, userId);
@@ -299,10 +300,10 @@ public class Actions {
 		public static String voteOnAnswer(String answerId, String userId,
 				String vote) {
 
-			Integer voteInt = (vote.equals("up")) ? 1 : 0;
+			Integer voteInt = (vote.equals("up")) ? 1 : -1;
 			// See if the review first exists
 			AnswerVote r = AnswerVote.findFirst(
-					"question_id = ? and user_id = ?", answerId, userId);
+					"answer_id = ? and user_id = ?", answerId, userId);
 
 			String cmd;
 			if (r != null) {
@@ -332,6 +333,16 @@ public class Actions {
 			
 			return message;
 			
+		}
+		public static String answerQuestion(String questionId, String userId,
+				String answer) {
+			
+			Answer a = Answer.create("question_id", questionId, "user_id", userId, "text", answer);
+			Tools.writeRQL(a.toInsert());
+		
+			String message = "Answer saved";
+			
+			return message;
 		}
 
 	}

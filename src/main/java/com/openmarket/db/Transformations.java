@@ -101,13 +101,15 @@ public class Transformations {
 
 
 		// Add 3 reviews
-		List<ReviewView> rvs = ReviewView.where("product_id = ?", productId).limit(3);
+		List<ReviewView> rvs = ReviewView.where("product_id = ?", productId).limit(3).
+				orderBy("votes_sum desc");
 		ObjectNode reviewNodes = reviewViewJson(rvs);
 
 		a.putAll(reviewNodes);
 
 		// Add 3 questions
-		List<QuestionView> qvs = QuestionView.where("product_id = ?", productId).limit(3);
+		List<QuestionView> qvs = QuestionView.where("product_id = ?", productId).limit(3).
+				orderBy("votes_sum desc");
 		ObjectNode questionNodes = questionViewJson(qvs);
 
 		a.putAll(questionNodes);
@@ -165,18 +167,18 @@ public class Transformations {
 	public static ObjectNode yourReviewsViewJson(ReviewView rv) {
 
 		JsonNode c = Tools.jsonToNode(rv.toJson(false));
-		
+
 		ObjectNode on = Tools.MAPPER.valueToTree(c);
-		
+
 		ProductThumbnailView ptv = ProductThumbnailView.findFirst
 				("product_id = ?", rv.getString("product_id"));
 		ObjectNode pvj = productThumbnailViewJson(ptv);
 
 		on.put("thumbnail", pvj);
-		
+
 		return on;
 	}
-	
+
 	public static ObjectNode yourReviewsViewJson(List<ReviewView> rvs) {
 
 		ObjectNode a = Tools.MAPPER.createObjectNode();
@@ -212,7 +214,8 @@ public class Transformations {
 
 		JsonNode c = Tools.jsonToNode(qv.toJson(false));
 
-		List<AnswerView> rcs = AnswerView.find("question_id = ?", qv.getString("id"));
+		List<AnswerView> rcs = AnswerView.find("question_id = ?", qv.getString("id")).
+				orderBy("votes_sum desc");
 
 		ObjectNode on = Tools.MAPPER.valueToTree(c);
 		a.putAll(on);

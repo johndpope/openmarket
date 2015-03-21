@@ -184,15 +184,14 @@
                       {{headline}}
                       </h4>
                             <span class="text-muted">By blank on {{created_at}}</span>
-                            <br> {{{text_html}}}
+                            <br> {{{text_html}}} <br>
                             <a href="" id="review_comments_btn_{{id}}">{{comments.length}} Comments <span class="caret"></a>
                             <span class="text-muted">&nbsp;&nbsp;&nbsp;</span>
                             <span id="review_vote_helpful_{{id}}" class="btn btn-sm btn-default vote-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>" type="submit"><i class='fa fa-thumbs-o-up'> Helpful</i>
                       </span>
                             <span id="review_vote_not_helpful_{{id}}" class="btn btn-sm btn-default vote-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>" type="submit"><i class='fa fa-thumbs-o-down'> Not Helpful</i>
                       </span>
-                            <div id="review_comments_div_{{id}}" {{^comments.0}}class="hide"{{/comments.0}}>
-
+                            <div id="review_comments_div_{{id}}" {{^comments.0}}class="hide" {{/comments.0}}>
                               {{#comments}}
                               <p>comment here {{comment}}</p>
                               {{/comments}}
@@ -206,54 +205,61 @@
                             <button id="writeReviewBtn" class="btn btn-block btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Write a review
                             </button>
                           </div>
-                         <!-- Questions tab -->
-                      <div role="tabpanel" class="tab-pane" id="questionsTab">
-                        <h2> Questions and Answers</h2>
-                        <div class="row">
-                          <div class="col-md-12">
-                            <form id="question_form" class="form-inline">
-                              <div class="form-group col-xs-10">
-                                <input name="question" type="inputEmail3" class="form-control" minlength="6" maxlength="90" placeholder="Ask a question for the owners" />
+                          <!-- Questions tab -->
+                          <div role="tabpanel" class="tab-pane" id="questionsTab">
+                            <h2> Questions and Answers</h2>
+                            <div class="row">
+                              <div class="col-md-12">
+                                <form id="question_form" class="form-inline">
+                                  <div class="form-group col-xs-10">
+                                    <input name="question" type="inputEmail3" class="form-control" minlength="6" maxlength="90" placeholder="Ask a question for the owners" />
+                                  </div>
+                                  <div class="">
+                                    <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Ask</button>
+                                  </div>
+                                </form>
                               </div>
-                              <div class="">
-                                <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Ask</button>
+                            </div>
+                            <br> {{#questions}}
+                            <div class="row">
+                              <div class="col-md-1 vertical-line">
+                                <a id="question_vote_up_{{id}}" class="vote-btn" href=""><i class='fa fa-arrow-up fa-fw'></i></a>
+                                <div id="question_vote_number_{{id}}" class="text-center">{{votes_sum}} </div>
+                                <a id="question_vote_down_{{id}}" class="vote-btn" href=""><i class='fa fa-arrow-down fa-fw'></i></a>
                               </div>
-                            </form>
-                          </div>
-                        </div>
-                        <br>
-
-                        <div class="row">
-                         {{#questions}}
-                          <div class="col-md-1 vertical-line">
-                            <a id="question_vote_up_{{id}}" href=""><i class='fa fa-arrow-up fa-fw'></i></a>
-                            <div class="text-center">{{votes_sum}} </div>
-                            
-                            <a id="question_vote_down_{{id}}" href=""><i class='fa fa-arrow-down fa-fw'></i></a>
-                          </div>
-                          <div class="col-md-11">
-                            <h4><a href="" >{{text}}</a></h4>
-                            {{#answers}}
-                            <div class="col-md-1">
-                              <p class=" text-left"> <a id="answer_vote_up_{{id}}" href=""><i class='fa fa-arrow-up fa-fw'></i></a>
-                                <br>  &nbsp; {{votes_sum}}
-                                <br>
-                                <a id="answer_vote_down_{{id}}" href=""><i class='fa fa-arrow-down fa-fw'></i></a>
-                              </p>
+                              <div class="col-md-11">
+                                <h4><a href="" >{{text}}</a> </h4>
+                                <h6><a id="question_reply_btn_{{id}}" class="text-muted reply-btn" href=""> reply</a></h6>
+                                <form id="question_reply_form_{{id}}" class="form-inline hide">
+                                  <div class="form-group col-xs-10">
+                                    <input name="answer" type="inputEmail3" class="form-control" minlength="6" maxlength="90" placeholder="Answer the Question" />
+                                  </div>
+                                  <div class="">
+                                    <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Reply</button>
+                                  </div>
+                                </form>
+                                {{#answers}}
+                                <div class="row">
+                                  <div class="col-md-1 vertical-line">
+                                    <a id="answer_vote_up_{{id}}" class="vote-btn" href=""><i class='fa fa-arrow-up fa-fw'></i></a>
+                                    <div id="answer_vote_number_{{id}}" class="text-center">{{votes_sum}} </div>
+                                    <a id="answer_vote_down_{{id}}" class="vote-btn" href=""><i class='fa fa-arrow-down fa-fw'></i></a>
+                                  </div>
+                                  <div class="col-md-11">
+                                    <p>{{text}}
+                                      <br>
+                                      <span class="text-muted">Blank answered on {{created_at}} </span>
+                                      
+                                    </p>
+                                  </div>
+                                </div>
+                                {{/answers}}
+                                <span class=""><a href="">See all {{answers.length}} answers</a></span>
+                              </div>
                             </div>
-                            <div class="col-md-11">
-                              <p>There are two types of canning: boiling-water canning at 100°C/212°F (for acid fruits, tomatoes, pickles and jellied products) and pressure canning at 115~121°C/240~250°F (for low acid vegetables, meat and poultry). Please refer to "USDA Complete Guide to Home Canning" for more details. Instant Pot can be used for boi…
-                                <br>
-                                <span class="text-muted">Bob answered on January 06, 2014 &nbsp;| &nbsp;</span>
-                                <span class=""><a href="">See all 10 answers</a></span>
-                              </p>
-                            </div>
-                            {{/answers}}
-                          {{/questions}}
-                          <span class=""><a href="/product/question/{{id}}">See all {{questions.length}} questions</a></span>
+                            {{/questions}}
+                            <span class=""><a href="/product/question/{{id}}">See all {{questions.length}} questions</a></span>
                           </div>
-                        </div>
-                      </div>
                           <!-- Shipping tab -->
                           <div role="tabpanel" class="tab-pane" id="shippingTab">
                             <h2> Shipping</h2>
@@ -263,7 +269,7 @@
                                   Ready to ship in <b>{{time_span_string}}</b>.
                                 </p>
                                 <p>
-                                  Ships from <b>{{from_country}}</b>.
+                                  {{#from_country}} Ships from <b>{{from_country}}</b>.{{/from_country}}
                                 </p>
                                 <ul>
                                   {{#shipping_costs}}
@@ -376,7 +382,7 @@
                             <div class="row">
                               <div class="col-md-12">
                                 <div class="text-center text-overflow">
-                                  <a href="{{sparkURL}}product/{{product_id}}">{{title}}</a>
+                                  <a href="{{sparkURL}}/product/{{product_id}}">{{title}}</a>
                                 </div>
                               </div>
                             </div>

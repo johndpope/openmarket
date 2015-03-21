@@ -68,6 +68,7 @@ function setupSummerNoteNormal(productId) {
 
   var formName = '#review-' + productId + '-form';
 
+  console.log('setup form for ' + formName);
   $(formName).bootstrapValidator({
       message: 'This value is not valid',
       excluded: [':disabled'],
@@ -82,7 +83,7 @@ function setupSummerNoteNormal(productId) {
       event.preventDefault();
       console.log($('.summernote').code());
       // set the text input to the summer note code
-      $(formName + ' [name=text_html]').val($('.summernote').code());
+      $(formName + ' [name=text_html]').val($('#text-' +productId).code());
       standardFormPost('save_product_review/' + productId, formName, null, null, null, null, null);
     });
   // airMode: true;
