@@ -7,9 +7,10 @@ import junit.framework.TestCase;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.openmarket.db.Tables.ProductView;
 import com.openmarket.db.Transformations;
 import com.openmarket.tools.Tools;
+
+import static com.openmarket.db.Tables.*;
 
 public class JsonTest extends TestCase {
 
@@ -25,6 +26,9 @@ public class JsonTest extends TestCase {
 		Tools.writeRQL(s);
 
 		Tools.dbInit();
+		
+	
+		
 		ProductView pv = ProductView.findFirst(
 				"id = ?", 1);
 

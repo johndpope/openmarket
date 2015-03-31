@@ -114,30 +114,36 @@ public class TableConstants {
 			new ProcessingTime(6, 8, TIME_TYPES.indexOf("weeks")+1)
 			);
 	
-	public static final List<String> INSTALL_RQLITE_SCRIPT_LINES =
-			Arrays.asList(
-					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
-					"cd " + DataSources.HOME_DIR,
-					"mkdir db",
-					"cd db/",
-					"export GOPATH=$PWD",
-					"go get github.com/otoolep/rqlite",
-					"go get gopkg.in/check.v1;");
+	public static final List<String> INSTALL_RQLITE_SCRIPT_LINES() {
+		return Arrays.asList(
+				"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
+				"cd " + DataSources.HOME_DIR,
+				"mkdir db",
+				"cd db/",
+				"export GOPATH=$PWD",
+				"go get github.com/otoolep/rqlite",
+				"go get gopkg.in/check.v1;");
+	}
+	
 
 
-	public static final List<String> RQLITE_JOIN_LINES = 
-			Arrays.asList(
+	public static final List<String> RQLITE_JOIN_LINES() {
+		 return Arrays.asList(
 					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
-					"cd " + DataSources.RQL_DIR,
+					"cd " + DataSources.RQL_DIR(),
 					"export GOPATH=$PWD",
 					"$GOPATH/bin/rqlite -join " + DataSources.MASTER_NODE_URL + 
 					" -p " + DataSources.RQL_PORT + " data");
+	}
+			
 
-	public static final List<String> RQLITE_STARTUP_SCRIPT_LINES =
-			Arrays.asList(
-					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
-					"cd " + DataSources.RQL_DIR,
-					"export GOPATH=$PWD",
-					"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_PORT + " data");
+	public static final List<String> RQLITE_STARTUP_SCRIPT_LINES() {
+		return Arrays.asList(
+				"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
+				"cd " + DataSources.RQL_DIR(),
+				"export GOPATH=$PWD",
+				"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_PORT + " data");
+	}
+
 }
 

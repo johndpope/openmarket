@@ -57,6 +57,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -98,8 +99,9 @@ public class Tools {
 
 	public static void addExternalWebServiceVarToTools() {
 
+		log.info("tools.js = " + DataSources.TOOLS_JS());
 		try {
-			List<String> lines = java.nio.file.Files.readAllLines(Paths.get(DataSources.TOOLS_JS));
+			List<String> lines = java.nio.file.Files.readAllLines(Paths.get(DataSources.TOOLS_JS()));
 
 			String interalServiceLine = "var sparkService = '" + 
 					DataSources.WEB_SERVICE_INTERNAL_URL() + "';";
@@ -110,8 +112,8 @@ public class Tools {
 			lines.set(0, interalServiceLine);
 			lines.set(1, externalServiceLine);
 
-			java.nio.file.Files.write(Paths.get(DataSources.TOOLS_JS), lines);
-			Files.touch(new File(DataSources.TOOLS_JS));
+			java.nio.file.Files.write(Paths.get(DataSources.TOOLS_JS()), lines);
+			Files.touch(new File(DataSources.TOOLS_JS()));
 
 
 		} catch (IOException e) {
@@ -359,7 +361,7 @@ public class Tools {
 
 	public static final void dbInit() {
 		try {
-			Base.open("org.sqlite.JDBC", "jdbc:sqlite:" + DataSources.DB_FILE, "root", "p@ssw0rd");
+			new DB("default").open("org.sqlite.JDBC", "jdbc:sqlite:" + DataSources.DB_FILE(), "root", "p@ssw0rd");
 		} catch (DBException e) {
 			e.printStackTrace();
 			dbClose();
@@ -369,7 +371,7 @@ public class Tools {
 	}
 
 	public static final void dbClose() {
-		Base.close();
+		new DB("default").close();
 	}
 
 	public static final String httpGet(String url) {
@@ -491,6 +493,7 @@ public class Tools {
 
 		copyResourcesToHomeDir(true);
 
+
 		addExternalWebServiceVarToTools();
 
 		// Initialize the DB if it hasn't already
@@ -522,17 +525,17 @@ public class Tools {
 
 		String zipFile = null;
 
-		if (copyAnyway || !new File(DataSources.SOURCE_CODE_HOME).exists()) {
+		if (copyAnyway || !new File(DataSources.SOURCE_CODE_HOME()).exists()) {
 			log.info("Copying resources to  ~/." + DataSources.APP_NAME + " dirs");
 
 			try {
 				if (new File(DataSources.SHADED_JAR_FILE).exists()) {
-					java.nio.file.Files.copy(Paths.get(DataSources.SHADED_JAR_FILE), Paths.get(DataSources.ZIP_FILE), 
+					java.nio.file.Files.copy(Paths.get(DataSources.SHADED_JAR_FILE), Paths.get(DataSources.ZIP_FILE()), 
 							StandardCopyOption.REPLACE_EXISTING);
 					zipFile = DataSources.SHADED_JAR_FILE;
 
 				} else if (new File(DataSources.SHADED_JAR_FILE_2).exists()) {
-					java.nio.file.Files.copy(Paths.get(DataSources.SHADED_JAR_FILE_2), Paths.get(DataSources.ZIP_FILE),
+					java.nio.file.Files.copy(Paths.get(DataSources.SHADED_JAR_FILE_2), Paths.get(DataSources.ZIP_FILE()),
 							StandardCopyOption.REPLACE_EXISTING);
 					zipFile = DataSources.SHADED_JAR_FILE_2;
 				} else {
@@ -542,7 +545,7 @@ public class Tools {
 
 				e.printStackTrace();
 			}
-			Tools.unzip(new File(zipFile), new File(DataSources.SOURCE_CODE_HOME));
+			Tools.unzip(new File(zipFile), new File(DataSources.SOURCE_CODE_HOME()));
 			//		new Tools().copyJarResourcesRecursively("src", configHome);
 		} else {
 			log.info("The source directory already exists");

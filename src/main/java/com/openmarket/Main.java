@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
+import com.bitmerchant.wallet.LocalWallet;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
 import com.openmarket.webservice.WebService;
@@ -45,14 +46,34 @@ public class Main {
 		
 		setPort(port);
 
-		log.setLevel(Level.toLevel(loglevel));		
+		log.setLevel(Level.toLevel(loglevel));
+		
+
+
 
 		// get the correct network
-		//		params = (testnet) ? TestNet3Params.get() : MainNetParams.get();
 		DataSources.HOME_DIR = (testnet) ? DataSources.HOME_DIR  + "/testnet" : DataSources.HOME_DIR;
+		
+//		Tools.dbInit();
+//		Tools.dbClose();
+		
+//		com.bitmerchant.tools.Tools.dbInit();
+//		Actions.ButtonActions.listButtons();
+//		com.bitmerchant.tools.Tools.dbClose();
+	
 
 		// Initialize the replicated db
 		Tools.initializeDBAndSetupDirectories(deleteDB);
+		
+		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR;
+
+		LocalWallet.startService(DataSources.HOME_DIR, loglevel, testnet, deleteDB, false);
+//		
+//		com.bitmerchant.tools.Tools.dbInit();
+//		log.info(com.bitmerchant.tools.DataSources.DB_FILE());
+//		log.info(Currency.findAll().toJson(true));
+//		com.bitmerchant.tools.Tools.dbClose();
+		
 
 		// Start the webservice
 		WebService.start();

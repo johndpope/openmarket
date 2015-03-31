@@ -7,7 +7,7 @@ public class RQLite implements Runnable {
 
 	private static Thread t;
 	public void run() {
-		Tools.runScript(DataSources.RQLITE_STARTUP_SCRIPT);
+		Tools.runScript(DataSources.RQLITE_STARTUP_SCRIPT());
 	}
 	
 	

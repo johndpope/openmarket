@@ -1,25 +1,24 @@
 package com.openmarket.db;
 
+import static com.openmarket.db.Tables.AnswerView;
+import static com.openmarket.db.Tables.ProductBullet;
+import static com.openmarket.db.Tables.ProductPicture;
+import static com.openmarket.db.Tables.ProductThumbnailView;
+import static com.openmarket.db.Tables.QuestionView;
+import static com.openmarket.db.Tables.ReviewComment;
+import static com.openmarket.db.Tables.ReviewView;
+import static com.openmarket.db.Tables.ShippingCostView;
+
 import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import com.openmarket.db.Tables.Answer;
-import com.openmarket.db.Tables.AnswerView;
-import com.openmarket.db.Tables.ProductBullet;
-import com.openmarket.db.Tables.ProductPicture;
-import com.openmarket.db.Tables.ProductThumbnailView;
-import com.openmarket.db.Tables.ProductView;
-import com.openmarket.db.Tables.QuestionView;
-import com.openmarket.db.Tables.ReviewComment;
-import com.openmarket.db.Tables.ReviewView;
-import com.openmarket.db.Tables.Shipping;
-import com.openmarket.db.Tables.ShippingCost;
-import com.openmarket.db.Tables.ShippingCostView;
+
 import com.openmarket.tools.Tools;
 
+import static com.openmarket.db.Tables.*;
 public class Transformations {
 
 	public static ObjectNode productThumbnailViewJson(ProductThumbnailView pv) {

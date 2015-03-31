@@ -7,6 +7,8 @@ import static spark.SparkBase.setPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bitmerchant.webservice.API;
+import com.bitmerchant.webservice.WalletService;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
 
@@ -29,7 +31,7 @@ public class WebService {
 
 		//		staticFileLocation("/web"); // Static files
 		//		staticFileLocation("/web/html"); // Static files
-		externalStaticFileLocation(DataSources.WEB_HOME);
+		externalStaticFileLocation(DataSources.WEB_HOME());
 
 		// Set up the secure keystore
 
@@ -42,9 +44,20 @@ public class WebService {
 			return "hi from the openmarket wallet web service";
 		});
 
+		
 		Platform.setup();
-
-
+		
+		WalletService.setup();
+		API.setup();
+		
+	
+		// All the simple webpages
+		get("/:page", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			String pageName = req.params(":page");
+			return Tools.readFile(DataSources.PAGES(pageName));
+		});
+	
 
 		
 

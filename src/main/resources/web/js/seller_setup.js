@@ -7,6 +7,8 @@ $(document).ready(function() {
   addNewItem();
   tabLoad();
   fillCurrentProducts();
+
+  setupWallet();
 });
 
 function tabLoad() {

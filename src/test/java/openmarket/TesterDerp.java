@@ -1,13 +1,11 @@
 package openmarket;
 
+import junit.framework.TestCase;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import junit.framework.TestCase;
-
-import com.openmarket.db.InitializeTables;
-import com.openmarket.db.Tables.User;
-import com.openmarket.tools.DataSources;
+import static com.openmarket.db.Tables.User;
 import com.openmarket.tools.Tools;
 
 public class TesterDerp extends TestCase {

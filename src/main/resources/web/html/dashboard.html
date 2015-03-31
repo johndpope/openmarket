@@ -1,61 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-
-
   <title>OpenMarket</title>
-
   <!-- favicon -->
   <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
-
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
-
   <!-- Link to font awesome -->
   <!-- <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"> -->
   <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-
   <!-- Bootstrap social css -->
   <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
-
   <!--   Bootstrap validator -->
   <link rel="stylesheet" href="../bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
-
   <!--   toastr css -->
   <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
-
   <!--   typeahead css -->
   <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
-
   <!-- Pickadate -->
   <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
   <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
-
   <!-- Summernote -->
   <link href="../bower_components/summernote/dist/summernote.css" rel="stylesheet" />
-
   <!-- Bootstrap datepicker -->
   <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
-
   <!-- This main css -->
   <link href="../css/main.css" rel="stylesheet">
-
-
 </head>
 
 <body>
   <!-- Navbars -->
-
   <!-- the start of the doc -->
   <div id="wrapper" class="wrapper hide">
-
     <!-- header -->
     <nav class="navbar navbar-default navbar-top" role="navigation">
       <div class="container-fluid">
@@ -69,7 +51,6 @@
           </button>
           <a class="navbar-brand" href="/">OpenMarket</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
@@ -90,7 +71,6 @@
                 </div>
               </form>
             </li>
-
             <li class="dropdown">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
@@ -101,25 +81,17 @@
                 </ul>
               </div>
             </li>
-
-
-
           </ul>
-
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#login">Wishlist <span class="caret"></span></a>
             </li>
-
             <li><a href="/about">Cart <span class="caret"></span></a>
             </li>
             <li class="dropdown logged-out">
               <div class="navbar-form">
-
                 <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
-
               </div>
             </li>
-
             <li class="dropdown logged-in">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
@@ -138,69 +110,93 @@
                 </ul>
               </div>
             </li>
-
-
           </ul>
-
-
         </div>
         <!-- /.navbar-collapse -->
       </div>
       <!-- /.container-fluid -->
     </nav>
-
     <!-- The full page with teh sidebar -->
     <div class="container-fluid">
-
-      <!-- Sidebar -->
-      <div class="row">
-
-        <!-- The sidebar -->
-        <div id="side_col" class="col-md-3 sidebar">
-
-          <div class="mini-submenu">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </div>
-          <div class="list-group">
-
-            <a class="list-group-item active" href="wallet" rel="keep-params"><i class="fa fa-bank fa-fw"></i> &nbsp; Bitcoin Wallet</a>
-            <a class="list-group-item" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Sales</a>
-            <a class="list-group-item" href="settings" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Items</a>
-            <a class="list-group-item" href="tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
-
-            <a class="list-group-item" href="settings" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; My Shop</a>
-
-            <a class="list-group-item" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
-
-            <a class="list-group-item" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Settings</a>
-
-          </div>
-        </div>
-      </div>
       <!-- The Page -->
       <div class="row-fluid">
-        <div class="othermain-col col-md-offset-3 col-md-9">
-          DER
+        <div class="col-md-12">
+          <h1 class="text-center"> Your Account
+        <br>
+        </h1>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="col-md-4 vertical-line">
+                <h3> Orders <br> <small> Recent Orders</small></h3>
+              </div>
+              <div class="col-md-4 vertical-line">
+                <h4> Order History </h4>
+                <a href=""> View Open Orders</a>
+                <br>
+                <a href=""> View All Orders</a>
+              </div>
+              <div class="col-md-4">
+                <h4> More Order Actions </h4>
+                <a href=""> Leave Seller Feedback</a>
+                <br>
+                <a href=""> Return or Replace Items</a>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-info">
+            <div class="panel-body">
+              <div class="col-md-4 vertical-line">
+                <h3> Settings <br> <small> Password and email</small></h3>
+              </div>
+              <div class="col-md-4 vertical-line">
+                <h4> Account Settings </h4>
+                <a href=""> Change Account Settings<br>
+                <small>Email, password, and user name</small></a>
+                <br>
+              </div>
+              <div class="col-md-4">
+                <h4> Your Feedback </h4>
+                <a href=""> Your reviews</a>
+                <br>
+                <a href=""> Leave Seller Feedback</a>
+                <br>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-warning">
+            <div class="panel-body">
+              <div class="col-md-4 vertical-line">
+                <h3> Seller Settings <br> <small> Seller setup</small></h3>
+              </div>
+              <div class="col-md-4 vertical-line">
+                <h4> Seller Settings </h4>
+                <a href=""> Setup wizard</a>
+                <br>
+                <a href=""> Shop Name</a><br>
+                <a href=""> Bitcoin Wallet settings</a><br>
+                <a href=""> Items </a><br>
 
+            
+              </div>
+              <div class="col-md-4">
+                <h4> Sales </h4>
+                <a href=""> Bitcoin Wallet</a>
+                <br>
+                <a href=""> Sales</a>
+                <br>
+                <a href=""> Orders</a>
+                <br>
+              </div>
+            </div>
+          </div>
         </div>
-
       </div>
-
       <!-- end of wrapper -->
     </div>
-
-
-
   </div>
-
   <!-- Modals -->
-
-
   <div id="userDisclaimerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
@@ -218,25 +214,18 @@
               <li> Your bitcoin wallet may charge you a small fee for making a deposit. </li>
             </ul>
           </div>
-
-
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">Okay, I accept</button>
         </div>
-
       </div>
     </div>
   </div>
-
-
   <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-body">
-
           <div role="tabpanel">
-
             <!-- Nav tabs -->
             <ul class="nav nav-tabs nav-justified" role="tablist">
               <li role="presentation" class="active"><a href="#loginTab" aria-controls="home" role="tab" data-toggle="tab">Log in</a>
@@ -244,14 +233,11 @@
               <li role="presentation"><a href="#signupTab" aria-controls="profile" role="tab" data-toggle="tab">Sign Up</a>
               </li>
             </ul>
-
             <!-- Tab panes -->
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane active" id="loginTab">
-
                 <h1 class="text-center"> Log in </h1>
                 <br>
-
                 <form id="login_form_modal" class="form-horizontal" role="form">
                   <div id="userLoginDiv" class="form-group">
                     <label for="inputUsername3" class="col-sm-12">Email</label>
@@ -265,59 +251,34 @@
                       <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username">
                     </div>
                   </div>
-
-
                   <div class="form-group">
                     <div class="col-sm-12">
                       <button id="signinBtn" type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign in</button>
                     </div>
                   </div>
                 </form>
-
               </div>
-
               <!-- The sign up tab -->
               <div role="tabpanel" class="tab-pane" id="signupTab">
-
                 <h1 class="text-center"> Sign up </h1>
                 <br>
-
                 <form id="signup_form_modal" class="form-horizontal">
                   <div class="form-group">
                     <label for="inputUsername3" class="col-sm-12">Email</label>
-
                     <div class="col-sm-12">
                       <input name="email" type="inputEmail3" class="form-control" placeholder="Email Address" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
                     </div>
                   </div>
-
                   <button type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign Up</button>
-
                 </form>
               </div>
-
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
-
       </div>
     </div>
   </div>
   <!-- end of login modal -->
-
-
-
-
-
-
-
   <!-- Bootstrap core JavaScript
       ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
@@ -337,14 +298,10 @@
   <script src="../bower_components/summernote/dist/summernote.min.js"></script>
   <script src="../bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
   <script src="../bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
-
   <!-- my scripts -->
   <script src="../js/tools.js"></script>
   <script src="../js/common.js"></script>
   <script src="../js/home.js"></script>
-
-
-
 </body>
 
 </html>

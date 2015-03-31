@@ -1,5 +1,5 @@
-// var productId = getLastUrlPath();
-var productId = 1;
+var productId = getLastUrlPath();
+// var productId = 1;
 var reviewTemplate = $('#review_template').html();
 
 $(document).ready(function() {

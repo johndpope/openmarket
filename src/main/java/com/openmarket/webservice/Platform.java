@@ -9,30 +9,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.openmarket.db.Tables.AnswerVote;
-import com.openmarket.db.Tables.Category;
-import com.openmarket.db.Tables.Country;
-import com.openmarket.db.Tables.Currency;
-import com.openmarket.db.Tables.Product;
-import com.openmarket.db.Tables.ProductBullet;
-import com.openmarket.db.Tables.ProductPicture;
-import com.openmarket.db.Tables.ProductThumbnailView;
-import com.openmarket.db.Tables.ProductView;
-import com.openmarket.db.Tables.QuestionVote;
-import com.openmarket.db.Tables.Review;
-import com.openmarket.db.Tables.ReviewView;
-import com.openmarket.db.Tables.ReviewVote;
-import com.openmarket.db.Tables.Seller;
-import com.openmarket.db.Tables.Shipping;
-import com.openmarket.db.Tables.ShippingCost;
-import com.openmarket.db.Tables.TimeSpanView;
-import com.openmarket.db.Tables.User;
 import com.openmarket.db.Transformations;
 import com.openmarket.db.actions.Actions.CategoryActions;
 import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
+
+import static com.openmarket.db.Tables.*;
 
 public class Platform {
 
@@ -1316,12 +1300,7 @@ public class Platform {
 
 
 
-		// All the simple webpages
-		get("/:page", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
-			String pageName = req.params(":page");
-			return Tools.readFile(DataSources.PAGES(pageName));
-		});
+
 
 
 		get("/", (req, res) -> {

@@ -1,5 +1,9 @@
 package com.openmarket.db;
 
+import static com.openmarket.db.Tables.Currency;
+import static com.openmarket.db.Tables.TimeSpan;
+import static com.openmarket.db.Tables.TimeType;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -10,9 +14,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.openmarket.db.Tables.Currency;
-import com.openmarket.db.Tables.TimeSpan;
-import com.openmarket.db.Tables.TimeType;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.TableConstants;
 import com.openmarket.tools.Tools;
@@ -26,7 +27,7 @@ public class InitializeTables {
 
 	public static void init(Boolean delete) {
 
-		log.info("Using database located at : " + DataSources.DB_FILE);
+		log.info("Using database located at : " + DataSources.DB_FILE());
 
 
 		if (delete) {
@@ -48,28 +49,29 @@ public class InitializeTables {
 
 		try {
 
-			Boolean rqlDirExists = new File(DataSources.RQL_DIR).exists();
+			Boolean rqlDirExists = new File(DataSources.RQL_DIR()).exists();
 
 			Boolean firstRqlRun = false;
 
+			log.info("rql dir = " + DataSources.RQL_DIR());
 			if (!rqlDirExists) {
 
 				log.info("Installing rqlite...(done only once to connect to the network)");
 
 
-				java.nio.file.Files.write(Paths.get(DataSources.RQLITE_INSTALL_SCRIPT),
-						TableConstants.INSTALL_RQLITE_SCRIPT_LINES);
+				java.nio.file.Files.write(Paths.get(DataSources.RQLITE_INSTALL_SCRIPT()),
+						TableConstants.INSTALL_RQLITE_SCRIPT_LINES());
 
-				Tools.runScript(DataSources.RQLITE_INSTALL_SCRIPT);
+				Tools.runScript(DataSources.RQLITE_INSTALL_SCRIPT());
 
 				// For some reason the joining command is a weird one, then after initializing its 
 				// like regular.
 				if (!DataSources.IS_MASTER_NODE) {
 					log.info("Joining rqlite master node @ " + DataSources.MASTER_NODE_URL);
-					java.nio.file.Files.write(Paths.get(DataSources.RQLITE_JOIN_SCRIPT),
-							TableConstants.RQLITE_JOIN_LINES);
+					java.nio.file.Files.write(Paths.get(DataSources.RQLITE_JOIN_SCRIPT()),
+							TableConstants.RQLITE_JOIN_LINES());
 
-					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT);
+					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT());
 				} 
 
 				firstRqlRun = true;
@@ -79,8 +81,8 @@ public class InitializeTables {
 			}
 
 			log.info("Starting rqlite...");
-			java.nio.file.Files.write(Paths.get(DataSources.RQLITE_STARTUP_SCRIPT), 
-					TableConstants.RQLITE_STARTUP_SCRIPT_LINES);
+			java.nio.file.Files.write(Paths.get(DataSources.RQLITE_STARTUP_SCRIPT()), 
+					TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
 
 			RQLite.start();
 
@@ -107,7 +109,7 @@ public class InitializeTables {
 	public static void deleteDB() {
 
 		try {
-			FileUtils.deleteDirectory(new File(DataSources.RQL_DIR));
+			FileUtils.deleteDirectory(new File(DataSources.RQL_DIR()));
 			log.info("DB deleted");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -120,10 +122,10 @@ public class InitializeTables {
 
 		try {
 
-			if (!new File(DataSources.DB_FILE).exists()) {
+			if (!new File(DataSources.DB_FILE()).exists()) {
 				log.info("Creating tables/running the DDL...");
-				Tools.runRQLFile(new File(DataSources.SQL_FILE));
-				Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE));
+				Tools.runRQLFile(new File(DataSources.SQL_FILE()));
+				Tools.runRQLFile(new File(DataSources.SQL_VIEWS_FILE()));
 
 				log.info("Tables created successfully");
 			} else {

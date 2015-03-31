@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import net.tomp2p.connection.Reservation;
-
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.javalite.activejdbc.LazyList;
-import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,27 +13,11 @@ import spark.Request;
 import spark.Response;
 
 import com.google.common.collect.ImmutableMap;
-import com.openmarket.db.Tables.Answer;
-import com.openmarket.db.Tables.AnswerVote;
-import com.openmarket.db.Tables.Auction;
-import com.openmarket.db.Tables.CategoryTreeView;
-import com.openmarket.db.Tables.Login;
-import com.openmarket.db.Tables.Product;
-import com.openmarket.db.Tables.ProductBullet;
-import com.openmarket.db.Tables.ProductPage;
-import com.openmarket.db.Tables.ProductPicture;
-import com.openmarket.db.Tables.ProductPrice;
-import com.openmarket.db.Tables.Question;
-import com.openmarket.db.Tables.QuestionVote;
-import com.openmarket.db.Tables.Review;
-import com.openmarket.db.Tables.ReviewVote;
-import com.openmarket.db.Tables.Seller;
-import com.openmarket.db.Tables.Shipping;
-import com.openmarket.db.Tables.ShippingCost;
-import com.openmarket.db.Tables.User;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.TableConstants;
 import com.openmarket.tools.Tools;
+
+import static com.openmarket.db.Tables.*;
 
 public class Actions {
 
