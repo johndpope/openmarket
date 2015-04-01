@@ -30,7 +30,7 @@
 			<id>tomp2p.net</id>
 			<url>http://tomp2p.net/dev/mvn/</url>
 		</repository>
-		
+
 
 	</repositories>
 	<pluginRepositories>
@@ -141,6 +141,11 @@
 					<artifactId>slf4j-jdk14</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>opensymphony</groupId>
+					<artifactId>oscache</artifactId>
+				</exclusion>
+
 			</exclusions>
 		</dependency>
 
