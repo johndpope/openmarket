@@ -92,7 +92,7 @@ function fillStatusText(url, divId) {
           clearInterval(intervalID);
           $('.sync-incomplete').fadeOut(1500);
           $('.wallet-btn').removeClass('disabled');
-          fillSimpleText('balance', '#balance');
+          fillSimpleText('wallet/balance', '#balance');
         }
       },
       error: function(request, status, error) {
@@ -119,7 +119,7 @@ function fillSendMoneyStatusText(url, divId) {
         if (data == "Success") {
           clearInterval(intervalID);
           $('.send-incomplete').fadeOut(1500);
-          fillSimpleText('balance', '#balance');
+          fillSimpleText('wallet/balance', '#balance');
         }
       },
       error: function(request, status, error) {
@@ -464,6 +464,7 @@ function fillMustacheFromJson(url, templateHtml, divId) {
       // var jsonObj = JSON.parseWithDate(data);
 
       $.extend(data, standardDateFormatObj);
+      $.extend(data, otherDateFormatObj);
       $.extend(data, sparkServiceObj);
       $.extend(data, currencyFormatter);
       $.extend(data, htmlDecoder);
@@ -489,6 +490,7 @@ function fillMustacheFromJson(url, templateHtml, divId) {
 function fillMustacheWithJson(data, templateHtml, divId) {
 
   $.extend(data, standardDateFormatObj);
+  $.extend(data, otherDateFormatObj);
   $.extend(data, sparkServiceObj);
   $.extend(data, currencyFormatter);
   $.extend(data, htmlDecoder);
@@ -497,7 +499,7 @@ function fillMustacheWithJson(data, templateHtml, divId) {
   var rendered = Mustache.render(templateHtml, data);
   $(divId).html(rendered);
 
-  // console.log(rendered);
+  console.log(rendered);
 
 }
 
@@ -587,11 +589,29 @@ function getLastUrlPath() {
 
 }
 
+
+
+
 var standardDateFormatObj = {
   "dateformat": function() {
     return function(text, render) {
       var t = render(text);
       var date = new Date(parseInt(t));
+      // console.log(t);
+      return date.customFormat("#YYYY#/#MM#/#DD# #hh#:#mm# #AMPM#")
+    }
+  }
+};
+
+var otherDateFormatObj = {
+  "otherdateformat": function() {
+    return function(text, render) {
+      var t = render(text);
+      var timeStrArr = t.split(/[-: ]/);
+      var a = timeStrArr.map(function toInt(x) {
+        return parseInt(x);
+      });
+      var date = new Date(a[0], a[1], a[2], a[3], a[4], a[5]);
       // console.log(t);
       return date.customFormat("#YYYY#/#MM#/#DD# #hh#:#mm# #AMPM#")
     }
@@ -659,77 +679,7 @@ Date.prototype.customFormat = function(formatString) {
 }
 
 
-function showHideElementsLoggedIn() {
-  var sessionId = getCookie("authenticated_session_id");
-  console.log(sessionId);
-  console.log(getCookies());
-  console.log(document.cookie);
 
-  if (sessionId != null) {
-    $(".logged-in").removeClass("hide");
-    $(".logged-out").addClass("hide");
-
-
-  } else {
-    $(".logged-in").addClass("hide");
-    $(".logged-out").removeClass("hide");
-
-  }
-  $(".wrapper").removeClass("hide");
-
-
-}
-
-
-function setupLogout() {
-  var sessionId = getCookie("authenticated_session_id");
-  var url = sparkService + "/logout";
-  $('#logouthref').click(function() {
-    $.ajax({
-      type: "POST",
-      url: url,
-      xhrFields: {
-        withCredentials: true
-      },
-      // data: seriesData, 
-      success: function(data, status, xhr) {
-        // console.log(data);
-        // var jsonObj = JSON.parse(data);
-        // JSON.useDateParser();
-        // var jsonObj = jQuery.parseJSON(data);
-        // JSON.useDateParser();
-
-
-        toastr.success(data);
-        // console.log(url);
-        delete_cookie("authenticated_session_id");
-
-        // setTimeout(
-        //     function() {
-        //         var url = "/";
-        //         window.location.replace(url);
-
-        //     }, 1500);
-
-        showHideElementsLoggedIn();
-
-
-      },
-      error: function(request, status, error) {
-
-        toastr.error(request.responseText);
-      }
-    });
-
-
-
-    // showHideElementsLoggedIn();
-
-
-
-
-  });
-}
 
 var delay = (function() {
   var timer = 0;
@@ -843,7 +793,7 @@ function voteBtn() {
 
       }
     }
-       // Voting on answers
+    // Voting on answers
     else if (id.startsWith("#answer_vote")) {
 
       var answerId = id.split('_').pop();
@@ -996,4 +946,21 @@ function fillAnswerVotes(answers) {
 
   });
 
+}
+
+function tabLoad() {
+  // Javascript to enable link to tab
+  var hash = document.location.hash;
+  var prefix = "tab_";
+  if (hash) {
+    console.log('hash');
+    $('.nav-tabs a[href=' + hash.replace(prefix, "") + ']').tab('show');
+    $('#rootwizard').find("a[href*='" + hash + "']").trigger('click');
+  }
+
+  // Change hash for page-reload
+  $('.nav-tabs a').on('shown.bs.tab', function(e) {
+    window.location.hash = e.target.hash.replace("#", "#" + prefix);
+    $('#rootwizard').find("a[href*='" + hash + "']").trigger('click');
+  });
 }

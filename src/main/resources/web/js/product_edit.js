@@ -48,16 +48,16 @@ $(document).ready(function() {
       setupInfoForm(productData);
       categoryRecursive(productData);
       setupPriceForm(productData);
-
+      setupPhysicalForm(productData);
     });
 
 
 });
 
 function setupNextPageBtn() {
-	$('#nextPageBtn').click(function(e) {
-		window.location.replace('/seller_setup#list_items')
-	})
+  $('#nextPageBtn').click(function(e) {
+    window.location.replace('/seller_setup#list_items')
+  })
 }
 
 function setupCurrencySelects() {
@@ -124,7 +124,7 @@ function categoryRecursive(productData) {
           subCategory.addClass('hide');
           subCategory.appendTo("#category_forms");
           categoryRecursive(productData);
-           $('.main-page').removeClass('hide');
+          $('.main-page').removeClass('hide');
         }
 
 
@@ -188,7 +188,29 @@ function categoryFetch(parentId, num) {
   });
 }
 
+function setupPhysicalForm(productData) {
+  if (productData['physical'] != null) {
+    $("#is_physical_form [name='is_physical']").prop('checked', productData['physical']);
+  }
+
+  if ($("[name='is_physical']").is(':checked')) {
+    $('#non_physical').removeClass('hide');
+  } else {
+    $('#non_physical').addClass('hide');
+  }
+  $("#is_physical_form").change(function(e1) {
+    if ($("[name='is_physical']").is(':checked')) {
+      $('#non_physical').removeClass('hide');
+    } else {
+      $('#non_physical').addClass('hide');
+    }
+    standardFormPost('set_product_physical/' + productId, '#is_physical_form', null, null, null, null, null);
+
+  });
+}
+
 function setupShippingForm(shippingData, shippingCostsData) {
+
   getJson('countries').done(function(e) {
     var data = JSON.parse(e);
 
@@ -346,7 +368,7 @@ function setupPriceForm(productData) {
   $('.input-group.date').datepicker({
     format: 'yyyy-mm-dd'
   }).on('changeDate', function(e) {
-  	standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
+    standardFormPost('set_product_price/' + productId, "#price_form", null, null, null, null, null);
   });
 
   $('#show_advanced').click(function() {
@@ -655,6 +677,12 @@ function shippingForm(shippingNum) {
 
   var formName = '#shipping_cost_' + shippingNum + "_form";
   console.log('shipping form name = ' + formName);
+
+
+
+
+
+
 
   $(formName + ' .removeShippingBtn').click(function() {
     simplePost('delete_product_shipping_cost/' + productId + "/" + shippingNum);

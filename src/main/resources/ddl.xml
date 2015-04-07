@@ -86,6 +86,9 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="time_span" row="id" />
 </row>
+<row name="physical" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>CURRENT_TIMESTAMP</default></row>
@@ -93,15 +96,16 @@
 <part>id</part>
 </key>
 </table>
-<table x="830" y="544" name="shipment">
+<table x="507" y="552" name="shipment">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
+<row name="address_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="address" row="id" />
+</row>
 <row name="tracking_url" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="new field" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -110,7 +114,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="278" y="801" name="review">
+<table x="274" y="818" name="review">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -142,46 +146,7 @@
 <part>user_id</part>
 </key>
 </table>
-<table x="290" y="297" name="wishlist">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="user_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="user" row="id" />
-</row>
-<row name="name" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="created_at" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>CURRENT_TIMESTAMP</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="291" y="588" name="cart">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="user_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="user" row="id" />
-</row>
-<row name="active" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="purchased" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="created_at" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>CURRENT_TIMESTAMP</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="433" y="13" name="address">
+<table x="438" y="11" name="address">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -211,6 +176,9 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="country" row="id" />
 </row>
+<row name="default_" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>CURRENT_TIMESTAMP</default></row>
@@ -248,13 +216,13 @@
 <part>id</part>
 </key>
 </table>
-<table x="432" y="585" name="cart_item">
+<table x="276" y="589" name="cart_item">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="cart_id" null="1" autoincrement="0">
+<row name="user_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="cart" row="id" />
+<default>NULL</default><relation table="user" row="id" />
 </row>
 <row name="product_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -265,7 +233,15 @@
 <default>NULL</default></row>
 <row name="purchased" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default></row>
+<default>0</default></row>
+<row name="shipment_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="shipment" row="id" />
+</row>
+<row name="payment_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="payment" row="id" />
+</row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>CURRENT_TIMESTAMP</default></row>
@@ -273,13 +249,16 @@
 <part>id</part>
 </key>
 </table>
-<table x="836" y="672" name="payment">
+<table x="633" y="666" name="payment">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="seller_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<row name="order_iframe" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
 <default>NULL</default></row>
+<row name="completed" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>CURRENT_TIMESTAMP</default></row>
@@ -363,7 +342,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="590" y="180" name="country">
+<table x="588" y="165" name="country">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -380,45 +359,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="606" y="671" name="cart_item_payment">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="cart_item_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="cart_item" row="id" />
-</row>
-<row name="payment_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="payment" row="id" />
-</row>
-<row name="created_at" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>CURRENT_TIMESTAMP</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="603" y="546" name="cart_item_shipment">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="cart_item_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="cart_item" row="id" />
-</row>
-<row name="shipment_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="shipment" row="id" />
-</row>
-<row name="created_at" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>CURRENT_TIMESTAMP</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="438" y="800" name="review_vote">
+<table x="444" y="799" name="review_vote">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -553,7 +494,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="254" y="1219" name="category">
+<table x="252" y="1226" name="category">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -573,13 +514,13 @@
 <part>id</part>
 </key>
 </table>
-<table x="483" y="302" name="wishlist_item">
+<table x="442" y="304" name="wishlist_item">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="wishlist_id" null="1" autoincrement="0">
+<row name="user_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="wishlist" row="id" />
+<default>NULL</default><relation table="user" row="id" />
 </row>
 <row name="product_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -595,7 +536,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="696" y="13" name="login">
+<table x="716" y="13" name="login">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -619,7 +560,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="237" y="1374" name="product_price">
+<table x="237" y="1393" name="product_price">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -737,7 +678,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="418" y="1237" name="tag">
+<table x="415" y="1264" name="tag">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -907,6 +848,49 @@
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="created_at" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>CURRENT_TIMESTAMP</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="823" y="808" name="message">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="from_user_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="user" row="id" />
+</row>
+<row name="to_user_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="user" row="id" />
+</row>
+<row name="subject" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="html" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="message_status_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="message_status" row="id" />
+</row>
+<row name="created_at" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>CURRENT_TIMESTAMP</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1005" y="808" name="message_status">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="title" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>CURRENT_TIMESTAMP</default></row>
 <key type="PRIMARY" name="">

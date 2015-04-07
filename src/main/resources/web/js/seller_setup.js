@@ -4,6 +4,7 @@ $(document).ready(function() {
 
   setupWizard();
   saveShopName();
+  fillShopName();
   addNewItem();
   tabLoad();
   fillCurrentProducts();
@@ -11,23 +12,7 @@ $(document).ready(function() {
   setupWallet();
 });
 
-function tabLoad() {
-  // Javascript to enable link to tab
-  var hash = document.location.hash;
-  var prefix = "tab_";
-  if (hash) {
-  	console.log('hash');
-    $('.nav-tabs a[href=' + hash.replace(prefix, "") + ']').tab('show');
-     $('#rootwizard').find("a[href*='" + hash + "']").trigger('click');
-  }
 
-  // Change hash for page-reload
-  $('.nav-tabs a').on('shown.bs.tab', function(e) {
-  	console.log('got here2');
-    window.location.hash = e.target.hash.replace("#", "#" + prefix);
-    $('#rootwizard').find("a[href*='" + hash + "']").trigger('click');
-  });
-}
 
 function setupWizard() {
   $('#rootwizard').bootstrapWizard({
@@ -51,7 +36,8 @@ function setupWizard() {
   });
 
   $('#rootwizard .finish').click(function() {
-    alert('Finished!, Starting over!');
+    // alert('Finished!, Starting over!');
+    window.location('/wallet');
     $('#rootwizard').find("a[href*='tab1']").trigger('click');
   });
 }
@@ -77,12 +63,24 @@ function addNewItem() {
 }
 
 function fillCurrentProducts() {
-getJson('product_thumbnails').done(function(e) {
+  getJson('product_thumbnails').done(function(e) {
     var data = JSON.parse(e);
     console.log(data);
     fillMustacheWithJson(data, productsTemplate, '#products');
     $('.pic_num-1').addClass('active');
 
+  });
+}
+
+function fillShopName() {
+  getJson('get_seller').done(function(e) {
+    var data = JSON.parse(e);
+    console.log(data);
+    var shopName = data['shop_name'];
+
+    if (shopName != null) {
+      $('#shopname_form [name="shop_name"]').val(shopName);
+    }
   });
 }
 

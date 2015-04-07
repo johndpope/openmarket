@@ -53,7 +53,7 @@ public class WebService {
 	
 		// All the simple webpages
 		get("/:page", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+//			Tools.allowOnlyLocalHeaders(req, res);	
 			String pageName = req.params(":page");
 			return Tools.readFile(DataSources.PAGES(pageName));
 		});

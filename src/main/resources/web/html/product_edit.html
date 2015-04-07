@@ -1,61 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-
-
   <title>OpenMarket</title>
-
   <!-- favicon -->
   <link rel="shortcut icon" href="/pics/favicon.ico" type="image/x-icon" />
-
   <!-- Bootstrap core CSS -->
   <link href="/css/white.plum.bootstrap.min.css" rel="stylesheet">
-
   <!-- Link to font awesome -->
   <!-- <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"> -->
   <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-
   <!-- Bootstrap social css -->
   <link href="/bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
-
   <!--   Bootstrap validator -->
   <link rel="stylesheet" href="/bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
-
   <!--   toastr css -->
   <link href="/bower_components/toastr/toastr.css" rel="stylesheet" />
-
   <!--   typeahead css -->
   <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
-
   <!-- Pickadate -->
   <link href="/bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
   <link href="/bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
-
   <!-- Summernote -->
   <link href="/bower_components/summernote/dist/summernote.css" rel="stylesheet" />
-
   <!-- Bootstrap datepicker -->
   <link href="/bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
-
   <!-- This main css -->
   <link href="/css/main.css" rel="stylesheet">
-
-
 </head>
 
 <body>
   <!-- Navbars -->
-
   <!-- the start of the doc -->
   <div id="wrapper" class="wrapper hide">
-
     <!-- header -->
     <nav class="navbar navbar-default navbar-top" role="navigation">
       <div class="container-fluid">
@@ -69,11 +51,9 @@
           </button>
           <a class="navbar-brand" href="/">OpenMarket</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-
             <form id="creator_search" class="navbar-form navbar-left navbar-input-group" role="search">
               <div class="input-group">
                 <div class="input-group-btn">
@@ -89,7 +69,6 @@
               </span>
               </div>
             </form>
-
             <li class="dropdown">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
@@ -100,25 +79,17 @@
                 </ul>
               </div>
             </li>
-
-
-
           </ul>
-
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#login">Wishlist <span class="caret"></span></a>
             </li>
-
             <li><a href="/about">Cart <span class="caret"></span></a>
             </li>
             <li class="dropdown logged-out">
               <div class="navbar-form">
-
                 <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
-
               </div>
             </li>
-
             <li class="dropdown logged-in">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
@@ -137,33 +108,24 @@
                 </ul>
               </div>
             </li>
-
-
           </ul>
-
-
         </div>
         <!-- /.navbar-collapse -->
       </div>
       <!-- /.container-fluid -->
     </nav>
-
     <!-- The full page with teh sidebar -->
     <div class="container-fluid main-page hide">
-
       <!-- The Page -->
       <div class="row-fluid">
         <div class="col-md-7">
-
           <div class="row">
             <div class="col-md-12">
               <div class="panel panel-default">
                 <div class="panel-body">
                   <h4 class="less-margins"> Category</h4>
                   <br>
-
                   <form id="category_form" class="form-horizontal">
-
                     <div class="form-group">
                       <div id="category_forms">
                         <div id="category_1" class="col-md-6">
@@ -176,7 +138,6 @@
                             </select>
                           </script>
                         </div>
-
                       </div>
                   </form>
                   </div>
@@ -184,29 +145,23 @@
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-12">
               <div class="panel panel-warning">
                 <div class="panel-body">
                   <h4 class="less-margins"> Pictures</h4>
                   <br>
-
                   <div id="pictures_forms">
                     <form id="picture_1_form" class="form-horizontal">
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group col-xs-6">
                             <div class="input-group">
-
                               <input name="picture_url" class="form-control" placeholder="Picture URL" type="url" data-fv-uri-message="The website address is not valid" />
-
                               <span class="input-group-btn">
                         <a href="#" type="" class="btn btn-danger removePictureBtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
                       </span>
-
                             </div>
-
                           </div>
                           <div class="col-xs-6">
                             <a href="#" class="thumbnail">
@@ -216,25 +171,17 @@
                         </div>
                       </div>
                     </form>
-
                   </div>
-
                   <button id="addPictureBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add Another</button>
-
-
-
-
                 </div>
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-12">
               <div class="panel panel-danger">
                 <div class="panel-body">
                   <div role="tabpanel">
-
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                       <li role="presentation" class="active"><a href="#detailsTab" aria-controls="home" role="tab" data-toggle="tab">Details</a>
@@ -242,10 +189,8 @@
                       <li role="presentation"><a href="#shippingTab" aria-controls="profile" role="tab" data-toggle="tab">Shipping</a>
                       </li>
                     </ul>
-
                     <!-- Tab panes -->
                     <div class="tab-content">
-
                       <!-- Details tab -->
                       <div role="tabpanel" class="tab-pane active" id="detailsTab">
                         <div class="summernote">
@@ -254,95 +199,88 @@
                         <br>
                         <button id="saveDetails" type="submit" class="btn btn-default btn-sm pull-right" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Save Details</button>
                       </div>
-
                       <!-- shipping tab -->
                       <div role="tabpanel" class="tab-pane" id="shippingTab">
                         <h4> Shipping </h4>
-                        <form id="shipping_form" class="form-horizontal">
+                        <form id="is_physical_form" class="form-horizontal">
                           <div class="form-group">
-                            <div id="ships_from" class="col-md-12">
-                              <script id="ships_from_template" type="x-tmpl-mustache">
-                                <select name="from_country" class="">
-                                  <option value="" disabled selected="selected">Ships From</option>
-                                  {{#.}}
-                                  <option name="{{name}}" value="{{id}}">{{name}}</option>
-                                  {{/.}}
-                                </select>
-                              </script>
-                            </div>
+                            <label class="radio">
+                            <input type="hidden" value="0" name="is_physical">
+                              <input type="checkbox" value="1" name="is_physical"> Is this a physical good?
+                            </label>
                           </div>
                         </form>
-
-                        <div id="shipping_cost_forms">
-                          <form id="shipping_cost_1_form" class="form-horizontal">
+                        <div id="non_physical" class="hide">
+                          <form id="shipping_form" class="form-horizontal">
                             <div class="form-group">
-                              <div class="col-xs-5 pushdown">
-                                <div id="ships_to">
-                                  <script id="ships_to_template" type="x-tmpl-mustache">
-                                    <select name="to_country" class="">
-                                      <option value="" disabled selected="selected">Ships to</option>
+                              <div id="ships_from" class="col-md-12">
+                                <script id="ships_from_template" type="x-tmpl-mustache">
+                                  <select name="from_country" class="">
+                                    <option value="" disabled selected="selected">Ships From</option>
+                                    {{#.}}
+                                    <option name="{{name}}" value="{{id}}">{{name}}</option>
+                                    {{/.}}
+                                  </select>
+                                </script>
+                              </div>
+                            </div>
+                          </form>
+                          <div id="shipping_cost_forms">
+                            <form id="shipping_cost_1_form" class="form-horizontal">
+                              <div class="form-group">
+                                <div class="col-xs-5 pushdown">
+                                  <div id="ships_to">
+                                    <script id="ships_to_template" type="x-tmpl-mustache">
+                                      <select name="to_country" class="">
+                                        <option value="" disabled selected="selected">Ships to</option>
+                                        {{#.}}
+                                        <option name="{{name}}" value="{{id}}">{{name}}</option>
+                                        {{/.}}
+                                      </select>
+                                    </script>
+                                  </div>
+                                </div>
+                                <div class="col-xs-3">
+                                  <input name="shipping_cost" type="text" class="form-control" placeholder="Cost" data-bv-greaterthan="true" data-bv-greaterthan-value="0" data-bv-greaterthan-message="Must be > 0" />
+                                </div>
+                                <div class="col-xs-2 pushdown currency-select">
+                                  <script id="currency_template" type="x-tmpl-mustache">
+                                    <select name="currency" class="">
                                       {{#.}}
-                                      <option name="{{name}}" value="{{id}}">{{name}}</option>
+                                      <option name="{{iso}}" value="{{id}}">{{iso}}</option>
                                       {{/.}}
                                     </select>
                                   </script>
                                 </div>
-                              </div>
-                              <div class="col-xs-3">
-                                <input name="shipping_cost" type="text" class="form-control" placeholder="Cost" data-bv-greaterthan="true" data-bv-greaterthan-value="0" data-bv-greaterthan-message="Must be > 0" />
-                              </div>
-                              <div class="col-xs-2 pushdown currency-select">
-                                <script id="currency_template" type="x-tmpl-mustache">
-                                  <select name="currency" class="">
-                                    {{#.}}
-                                    <option name="{{iso}}" value="{{id}}">{{iso}}</option>
-                                    {{/.}}
-                                  </select>
-                                </script>
-
-                              </div>
-                              <div class="col-xs-2">
-                                <a href="#" type="" class="btn btn-danger removeShippingBtn pull-right" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
-                              </div>
-
-
-
-                          </form>
+                                <div class="col-xs-2">
+                                  <a href="#" type="" class="btn btn-danger removeShippingBtn pull-right" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
+                                </div>
+                            </form>
+                            </div>
                           </div>
-
+                          <a href="#" id="addShippingBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add Another</a>
                         </div>
-                        <a href="#" id="addShippingBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add Another</a>
-
                       </div>
-
-
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
-
         <div class="col-md-5">
-
           <div class="row">
             <div class="col-md-12">
-
               <div class="panel panel-success">
                 <div class="panel-body">
-
                   <h4 class="less-margins"> Product information</h4>
                   <br>
-
                   <form id="info_form" class="form-horizontal">
                     <div class="form-group">
                       <div class="col-md-12">
                         <input name="title" type="inputEmail3" class="form-control" placeholder="Product name" minlength="6" maxlength="90" data-bv-notempty="true" data-bv-notempty-message="An name is required" />
                       </div>
                     </div>
-
                     <div class="form-group">
                       <div class="col-xs-6">
                         <input name="quantity" type="number" class="form-control" placeholder="Quantity" data-bv-greaterthan="true" data-bv-greaterthan-value="0" data-bv-greaterthan-message="Must be > 0" />
@@ -358,74 +296,50 @@
                         </script>
                       </div>
                     </div>
-
                   </form>
-
-
-
-
                   <br>
                   <div class="row">
                     <div class="col-md-12">
                       <h4 class="less-margins"> Overview bullet points</h4>
                     </div>
-
                   </div>
                   <br>
                   <div class="row">
                     <div class="col-md-12">
-
                       <div id="bullets_forms">
                         <form id="bullet_1_form" class="form-horizontal">
                           <div class="form-group col-md-12">
                             <div class="input-group">
-
                               <input name="bullet" class="form-control" placeholder="Bullet point" type="text" minlength="6" maxlength="90" />
-
                               <span class="input-group-btn">
                         <a href="#" type="" class="btn btn-danger removeBulletBtn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-trash'></i></a>
                       </span>
-
                             </div>
-
                           </div>
                         </form>
                       </div>
                       <button id="addBulletBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add Another</button>
-
-
-
-
-
                     </div>
                   </div>
                   <br>
-
-
                 </div>
-
-
               </div>
-
               <div class="panel panel-info">
                 <div class="panel-body">
                   <div class="row">
                     <div class="col-xs-12">
                       <h4> Pricing </h4>
-
                       <form id="price_form" class="form-horizontal">
                         <div class="form-group">
                           <div class="col-md-6">
                             <input name="price" type="inputEmail3" class="form-control" placeholder="price" data-bv-notempty="true" data-bv-notempty-message="An price is required" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001" />
                           </div>
                           <div class="col-sm-4 pushdown currency-select">
-
                           </div>
                         </div>
                         <a id="show_advanced" href="#">Show advanced settings</a>
                         <div id="pricing_advanced" class="hide">
                           <div class="form-group">
-
                             <div class="col-sm-12">
                               <div class="input-group">
                                 <label class="radio">
@@ -439,7 +353,6 @@
                                 <div id="variable_prices" class="hide">
                                   <br>
                                   <div class="form-group">
-
                                     <div class="col-sm-3">
                                       <input name="price_1" type="text" class="form-control " placeholder="$1" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
                                     </div>
@@ -459,78 +372,45 @@
                                 </div>
                               </div>
                             </div>
-
-
-
-
-
                             <div class="col-sm-12">
                               <div class="input-group">
                                 <label class="radio">
                                   <input type="hidden" name="is_auction" value="0">
                                   <input type="checkbox" name="is_auction" value="1"> Hold an Auction?
                                 </label>
-
                                 <div id="auction_info" class="hide">
-
                                   <br>
                                   <div class="form-group">
-
-
-
                                     <div class="col-sm-6">
                                       <input name="start_amount_auction" type="text" class="form-control " placeholder="Start price" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
                                     </div>
-
                                     <div class="col-sm-6">
                                       <input name="reserve_amount_auction" type="text" class="form-control " placeholder="Reserve price" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
                                     </div>
-
-
                                     <div class="col-sm-6">
                                       <div class="input-group date">
                                         <input name="expiration_time" type="date" class="form-control " placeholder="expiration time" data-fv-date-format="YYYY/MM/DD" data-fv-date-message="not a date"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                       </div>
                                     </div>
-
-
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-
-
-
                         </div>
-
                       </form>
                     </div>
                   </div>
                 </div>
               </div>
-
               <button id="nextPageBtn" class="btn btn-default btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>"><i class='fa fa-plus'></i> Add more products</button>
-
-
-
-
-
             </div>
-
             <!-- end of wrapper -->
           </div>
-
-
-
         </div>
-
         <!-- Modals -->
-
-
         <div id="userDisclaimerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
           <div class="modal-dialog">
-
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
@@ -548,25 +428,18 @@
                     <li> Your bitcoin wallet may charge you a small fee for making a deposit. </li>
                   </ul>
                 </div>
-
-
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Okay, I accept</button>
               </div>
-
             </div>
           </div>
         </div>
-
-
         <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-sm">
             <div class="modal-content">
               <div class="modal-body">
-
                 <div role="tabpanel">
-
                   <!-- Nav tabs -->
                   <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#loginTab" aria-controls="home" role="tab" data-toggle="tab">Log in</a>
@@ -574,14 +447,11 @@
                     <li role="presentation"><a href="#signupTab" aria-controls="profile" role="tab" data-toggle="tab">Sign Up</a>
                     </li>
                   </ul>
-
                   <!-- Tab panes -->
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="loginTab">
-
                       <h1 class="text-center"> Log in </h1>
                       <br>
-
                       <form id="login_form_modal" class="form-horizontal" role="form">
                         <div id="userLoginDiv" class="form-group">
                           <label for="inputUsername3" class="col-sm-12">Email</label>
@@ -595,59 +465,34 @@
                             <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-different="true" data-bv-different-field="username" data-bv-different-message="The password cannot be the same as username">
                           </div>
                         </div>
-
-
                         <div class="form-group">
                           <div class="col-sm-12">
                             <button id="signinBtn" type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign in</button>
                           </div>
                         </div>
                       </form>
-
                     </div>
-
                     <!-- The sign up tab -->
                     <div role="tabpanel" class="tab-pane" id="signupTab">
-
                       <h1 class="text-center"> Sign up </h1>
                       <br>
-
                       <form id="signup_form_modal" class="form-horizontal">
                         <div class="form-group">
                           <label for="inputUsername3" class="col-sm-12">Email</label>
-
                           <div class="col-sm-12">
                             <input name="email" type="inputEmail3" class="form-control" placeholder="Email Address" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
                           </div>
                         </div>
-
                         <button type="submit" class="btn btn-default btn-lg btn-block" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign Up</button>
-
                       </form>
                     </div>
-
                   </div>
                 </div>
               </div>
-
-
-
-
-
-
-
-
             </div>
           </div>
         </div>
         <!-- end of login modal -->
-
-
-
-
-
-
-
         <!-- Bootstrap core JavaScript
       ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
@@ -667,14 +512,10 @@
         <script src="/bower_components/summernote/dist/summernote.min.js"></script>
         <script src="/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script src="/bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
-
         <!-- my scripts -->
         <script src="/js/tools.js"></script>
         <script src="/js/common.js"></script>
         <script src="/js/product_edit.js"></script>
-
-
-
 </body>
 
 </html>

@@ -1,18 +1,28 @@
 package com.openmarket.db.actions;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import spark.Request;
 import spark.Response;
 
+import com.bitmerchant.db.Tables.Order;
 import com.google.common.collect.ImmutableMap;
+import com.openmarket.db.Tables.WishlistItem;
+import com.openmarket.db.Transformations;
+import com.openmarket.db.Tables.ProductThumbnailView;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.TableConstants;
 import com.openmarket.tools.Tools;
@@ -250,7 +260,7 @@ public class Actions {
 
 			return message;
 		}
-		
+
 		public static String voteOnQuestion(String questionId, String userId,
 				String vote) {
 
@@ -276,7 +286,7 @@ public class Actions {
 
 			return message;
 		}
-		
+
 		public static String voteOnAnswer(String answerId, String userId,
 				String vote) {
 
@@ -302,29 +312,375 @@ public class Actions {
 
 			return message;
 		}
-		
+
 		public static String askQuestion(String productId, String userId,
 				String text) {
-			
+
 			Question q = Question.create("product_id", productId, "user_id", userId, "text", text);
 			Tools.writeRQL(q.toInsert());
-		
+
 			String message = "Question saved";
+
+			return message;
+
+		}
+		public static String answerQuestion(String questionId, String userId,
+				String answer) {
+
+			Answer a = Answer.create("question_id", questionId, "user_id", userId, "text", answer);
+			Tools.writeRQL(a.toInsert());
+
+			String message = "Answer saved";
+
+			return message;
+		}
+
+		public static String addToCart(String userId, String productId) {
+
+
+			// Check if item already exists
+			CartItem cartItem = CartItem.findFirst("user_id = ? and product_id = ? and purchased = ?", userId,
+					productId, "0");
+			if (cartItem != null) {
+				Integer quantity = cartItem.getInteger("quantity");
+				cartItem.set("quantity", ++quantity);
+				log.info("update = " + cartItem.toUpdate());
+				Tools.writeRQL(cartItem.toUpdate());
+
+			} else {
+				// Add the product to the cart
+				cartItem = CartItem.create("user_id", userId,
+						"product_id", productId,
+						"quantity", 1);
+				Tools.writeRQL(cartItem.toInsert());
+			}
+
+			String message = "Item added to cart";
+
+			return message;
+		}
+
+		public static String removeFromCart(String userId, String cartItemId) {
+			
+			CartItem ci = CartItem.findFirst("id = ?", cartItemId);
+			String message;
+			if (ci != null) {
+
+				String cmd = Tools.toDelete("cart_item", ci.getId().toString());
+				Tools.writeRQL(cmd);
+
+				message = "Item removed from cart";
+			} else {
+				throw new NoSuchElementException("Couldn't delete the cart item");
+			}
 			
 			return message;
 			
 		}
-		public static String answerQuestion(String questionId, String userId,
-				String answer) {
+
+		public static String saveAddress(String userId, String fullName,
+				String street, String addrTwo, String city, String state,
+				String zipcode, String countryId) {
+
+			Address address = Address.create("user_id", userId,
+					"full_name", fullName,
+					"address_line_1", street,
+					"address_line_2", addrTwo,
+					"city", city,
+					"state", state,
+					"zip", zipcode,
+					"default_", "0", //TODO default
+					"country_id", countryId); 
+
+			Tools.writeRQL(address.toInsert());
+
+			String message = "Address saved";
+
+			return message;
+
+		}
+
+		public static String editAddress(String userId, String addressId, String fullName,
+				String street, String addrTwo, String city, String state,
+				String zipcode, String countryId) {
+
+			Address address = Address.findFirst("id = ?", addressId);
+
+			address.set("user_id", userId,
+					"full_name", fullName,
+					"address_line_1", street,
+					"address_line_2", addrTwo,
+					"city", city,
+					"state", state,
+					"zip", zipcode,
+					"default_", "0", //TODO default
+					"country_id", countryId); 
+
+			Tools.writeRQL(address.toUpdate());
+
+			String message = "Address changed";
+
+			return message;
+
+		}
+
+
+		public static String deleteAddress(String userId, String addressId) {
+
+			String message;
+			Address addr = Address.findFirst("id = ?", addressId);
+
+			if (addr != null) {
+
+				String cmd = Tools.toDelete("address", addr.getId().toString());
+				Tools.writeRQL(cmd);
+
+				message = "Address deleted";
+			} else {
+				message = "BLARP";
+			}
+
+			return message;
+
+
+		}
+		public static String saveShipment(String userId, String addressId,
+				String sellerId) {
+			String message;
+			// First, find all the active cart items for that user
+			List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?", 
+					userId, sellerId);
+
+			Set<String> cartItemIds = new HashSet<String>();
+
+			// These need to be updated 
+			String shipmentId = null;
+			for (CartView cv : cvs) {
+				cartItemIds.add(cv.getId().toString());
+				String cartShipment = cv.getString("shipment_id");
+				log.info(cartShipment);
+				if (cartShipment != null) {
+					shipmentId = cartShipment;
+				}
+			}
+
+			// If the shipment ID isn't null, then it needs to be updated, and don't change the cart_items
+			if (shipmentId != null) {
+				Shipment shipment = Shipment.findFirst("id = ?", shipmentId);
+				shipment.set("address_id",addressId);
+
+				Tools.writeRQL(shipment.toUpdate());
+				message = "Shipping address updated";
+			} 
+			// Otherwise, add a new shipment, update the cart items
+			else {
+				Shipment shipment = Shipment.create("address_id",addressId);
+
+				Tools.writeRQL(shipment.toInsert());
+
+
+			}
+
+			// Always update the cart items
+
+			LazyList<Shipment> shipments = Shipment.find("address_id = ? and tracking_url is NULL"
+					,addressId).orderBy("created_at desc");
+			Shipment shipment = shipments.get(0);
+
+			String cmd = Tools.toUpdate("cart_item", cartItemIds, 
+					"shipment_id", shipment.getId().toString());
+			log.info("The shipment id = " + shipment.getId().toString() + " and the update line is \n" + cmd);
+
+			Tools.writeRQL(cmd);
+			message = "Shipping address added";
+
+
+			return message;
+
+
+		}
+
+		public static void updatePaymentIframe(String paymentId, CartGroup cg) {
+
+			String total = cg.getString("checkout_total");
+			String iso = cg.getString("iso");
+
+			String jsonReq = Tools.createBitmerchantButtonRequest(total, iso, paymentId);
+
+			// Create the bitmerchant order and iframe stuff
+			Order o = com.bitmerchant.db.Actions.OrderActions.createOrder(jsonReq);
+
+			String buttonId = o.getString("button_id");
+
+			Payment payment = Payment.findFirst("id = ?", paymentId);
+
+			String iframeText = Tools.createBitmerchantIframe(buttonId, o.getId().toString(),
+					DataSources.WEB_SERVICE_EXTERNAL_URL());
+
+
+			log.info(iframeText);
+			payment.set("order_iframe",iframeText);
+
+			log.info("payment iframe update = " + payment.toUpdate());
+			Tools.writeRQL(payment.toUpdate());
+
+		}
+
+		public static String createPayment(String userId, String sellerId) {
+
+			String message;
+
+			// Find all the active cart items for that user
+			List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?", 
+					userId, sellerId);
+
+			if (cvs.size() == 0) {
+				throw new NoSuchElementException("Nothing in cart");
+			}
+
+			// Construct the order jsonReq from cart group totals
+			CartGroup cg = CartGroup.findFirst("user_id = ? and seller_id = ?",
+					userId, sellerId);
+
+
+
+			Set<String> cartItemIds = new HashSet<String>();
+
+			// These need to be updated 
+			String paymentId = null;
+			for (CartView cv : cvs) {
+				cartItemIds.add(cv.getId().toString());
+				String cartPayment = cv.getString("payment_id");
+				log.info(cartPayment);
+				if (cartPayment != null) {
+					paymentId = cartPayment;
+				}
+			}
+
+
+			// If the payment ID isn't null, then it needs to be updated, and don't change the cart_items
+			if (paymentId != null) {
+				//				Payment payment = Payment.findFirst("id = ?", paymentId);
+				message = "payment updated";
+			}
+			// Otherwise, add a payment, and update the cart items
+			else {
+				Payment payment = Payment.create();
+
+				Tools.writeRQL(payment.toInsert());
+
+
+			}
+			// Always update the cart items
+			// Fetch it to get its id
+			LazyList<Payment> payments = Payment.find("completed is null").orderBy("created_at desc");
+			Payment payment = payments.get(0);
+			paymentId = payment.getId().toString();
+
+			String cmd = Tools.toUpdate("cart_item", cartItemIds, 
+					"payment_id", payment.getId().toString());
+			log.info("The payment id = " + payment.getId().toString() + " and the update line is \n" + cmd);
+
+			Tools.writeRQL(cmd);
+			message = "Payment added";
+
+			updatePaymentIframe(paymentId, cg);
+
+
+
+			return message;
+
+		}
+		public static String getWishlistThumbnails(String userId) {
+
+			// Get users wishlist items
+			List<WishlistItem> wsItems = WishlistItem.find("user_id = ?", userId);
+
+			if (wsItems.size() == 0) {
+				return "{\"products\": []}";
+			}
+			// Construct an in clause
+			StringBuilder inClause = new StringBuilder();
+			inClause.append("(");
+			Iterator<WishlistItem> wsI = wsItems.iterator();
+			for (;;) {
+				WishlistItem ws = wsI.next();
+				inClause.append(ws.getString("product_id"));
+				if (wsI.hasNext()) {
+					inClause.append(",");
+				} else {
+					inClause.append(")");
+					break;
+				}
+			}
+			log.info("in clause = " + inClause);
+
+			List<ProductThumbnailView> pvs = ProductThumbnailView.where(
+					"product_id in " + inClause.toString());
+
+			String json = Tools.nodeToJson(
+					Transformations.productThumbnailViewJson(pvs));
+
+			return json;
+		}
+
+		public static String addToWishlist(String userId, String productId) {
+
+
+			// Check if item already exists
+			WishlistItem wishlistItem = WishlistItem.findFirst("user_id = ? and product_id = ? and purchased = ?", userId,
+					productId, "0");
+
+			// only add it if its not already there
+			if (wishlistItem == null){
+				// Add the product to the cart
+				wishlistItem = WishlistItem.create("user_id", userId,
+						"product_id", productId,
+						"purchased", 0);
+				Tools.writeRQL(wishlistItem.toInsert());
+			}
+
+			String message = "Item added to wishlist";
+
+			return message;
+		}
+		public static String removeFromWishlist(String userId, String productId) {
 			
-			Answer a = Answer.create("question_id", questionId, "user_id", userId, "text", answer);
-			Tools.writeRQL(a.toInsert());
-		
-			String message = "Answer saved";
+			WishlistItem ci = WishlistItem.findFirst("user_id = ? and product_id = ?",
+					userId, productId);
+			String message;
+			if (ci != null) {
+
+				String cmd = Tools.toDelete("wishlist_item", ci.getId().toString());
+				Tools.writeRQL(cmd);
+
+				message = "Item removed from wishlist";
+			} else {
+				throw new NoSuchElementException("Couldn't remove the wishlist item");
+			}
 			
 			return message;
 		}
 
+
+	}
+	public static class PaymentActions {
+		public static void updatePayment(String paymentId) {
+
+
+			// update the payment to completed
+			Payment payment = Payment.findFirst("id = ?", paymentId);
+			payment.set("completed","1");
+
+			Tools.writeRQL(payment.toUpdate());
+
+			// update the cart_items to purchased
+			String cmd = Tools.toUpdate("cart_item","payment_id",Integer.valueOf(paymentId),"purchased","1");
+			Tools.writeRQL(cmd);
+			log.info(cmd);
+
+
+		}
 	}
 
 
@@ -456,8 +812,7 @@ public class Actions {
 
 			String cmd;
 			if (p != null) {
-				cmd = Tools.toUpdate("product_price", p.getId().toString(),
-						"product_id", productId, 
+				p.set("product_id", productId, 
 						"price", price,
 						"native_currency_id", currId,
 						"variable_price", variablePrice,
@@ -467,6 +822,9 @@ public class Actions {
 						"price_3", price3,
 						"price_4", price4,
 						"price_5", price5);
+
+				cmd = p.toUpdate();
+
 			} else {
 				cmd = ProductPrice.create("product_id", productId, 
 						"price", price,
@@ -705,6 +1063,26 @@ public class Actions {
 			Tools.writeRQL(cmd);
 
 			String message = "Shipping saved";
+
+			return message;
+		}
+
+		public static String saveShippingPhysical(String productId,
+				String isPhysical) {
+
+			// See if the shipping first exists
+			Product a = Product.findFirst(
+					"id = ?", productId);
+
+			String cmd;
+
+			cmd = Tools.toUpdate("product", a.getId().toString(),
+					"id", productId, 
+					"physical", isPhysical);
+
+			Tools.writeRQL(cmd);
+
+			String message = "Is physical saved";
 
 			return message;
 		}

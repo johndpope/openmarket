@@ -228,4 +228,110 @@ public class Transformations {
 
 		return a;
 	}
+
+	public static ObjectNode cartGroupedJson(String userId) {
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("cart_groups");
+		
+		
+		List<CartGroup> cgs = CartGroup.find("user_id = ?", userId);
+
+		for (CartGroup cg : cgs) {
+			// each row is a distinct seller and payment?
+			String sellerId = cg.getString("seller_id");
+
+			List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?",
+					userId, sellerId);
+
+
+			JsonNode cgNode = Tools.jsonToNode(cg.toJson(false));
+
+			// Need to add the product array to this later
+			ObjectNode on = Tools.MAPPER.valueToTree(cgNode);		
+
+			ArrayNode ac = on.putArray("products");
+			for (CartView cv : cvs) {
+				ac.add(Tools.jsonToNode(cv.toJson(false)));
+
+			}
+			ab.add(on);
+
+
+		}
+
+		return a;
+
+
+
+	}
+
+	public static ObjectNode cartGroupedJson(String userId, String sellerId) {
+
+		CartGroup cg = CartGroup.findFirst("user_id = ? and seller_id = ?", userId, sellerId);
+
+		List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?",
+				userId, sellerId);
+
+
+		JsonNode cgNode = Tools.jsonToNode(cg.toJson(false));
+
+		// Need to add the product array to this later
+		ObjectNode on = Tools.MAPPER.valueToTree(cgNode);		
+
+		ArrayNode ac = on.putArray("products");
+		for (CartView cv : cvs) {
+			ac.add(Tools.jsonToNode(cv.toJson(false)));
+
+		}
+
+		return on;
+
+
+
+	}
+	
+	public static ObjectNode orderGroupedJson(String userId, String view) {
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("order_groups");
+		
+		List<OrderGroup> ogs;
+		
+		if (view.equals("open")) {
+			ogs = OrderGroup.find("user_id = ? and tracking_url is null", userId).orderBy("created_at desc");
+		} else {
+			ogs = OrderGroup.find("user_id = ?", userId).orderBy("created_at desc");
+		}
+		for (OrderGroup og : ogs) {
+			// each row is a distinct seller and payment?
+			String paymentId = og.getString("payment_id");
+
+			List<OrderView> cvs = OrderView.find("user_id = ? and payment_id = ?",
+					userId, paymentId);
+
+
+			JsonNode cgNode = Tools.jsonToNode(og.toJson(false));
+
+			// Need to add the product array to this later
+			ObjectNode on = Tools.MAPPER.valueToTree(cgNode);		
+
+			ArrayNode ac = on.putArray("products");
+			for (OrderView cv : cvs) {
+				ac.add(Tools.jsonToNode(cv.toJson(false)));
+
+			}
+			ab.add(on);
+
+
+		}
+
+		return a;
+
+
+
+	}
+	
 }

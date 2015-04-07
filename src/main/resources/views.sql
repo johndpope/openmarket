@@ -29,6 +29,7 @@ price_5,
 expire_time,
 start_amount,
 reserve_amount,
+physical,
 currency_id as auction_currency_id,
 auction_currency.iso as auction_currency_iso,
 shipping.id as shipping_id, 
@@ -141,3 +142,140 @@ from shipping_cost
 left join country on shipping_cost.to_country_id = country.id 
 left join currency on shipping_cost.native_currency_id = currency.id 
 ;
+
+CREATE VIEW cart_view AS 
+select cart_item.id,
+cart_item.user_id,
+product.seller_id,
+cart_item.product_id,
+cart_item.quantity,
+purchased,
+cart_item.created_at,
+title, 
+url,
+product_price.price,
+iso ,
+cart_item.shipment_id,
+cart_item.payment_id 
+from cart_item 
+left join product_picture on cart_item.product_id = product_picture.product_id and num_ = 1 
+left join product on product.id = cart_item.product_id 
+left join product_price on cart_item.product_id = product_price.product_id 
+left join currency on product_price.native_currency_id = currency.id 
+where purchased = 0 
+;
+
+CREATE VIEW cart_group AS 
+select cart_item.user_id,
+seller_id, 
+shop_name, 
+max(time_span_string) as time_span_string, 
+sum(product_price.price*cart_item.quantity) as cost,
+max(iso) as iso,
+IFNULL(max(shipping_cost.price),0) as shipping,
+sum(product_price.price*cart_item.quantity) + IFNULL(max(shipping_cost.price),0) as checkout_total ,
+shipment_id, 
+address.full_name,
+address.address_line_1,
+address.address_line_2,
+address.city,
+address.state,
+address.zip,
+address.country_id,
+payment_id,
+purchased, 
+order_iframe, 
+cart_item.created_at 
+from cart_item 
+left join product on product.id = cart_item.product_id 
+left join product_price on cart_item.product_id = product_price.product_id 
+left join shipping on cart_item.product_id = shipping.product_id 
+left join shipping_cost on shipping.id = shipping_cost.shipping_id 
+left join seller on product.seller_id = seller.id 
+left join time_span_view on product.processing_time_span_id = time_span_view.id 
+left join currency on product_price.native_currency_id = currency.id 
+left join shipment on cart_item.shipment_id = shipment.id 
+left join address on shipment.address_id = address.id 
+left join payment on cart_item.payment_id = payment.id 
+where purchased = 0 
+group by cart_item.user_id, product.seller_id 
+;
+
+CREATE VIEW order_group AS 
+select cart_item.user_id,
+seller_id, 
+shop_name, 
+max(time_span_string) as time_span_string, 
+sum(product_price.price*cart_item.quantity) as cost,
+max(iso) as iso,
+IFNULL(max(shipping_cost.price),0) as shipping,
+sum(product_price.price*cart_item.quantity) + IFNULL(max(shipping_cost.price),0) as checkout_total ,
+shipment_id, 
+shipment.tracking_url, 
+address.full_name,
+address.address_line_1,
+address.address_line_2,
+address.city,
+address.state,
+address.zip,
+address.country_id,
+payment_id,
+purchased, 
+completed, 
+order_iframe,
+payment.created_at 
+from cart_item 
+left join product on product.id = cart_item.product_id 
+left join product_price on cart_item.product_id = product_price.product_id 
+left join shipping on cart_item.product_id = shipping.product_id 
+left join shipping_cost on shipping.id = shipping_cost.shipping_id 
+left join seller on product.seller_id = seller.id 
+left join time_span_view on product.processing_time_span_id = time_span_view.id 
+left join currency on product_price.native_currency_id = currency.id 
+left join shipment on cart_item.shipment_id = shipment.id 
+left join address on shipment.address_id = address.id 
+left join payment on cart_item.payment_id = payment.id 
+where purchased = 1 
+group by cart_item.user_id, payment_id 
+;
+
+CREATE VIEW order_view AS 
+select cart_item.id,
+cart_item.user_id,
+product.seller_id,
+cart_item.product_id,
+cart_item.quantity,
+purchased,
+cart_item.created_at,
+title, 
+url,
+product_price.price,
+iso ,
+cart_item.shipment_id,
+cart_item.payment_id 
+from cart_item 
+left join product_picture on cart_item.product_id = product_picture.product_id and num_ = 1 
+left join product on product.id = cart_item.product_id 
+left join product_price on cart_item.product_id = product_price.product_id 
+left join currency on product_price.native_currency_id = currency.id 
+where purchased = 1
+;
+
+CREATE VIEW address_view AS 
+select address.id,
+user_id,
+full_name,
+address_line_1,
+address_line_2,
+city,
+state,
+zip,
+country_id,
+default_,
+country.name as country_name,
+address.created_at 
+from address 
+left join country on address.country_id = country.id 
+;
+
+

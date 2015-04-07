@@ -13,6 +13,10 @@ public class Tables {
 	public static class Address extends Model {}
 	public static Address Address = new Address();
 	
+	@Table("Address_view")
+	public static class AddressView extends Model {}
+	public static AddressView AddressView = new AddressView();
+	
 	@Table("Country")
 	public static class Country extends Model {}
 	public static Country Country = new Country();
@@ -20,11 +24,7 @@ public class Tables {
 	@Table("Login")
 	public static class Login extends Model {}
 	public static Login Login = new Login();
-	
-	@Table("Wishlist")
-	public static class Wishlist extends Model {}
-	public static Wishlist Wishlist = new Wishlist();
-	
+		
 	@Table("wishlist_item")
 	public static class WishlistItem extends Model {}
 	public static WishlistItem WishlistItem = new WishlistItem();
@@ -140,6 +140,37 @@ public class Tables {
 	@Table("Answer_vote")
 	public static class AnswerVote extends Model {}
 	public static AnswerVote AnswerVote = new AnswerVote();
+	
+	
+	@Table("Cart_view")
+	public static class CartView extends Model {}
+	public static CartView CartView = new CartView();
+	
+	@Table("Cart_group")
+	public static class CartGroup extends Model {}
+	public static CartGroup CartGroup = new CartGroup();
+	
+	@Table("Cart_item")
+	public static class CartItem extends Model {}
+	public static CartItem CartItem = new CartItem();
+	
+	@Table("Order_group")
+	public static class OrderGroup extends Model {}
+	public static OrderGroup OrderGroup = new OrderGroup();
+	
+	@Table("Order_view")
+	public static class OrderView extends Model {}
+	public static OrderView OrderView = new OrderView();
+	
+
+	@Table("Shipment")
+	public static class Shipment extends Model {}
+	public static Shipment Shipment = new Shipment();
+	
+	@Table("Payment")
+	public static class Payment extends Model {}
+	public static Payment Payment = new Payment();
+	
 	
 
 

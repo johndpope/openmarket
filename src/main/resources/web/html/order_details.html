@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">d
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+
+  <title>BitMerchant</title>
+
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" /> 
+
+  <!-- Bootstrap core CSS -->
+  <link href="../css/united.bootstrap.min.css" rel="stylesheet">
+
+  <!-- Link to font awesome -->
+  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
+
+  <!-- Bootstrap social css -->
+  <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
+
+  <!--   Bootstrap validator -->
+  <link rel="stylesheet" href="../bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
+
+  <!--   toastr css -->
+  <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
+
+  <!--   typeahead css -->
+  <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
+
+  <!-- Pickadate -->
+  <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
+  <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
+
+  <!-- Summernote -->
+  <link href="../bower_components/summernote/dist/summernote.css" rel="stylesheet" />
+
+  <!-- Bootstrap datepicker -->
+  <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
+
+  <!-- This main css -->
+  <link href="../css/main.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+  <!-- Navbars -->
+
+  <!-- the start of the doc -->
+  <div id="wrapper">
+
+    <!-- header -->
+    <nav class="navbar navbar-default navbar-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">BitMerchant</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/about">About</a>
+            </li>
+            <li><a href="/wallet">Wallet</a>
+            </li>
+            <li><a href="/api">API</a>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/api">API Reference</a>
+                </li>
+                <li><a href="/FAQ">Frequently Asked Questions</a>
+                </li>
+                <li><a href="https://github.com/tchoulihan/bitmerchant">Github</a>
+                </li>
+                <li><a href="https://www.bountysource.com/trackers/9805417-tchoulihan-bitmerchant">Bounty Source</a>
+                </li>
+                <li><a href="https://github.com/tchoulihan/bitmerchant">Bugs/Feature requests</a>
+                </li>
+                <li><a href="https://github.com/tchoulihan/bitmerchant">Contact</a>
+                </li>
+
+
+              </ul>
+            </li>
+          </ul>
+       <div id="power" class="navbar-right">
+            <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a> -->
+            <button type="submit" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-power-off fa-2x"></i>
+            </button>
+
+            <ul class="dropdown-menu">
+              <li><a href="" id="power_off">Power off</a>
+              </li>
+              <li><a href="" id="restart">Restart</a>
+              </li>
+            </ul>
+          </div>
+
+
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+
+    <!-- The full page with teh sidebar -->
+    <div class="container-fluid">
+      <div class="row">
+
+        <!-- The sidebar -->
+        <div id="side_col" class="col-md-3 sidebar">
+
+          <div class="mini-submenu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </div>
+          <div class="list-group">
+            <a class="list-group-item active" href="wallet" rel="keep-params"><i class="fa fa-bank fa-fw"></i> &nbsp; Wallet</a>
+            <a class="list-group-item" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
+<a class="list-group-item" href="tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
+            <a class="list-group-item" href="settings" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Settings</a>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- stop plugging in -->
+
+
+      <!-- Sidebar -->
+      <!--   <div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+      <li class="active"><a href="userdashboard_overview.html"><i class="fa fa-dashboard"></i> Overview</a></li>
+      <li><a href="userdashboard_funds.html"><i class="fa fa-bar-chart-o"></i> Funds</a></li>
+      <li><a href="userdashboard_pieces.html"><i class="fa fa-table"></i> Pieces</a></li>
+      <li><a href="userdashboard_prices.html"><i class="fa fa-edit"></i> Prices</a></li>
+    </ul>
+
+  </div> -->
+
+
+
+      <!-- The sidebar -->
+
+
+
+      <!-- The Page -->
+      <div class="row-fluid">
+        <div class="othermain-col col-md-9 col-md-offset-3">
+
+
+
+          <div class="row">
+
+          <div id="orders">
+          <script id="orders_template" type="x-tmpl-mustache">
+            <div class="col-md-6">
+              <h1 id="page_title">Order #{{order.id}} </h1>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Details</h3>
+                  </div>
+                  
+                  <div class="panel-body large-table">
+                    
+                    <table class="table table-hover table-striped tablesorter">
+                      <tr> <td> Order id </td> <td>{{order.id}} </td>
+                      <tr> <td> Status </td> <td>{{order.status}} </td>
+                      <tr> <td> Button </td> <td>{{order.button_name}} </td>
+                      <tr> <td> Button id </td> <td>{{order.button_id}} </td>
+                      <tr> <td> Description </td> <td>{{order.button_description}} </td>
+                      <tr> <td> Total </td> <td>{{order.total_native}} {{order.native_currency_iso}}</td>
+                      <tr> <td> Total Satoshis </td> <td>{{order.total_satoshis}} </td>
+                      <tr> <td> Network </td> <td>{{order.network}} </td>
+                      <tr> <td> Payment Request URL </td> <td><a href="{{order.payment_request_url}}">
+                        {{order.payment_request_url}}</a> </td>
+                      <tr> <td> Transaction </td> <td>
+                          <a href="https://www.blockexplorer.com/tx/{{order.transaction_hash}}">
+                          {{order.transaction_hash}}</a> </td>
+
+                      </table>
+                    
+                    <button id="refundBtn" type="button" class="btn btn-primary"> Refund</button>
+                   
+
+                  </div>
+                  </div>
+
+                </div>
+              </div>
+              </script>
+            </div>
+
+            <div class="row">
+              <hr class="featurette-divider">
+              <footer>
+                <p class="pull-right"><a href="#">Back to top</a>
+                </p>
+                <p>&copy; 2015 Bitmerchant, Inc. &middot; <a href="/about">About</a> &middot; <a href="https://github.com/tchoulihan/bitmerchant">Contact</a> &middot; <a href="/FAQ">Support</a> &middot; <a href="https://github.com/tchoulihan/bitmerchant">Github</a>
+                </p>
+              </footer>
+            </div>
+
+
+            <br>
+
+          </div>
+
+        </div>
+
+        <!-- end of wrapper -->
+      </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- Bootstrap core JavaScript
+      ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../bower_components/bootstrapValidator/dist/js/bootstrapValidator.min.js "></script>
+    <script src="../bower_components/toastr/toastr.js"></script>
+    <script src="../bower_components/mustache/mustache.js"></script>
+    <script src="../bower_components/holderjs/holder.js"></script>
+    <script src="../js/json.date-extensions.min.js"></script>
+    <script src="../bower_components/tablesorter/jquery.tablesorter.min.js"></script>
+    <script src="../bower_components/highcharts/highcharts.js"></script>
+    <script src="../bower_components/highcharts/modules/exporting.js"></script>
+    <script src="../bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+    <script src="../bower_components/pickadate/lib/picker.js"></script>
+    <script src="../bower_components/pickadate/lib/picker.date.js"></script>
+    <script src="../bower_components/summernote/dist/summernote.min.js"></script>
+    <script src="../bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="../bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
+
+    <!-- my scripts -->
+    <script src="../js/tools.js"></script>
+<script src="../js/common.js"></script>
+    <script src="../js/order_details.js"></script>
+
+
+
+</body>
+
+</html>

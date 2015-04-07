@@ -1,1 +1,0 @@
-mvn process-classes

@@ -3,18 +3,28 @@ package com.openmarket.webservice;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+
 import java.util.List;
 import java.util.Map;
 
+
+import org.eclipse.jetty.server.UserIdentity;
+import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+import com.bitmerchant.db.Tables.Order;
+import com.bitmerchant.db.Tables.OrderView;
 import com.openmarket.db.Transformations;
 import com.openmarket.db.actions.Actions.CategoryActions;
+import com.openmarket.db.actions.Actions.PaymentActions;
 import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
+
 
 import static com.openmarket.db.Tables.*;
 
@@ -161,9 +171,10 @@ public class Platform {
 				String shopName = vars.get("shop_name");
 
 				Tools.dbInit();
-
+				com.bitmerchant.tools.Tools.dbInit();
 				Seller seller = SellerActions.getSellerFromSessionId(req);
 
+				com.bitmerchant.db.Actions.saveMerchantInfo(shopName, "USD");
 				String message = SellerActions.saveShopName(seller, shopName);
 
 
@@ -175,6 +186,7 @@ public class Platform {
 				e.printStackTrace();
 				return e.getMessage();
 			} finally {
+				com.bitmerchant.tools.Tools.dbClose();
 				Tools.dbClose();
 			}
 
@@ -380,6 +392,42 @@ public class Platform {
 			}
 
 		});
+		
+		post("/set_product_physical/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+
+				log.info("vars = " + vars.toString());
+				String productId = req.params(":productId");
+				
+				String isPhysical = vars.get("is_physical");
+
+
+
+				Tools.dbInit();
+
+				String message = null;
+				SellerActions.ensureSellerOwnsProduct(req, productId);
+
+				message = SellerActions.saveShippingPhysical(productId, isPhysical);
+
+
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
 
 		post("/delete_product_shipping_cost/:productId/:shippingNum", (req, res) -> {
 			try {
@@ -550,10 +598,9 @@ public class Platform {
 					SellerActions.saveAuction(productId, isAuction, auctionExpirationDate,
 							auctionStartPrice, auctionReservePrice, currIso);
 				}
-
-
-
-
+				
+				
+			
 				return message;
 
 			} catch (Exception e) {
@@ -843,7 +890,6 @@ public class Platform {
 				User user = UserActions.getUserFromSessionId(req);
 
 				String message = null;
-				SellerActions.ensureSellerOwnsProduct(req, questionId);
 
 				message = UserActions.answerQuestion(questionId, user.getId().toString(), answer);
 
@@ -861,6 +907,313 @@ public class Platform {
 			}
 
 		});
+		
+		post("/add_to_cart/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+
+				Tools.dbInit();
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				String json = null;
+			
+
+				json = UserActions.addToCart(user.getId().toString(), productId);
+
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		post("/remove_from_cart/:cartItemId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String cartItemId = req.params(":cartItemId");
+
+				Tools.dbInit();
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				String json = null;
+			
+
+				json = UserActions.removeFromCart(user.getId().toString(), cartItemId);
+
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		post("/add_to_wishlist/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+
+				Tools.dbInit();
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				String json = null;
+			
+
+				json = UserActions.addToWishlist(user.getId().toString(), productId);
+
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		post("/remove_from_wishlist/:productId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String productId = req.params(":productId");
+
+				Tools.dbInit();
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				String json = null;
+			
+
+				json = UserActions.removeFromWishlist(user.getId().toString(), productId);
+
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		
+		post("/save_address", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				
+
+				
+				String fullName = vars.get("full_name");
+				String street = vars.get("street");
+				String addrTwo = vars.get("addr_two");
+				String zipcode = vars.get("zipcode");
+				String city = vars.get("city");
+				String state = vars.get("state");
+				String countryId = vars.get("country"); // need to check on this
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String message = UserActions.saveAddress(user.getId().toString(),
+						fullName,
+						street,
+						addrTwo,
+						city,
+						state,
+						zipcode,
+						countryId);
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		post("/edit_address/:addressId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				
+				String addressId = req.params(":addressId");
+				
+				String fullName = vars.get("full_name");
+				String street = vars.get("street");
+				String addrTwo = vars.get("addr_two");
+				String zipcode = vars.get("zipcode");
+				String city = vars.get("city");
+				String state = vars.get("state");
+				String countryId = vars.get("country"); // need to check on this
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String message = UserActions.editAddress(user.getId().toString(),
+						addressId,
+						fullName,
+						street,
+						addrTwo,
+						city,
+						state,
+						zipcode,
+						countryId);
+				
+
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		post("/save_shipment/:addressId/:sellerId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String addressId = req.params(":addressId");
+				String sellerId = req.params(":sellerId");
+				
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String message = UserActions.saveShipment(user.getId().toString(),
+						addressId, sellerId);
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		post("/create_payment/:sellerId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String sellerId = req.params(":sellerId");
+				
+				Tools.dbInit();
+				com.bitmerchant.tools.Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String message = UserActions.createPayment(user.getId().toString(),
+						sellerId);
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+				com.bitmerchant.tools.Tools.dbClose();
+			}
+
+		});
+		
+		post("/callback/:paymentId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String paymentId = req.params(":paymentId");
+				
+				Tools.dbInit();		
+				log.info("i got the callback");
+				PaymentActions.updatePayment(paymentId);
+
+				return null;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		
+		
+		
+		post("/delete_address/:addressId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String addressId = req.params(":addressId");
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String message = UserActions.deleteAddress(user.getId().toString(),addressId);
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		
 
 		get("/get_review_vote/:reviewId", (req, res) -> {
 			try {
@@ -1100,16 +1453,25 @@ public class Platform {
 		});
 
 
-		//		get("/get_product/:productId", (req, res) -> { 
-		//			Tools.allowAllHeaders(req, res);
-		//			Tools.dbInit();
-		//			String productId = req.params(":productId");
-		//			String json = ProductView.where("id = ?", productId).toJson(false);
-		//			Tools.dbClose();
-		//			return json;
-		//
-		//
-		//		});
+		get("/get_seller", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				Seller s = SellerActions.getSellerFromSessionId(req);
+
+				String json = s.toJson(false);
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
 
 		get("/get_product_bullets/:productId", (req, res) -> { 
 			try {
@@ -1226,6 +1588,28 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
+		
+		get("/wishlist_thumbnails", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+				
+				
+				String json = UserActions.getWishlistThumbnails(user.getId().toString());
+				log.info(json);
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
 
 		get("/get_product/:productId", (req, res) -> {
 
@@ -1279,6 +1663,158 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
+		
+		get("/get_cart", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String json = null;
+				
+				// get the cart items
+				LazyList<CartView> cvs = CartView.find("user_id = ?", user.getId().toString());
+				if (cvs == null) {
+					json = "[]";
+				} else {
+					json = cvs.toJson(false);
+				}
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_cart_grouped", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String json = null;
+				
+				json = Tools.nodeToJson(Transformations.cartGroupedJson(user.getId().toString()));
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_cart_grouped/:sellerId", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				User user = UserActions.getUserFromSessionId(req);
+				String sellerId = req.params(":sellerId");
+				
+				String json = null;
+				
+				json = Tools.nodeToJson(Transformations.cartGroupedJson(
+						user.getId().toString(),sellerId));
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_orders_grouped/:view", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				User user = UserActions.getUserFromSessionId(req);
+				String view = req.params(":view");
+				
+				String json = null;
+				
+				json = Tools.nodeToJson(Transformations.orderGroupedJson(user.getId().toString(), view));
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_addresses", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String json = null;
+				
+				json = AddressView.find("user_id = ?", user.getId().toString()).toJson(false);
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_payment/:paymentId", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+								
+				String paymentId = req.params(":paymentId");
+				String json = null;
+				
+				json = Payment.findFirst("id = ?", paymentId).toJson(false);
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
 
 
 
@@ -1296,6 +1832,11 @@ public class Platform {
 		get("/product/:productId", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);	
 			return Tools.readFile(DataSources.PAGES("product"));
+		});
+		
+		get("/checkout/:sellerId", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			return Tools.readFile(DataSources.PAGES("checkout"));
 		});
 
 

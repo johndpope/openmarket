@@ -4,10 +4,16 @@ var productTemplate = $('#product_template').html();
 
 $(document).ready(function() {
 
+
   getJson('get_product/' + productId).done(function(e) {
+
     var data = JSON.parse(e);
     console.log(data);
     fillMustacheWithJson(data, productTemplate, '#product_div');
+
+    addToCart();
+    addToWishlist();
+    
     $('.pic_num-1').addClass('active');
 
     writeReviewBtn();
@@ -37,6 +43,17 @@ $(document).ready(function() {
 
 });
 
+function addToCart() {
+  $('#addToCart').click(function(e) {
+    simplePost('add_to_cart/' + productId, null, null, null, null, null);
+  });
+}
+
+function addToWishlist() {
+  $('#addToWishlist').click(function(e) {
+    simplePost('add_to_wishlist/' + productId, null, null, null, null, null);
+  });
+}
 
 
 function reviewRedirect() {

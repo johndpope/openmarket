@@ -12,7 +12,7 @@ $(document).ready(function() {
     fillMustacheWithJson(data, reviewTemplate, '#reviews');
     $('.pic_num-1').addClass('active');
 
-    $('.summernote').summernote({});
+    $('.summernote').summernote();
     $('[name="stars"]').rating();
 
 

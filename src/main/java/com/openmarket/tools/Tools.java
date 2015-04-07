@@ -26,11 +26,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -44,6 +46,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -145,6 +148,73 @@ public class Tools {
 		}
 
 		s.append(" WHERE id = " + id + ";");
+
+
+		return s.toString();
+
+	}
+	
+	public static String toUpdate(String tableName, Set<String> ids, Object... namesAndValues) {
+
+
+		StringBuilder s = new StringBuilder();
+
+		s.append("UPDATE " + tableName + " SET ");
+
+		for (int i = 0; i < namesAndValues.length - 1; i+=2) {
+			Object field = namesAndValues[i];
+			Object value = namesAndValues[i+1];
+			if (value != null) {
+				s.append(field + " = " + "'" + value + "'");
+			} else {
+				s.append(field + " = null" );
+			}
+
+			if (i+2 < namesAndValues.length) {
+				s.append(" , ");
+			}
+		}
+
+		s.append(" WHERE ");
+		Iterator<String> idIt = ids.iterator();
+		for (;;) {
+			String id = idIt.next();
+			s.append(" id = " + id);
+			
+			if (idIt.hasNext()) {
+				s.append(" OR ");
+			} else {
+				break;
+			}
+		}
+		s.append(";");
+
+		return s.toString();
+
+	}
+	
+	public static String toUpdate(String tableName, String conditionCol, Integer condition, Object... namesAndValues) {
+
+
+		StringBuilder s = new StringBuilder();
+
+		s.append("UPDATE " + tableName + " SET ");
+
+		for (int i = 0; i < namesAndValues.length - 1; i+=2) {
+			Object field = namesAndValues[i];
+			Object value = namesAndValues[i+1];
+			if (value != null) {
+				s.append(field + " = " + "'" + value + "'");
+			} else {
+				s.append(field + " = null" );
+			}
+
+			if (i+2 < namesAndValues.length) {
+				s.append(" , ");
+			}
+		}
+
+		s.append(" WHERE " + conditionCol + " = " + condition + ";");
 
 
 		return s.toString();
@@ -780,6 +850,54 @@ public class Tools {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * {
+ "button" : {
+    "name": "kitten mittens",
+    "type": "buy_now",
+    "style": "custom_large",
+    "network": "test",
+    "text": "Buy with USD",
+    "price_string": "5",
+    "price_currency_iso": "USD",
+    "callback_url": "http://www.example.com/my_custom_button_callback",
+    "description": "Is your cat making too much noise all the time?"
+  }
+}
+
+	 */
+	
+	public static String createBitmerchantButtonRequest(String total,
+			String iso, String paymentId) {
+		
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+		
+		ObjectNode b = Tools.MAPPER.createObjectNode();
+		
+		b.put("name", "Order #" + paymentId);
+		b.put("type", "buy_now");
+		b.put("style", "custom_large");
+		b.put("text", "Buy with derp");
+		b.put("price_string", total);
+		b.put("price_currency_iso", iso);
+		b.put("callback_url", DataSources.WEB_SERVICE_EXTERNAL_URL() + "callback/" + paymentId);
+		b.put("description", "Order #" + paymentId);
+		a.put("button", b);
+		
+		return Tools.nodeToJson(a);
+		
+	}
+
+	public static String createBitmerchantIframe(String buttonId, String orderId, String ip) {
+		String s="<iframe id=\"bitmerchant_iframe\" name=\"" + buttonId + "\" src=\"" + ip + "html/payment_iframe.html\" "
+				+ " ordernum = \"" + orderId + "\" "
+				+ "style=\"width: 460px; height: 300px; border: none; "
+				+ "\" allowtransparency=\"true\" frameborder=\"0\" white-space=\"nowrap\"></iframe>\n"+
+				"";
+		
+		return s.replace("\"", "doublequote").replace(";","semicolon");
 	}
 
 

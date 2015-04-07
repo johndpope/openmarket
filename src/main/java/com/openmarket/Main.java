@@ -1,5 +1,8 @@
 package com.openmarket;
 
+import java.util.concurrent.ExecutionException;
+
+import org.joda.money.CurrencyUnit;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -8,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
+import com.bitmerchant.tools.CurrencyConverter;
 import com.bitmerchant.wallet.LocalWallet;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
@@ -74,9 +78,19 @@ public class Main {
 //		log.info(Currency.findAll().toJson(true));
 //		com.bitmerchant.tools.Tools.dbClose();
 		
-
 		// Start the webservice
 		WebService.start();
+		
+		// Start up the currency converter just to pre cache it
+		try {
+			CurrencyConverter.INSTANCE.getBtcRatesCache().get(CurrencyUnit.of("USD"));
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		
 
 		// Start the sellers wallet
 		//		INSTANCE.init();

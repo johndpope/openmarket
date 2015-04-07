@@ -106,4 +106,6 @@ public class DataSources {
 	public static final String PAGES(String pageName) {
 		return WEB_HTML() + "/" + pageName + ".html";
 	}
+	
+	
 }
