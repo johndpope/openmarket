@@ -1,8 +1,8 @@
 package com.openmarket.db;
 
-import static com.openmarket.db.Tables.Currency;
-import static com.openmarket.db.Tables.TimeSpan;
-import static com.openmarket.db.Tables.TimeType;
+import static com.openmarket.db.Tables.CURRENCY;
+import static com.openmarket.db.Tables.TIME_SPAN;
+import static com.openmarket.db.Tables.TIME_TYPE;
 
 import java.io.File;
 import java.io.IOException;
@@ -171,7 +171,7 @@ public class InitializeTables {
 		for (Entry<String, String> e : TableConstants.CURRENCY_MAP.entrySet()) {
 			// Unicode still not working
 
-			String cmd = Currency.create("iso", e.getKey(), "desc", e.getValue(), 
+			String cmd = CURRENCY.create("iso", e.getKey(), "desc", e.getValue(), 
 					"unicode" , TableConstants.CURRENCY_UNICODES.get(e.getKey())).toInsert();
 			s.append(";\n");
 			s.append(cmd);
@@ -185,7 +185,7 @@ public class InitializeTables {
 		Tools.dbInit();
 		StringBuilder s = new StringBuilder();
 		for (String e: TableConstants.TIME_TYPES) {
-			String cmd = TimeType.create("name", e).toInsert();
+			String cmd = TIME_TYPE.create("name", e).toInsert();
 			s.append(cmd);
 			s.append(";\n");
 		}
@@ -196,7 +196,7 @@ public class InitializeTables {
 		s = new StringBuilder();
 
 		for (TableConstants.ProcessingTime e : TableConstants.PROCESSING_TIME_SPANS) {
-			String cmd = TimeSpan.create("time_type_id", e.getTimeTypeId(),
+			String cmd = TIME_SPAN.create("time_type_id", e.getTimeTypeId(),
 					"min", e.getMin(),
 					"max", e.getMax()).toInsert();
 			s.append(cmd);

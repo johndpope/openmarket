@@ -1,5 +1,6 @@
 var cartTemplate = $('#cart_template').html();
 var wishlistTemplate = $('#wishlist_template').html();
+var topCategoriesTemplate = $('#top_categories_template').html();
 
 $(document).ready(function() {
 
@@ -8,10 +9,20 @@ $(document).ready(function() {
   setupSignupFormModal();
   setupLoginFormModal();
 
+  setupTopCategories();
+
   $('[data-toggle="tooltip"]').tooltip();
 
 });
 
+function setupTopCategories() {
+  getJson('get_top_categories').done(function(e) {
+    var data = JSON.parse(e);
+    console.log(data);
+    fillMustacheWithJson(data, topCategoriesTemplate, '#top_categories_div');
+
+  });
+}
 
 
 function setupSignupFormModal() {
@@ -115,44 +126,9 @@ function showHideElementsLoggedIn() {
 
 
 function setupLogout() {
-  var sessionId = getCookie("authenticated_session_id");
-  var url = sparkService + "/logout";
+
   $('#logouthref').click(function() {
-    $.ajax({
-      type: "POST",
-      url: url,
-      xhrFields: {
-        withCredentials: true
-      },
-      // data: seriesData, 
-      success: function(data, status, xhr) {
-        // console.log(data);
-        // var jsonObj = JSON.parse(data);
-        // JSON.useDateParser();
-        // var jsonObj = jQuery.parseJSON(data);
-        // JSON.useDateParser();
-
-
-        toastr.success(data);
-        // console.log(url);
-        delete_cookie("authenticated_session_id");
-
-        // setTimeout(
-        //     function() {
-        //         var url = "/";
-        //         window.location.replace(url);
-
-        //     }, 1500);
-
-        showHideElementsLoggedIn();
-
-
-      },
-      error: function(request, status, error) {
-
-        toastr.error(request.responseText);
-      }
-    });
+    logout();
 
 
 
@@ -161,5 +137,45 @@ function setupLogout() {
 
 
 
+  });
+}
+
+function logout() {
+  var sessionId = getCookie("authenticated_session_id");
+  var url = sparkService + "/logout";
+  $.ajax({
+    type: "POST",
+    url: url,
+    xhrFields: {
+      withCredentials: true
+    },
+    // data: seriesData, 
+    success: function(data, status, xhr) {
+      // console.log(data);
+      // var jsonObj = JSON.parse(data);
+      // JSON.useDateParser();
+      // var jsonObj = jQuery.parseJSON(data);
+      // JSON.useDateParser();
+
+
+      toastr.success(data);
+      // console.log(url);
+      delete_cookie("authenticated_session_id");
+
+      // setTimeout(
+      //     function() {
+      //         var url = "/";
+      //         window.location.replace(url);
+
+      //     }, 1500);
+
+      showHideElementsLoggedIn();
+
+
+    },
+    error: function(request, status, error) {
+
+      toastr.error(request.responseText);
+    }
   });
 }

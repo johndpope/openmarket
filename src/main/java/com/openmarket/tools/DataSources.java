@@ -32,7 +32,7 @@ public class DataSources {
 	}
 
 	public static String SET_PASSWORD_URL() {
-		return URL() + "set_password";
+		return URL() + "user_setup";
 	}
 
 	// The path to the openmarket dir

@@ -57,6 +57,7 @@ SELECT
 product.id as product_id,
 title,
 seller_id,
+category_id,
 shop_name, 
 count(review.id) as number_of_reviews, 
 ifnull(avg(review.stars),0) as review_avg, 
@@ -94,10 +95,15 @@ LEFT JOIN category AS t7 ON t7.parent = t6.id
 where t1.parent IS NULL 
 ;
 
+CREATE VIEW browse_view AS 
+select distinct id_1, id_2, name_1, name_2 from category_tree_view
+;
+
 CREATE VIEW review_view AS 
 select review.id,
 product_id,
 review.user_id,
+user.name as user_name, 
 stars,
 headline,
 text_html, 
@@ -105,28 +111,53 @@ review.created_at,
 SUM(vote) as votes_sum, 
 count(review_vote.id) as votes_count 
 from review 
-left join review_vote 
-on review.id = review_vote.review_id 
+left join review_vote on review.id = review_vote.review_id 
+left join user on review.user_id = user.id 
 group by review.id 
 ;
 
+CREATE VIEW feedback_view AS 
+select feedback.id,
+cart_item_id,
+cart_item.product_id,
+cart_item.user_id,
+stars,
+arrived_on_time,
+correctly_described,
+prompt_service,
+comments,
+feedback.created_at 
+from feedback 
+left join cart_item on feedback.cart_item_id = cart_item.id 
+;
+
 CREATE VIEW question_view AS 
-select question.id, question.user_id, product_id, text, question.created_at, 
+select question.id, 
+question.user_id, 
+user.name as user_name, 
+product_id, 
+text, 
+question.created_at, 
 SUM(vote) as votes_sum, 
 count(question_vote.id) as votes_count 
 from question 
-left join question_vote 
-on question.id = question_vote.question_id 
+left join question_vote on question.id = question_vote.question_id 
+left join user on question.user_id = user.id 
 group by question.id 
 ;
 
 CREATE VIEW answer_view AS 
-select answer.id, answer.user_id, question_id, text, answer.created_at, 
+select answer.id, 
+answer.user_id, 
+user.name as user_name,
+question_id, 
+text, 
+answer.created_at, 
 SUM(case when vote = 1 then 1 when vote = -1 then -1 else 0 end) as votes_sum, 
 count(answer_vote.id) as votes_count 
 from answer 
-left join answer_vote 
-on answer.id = answer_vote.answer_id 
+left join answer_vote on answer.id = answer_vote.answer_id 
+left join user on answer.user_id = user.id 
 group by answer.id 
 ;
 

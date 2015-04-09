@@ -77,7 +77,7 @@ function categoryRecursive(productData) {
   var productCategoryId = productData['category_id'];
 
 
-  getJson('category_tree/' + productCategoryId).done(function(e2) {
+  getJson('get_category_tree/' + productCategoryId).done(function(e2) {
 
     var catTree = JSON.parse(e2);
     console.log('cat tree:');
@@ -178,7 +178,7 @@ function categoryRecursive(productData) {
 
 function categoryFetch(parentId, num) {
 
-  return getJson('category/' + parentId).done(function(e) {
+  return getJson('get_category/' + parentId).done(function(e) {
     var data = JSON.parse(e);
     // console.log(data);
     fillMustacheWithJson(data, categoryTemplate, '#category_' + num);

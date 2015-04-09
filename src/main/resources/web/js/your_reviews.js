@@ -46,6 +46,8 @@ $(document).ready(function() {
       $(formName + " [name=stars]").rating('update', stars);
       // $('#input-id').rating('update', 3);
 
+      textHtml = htmlDecode(textHtml);
+      
       $(formName + ' textarea[name="text_html"]').code(textHtml);
 
       // $(formName + " [name=text_html]").val(textHtml);

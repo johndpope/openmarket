@@ -1,25 +1,33 @@
 package com.openmarket.db;
 
-import static com.openmarket.db.Tables.AnswerView;
-import static com.openmarket.db.Tables.ProductBullet;
-import static com.openmarket.db.Tables.ProductPicture;
-import static com.openmarket.db.Tables.ProductThumbnailView;
-import static com.openmarket.db.Tables.QuestionView;
-import static com.openmarket.db.Tables.ReviewComment;
-import static com.openmarket.db.Tables.ReviewView;
-import static com.openmarket.db.Tables.ShippingCostView;
+import static com.openmarket.db.Tables.ANSWER_VIEW;
+import static com.openmarket.db.Tables.PRODUCT_BULLET;
+import static com.openmarket.db.Tables.PRODUCT_PICTURE;
+import static com.openmarket.db.Tables.PRODUCT_THUMBNAIL_VIEW;
+import static com.openmarket.db.Tables.QUESTION_VIEW;
+import static com.openmarket.db.Tables.REVIEW_COMMENT;
+import static com.openmarket.db.Tables.REVIEW_VIEW;
+import static com.openmarket.db.Tables.SHIPPING_COST_VIEW;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.javalite.activejdbc.LazyList;
+import org.javalite.activejdbc.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-
+import com.openmarket.db.actions.Actions;
 import com.openmarket.tools.Tools;
 
 import static com.openmarket.db.Tables.*;
 public class Transformations {
+
+	static final Logger log = LoggerFactory.getLogger(Transformations.class);
 
 	public static ObjectNode productThumbnailViewJson(ProductThumbnailView pv) {
 
@@ -28,7 +36,7 @@ public class Transformations {
 
 		JsonNode c = Tools.jsonToNode(pv.toJson(false));
 
-		List<ProductPicture> pps = ProductPicture.find("product_id = ?", pv.getString("product_id"));
+		List<ProductPicture> pps = PRODUCT_PICTURE.find("product_id = ?", pv.getString("product_id"));
 
 		ObjectNode on = Tools.MAPPER.valueToTree(c);
 		a.putAll(on);
@@ -72,7 +80,7 @@ public class Transformations {
 
 
 		// add the pictures
-		List<ProductPicture> pps = ProductPicture.find("product_id = ?", productId);
+		List<ProductPicture> pps = PRODUCT_PICTURE.find("product_id = ?", productId);
 
 		ArrayNode an = a.putArray("pictures");
 
@@ -81,7 +89,7 @@ public class Transformations {
 		}
 
 		// Add the bullets
-		List<ProductBullet> pbs = ProductBullet.find("product_id = ?", productId);
+		List<ProductBullet> pbs = PRODUCT_BULLET.find("product_id = ?", productId);
 
 		ArrayNode ab = a.putArray("bullets");
 
@@ -90,7 +98,7 @@ public class Transformations {
 		}
 
 		// Add shipping info
-		List<ShippingCostView> scs = ShippingCostView.find("shipping_id = ?", pv.getString("shipping_id"));
+		List<ShippingCostView> scs = SHIPPING_COST_VIEW.find("shipping_id = ?", pv.getString("shipping_id"));
 
 		ArrayNode as = a.putArray("shipping_costs");
 
@@ -100,14 +108,14 @@ public class Transformations {
 
 
 		// Add 3 reviews
-		List<ReviewView> rvs = ReviewView.where("product_id = ?", productId).limit(3).
+		List<ReviewView> rvs = REVIEW_VIEW.where("product_id = ?", productId).limit(3).
 				orderBy("votes_sum desc");
 		ObjectNode reviewNodes = reviewViewJson(rvs);
 
 		a.putAll(reviewNodes);
 
 		// Add 3 questions
-		List<QuestionView> qvs = QuestionView.where("product_id = ?", productId).limit(3).
+		List<QuestionView> qvs = QUESTION_VIEW.where("product_id = ?", productId).limit(3).
 				orderBy("votes_sum desc");
 		ObjectNode questionNodes = questionViewJson(qvs);
 
@@ -115,7 +123,7 @@ public class Transformations {
 
 		// Add 4 other sellers products
 		List<ProductThumbnailView> otherProducts = 
-				ProductThumbnailView.find("seller_id = ? and product_id != ?", 
+				PRODUCT_THUMBNAIL_VIEW.find("seller_id = ? and product_id != ?", 
 						pv.getString("seller_id"),
 						pv.getId().toString()).limit(4);
 
@@ -148,7 +156,7 @@ public class Transformations {
 
 		JsonNode c = Tools.jsonToNode(rv.toJson(false));
 
-		List<ReviewComment> rcs = ReviewComment.find("review_id = ?", rv.getString("id"));
+		List<ReviewComment> rcs = REVIEW_COMMENT.find("review_id = ?", rv.getString("id"));
 
 		ObjectNode on = Tools.MAPPER.valueToTree(c);
 		a.putAll(on);
@@ -169,7 +177,7 @@ public class Transformations {
 
 		ObjectNode on = Tools.MAPPER.valueToTree(c);
 
-		ProductThumbnailView ptv = ProductThumbnailView.findFirst
+		ProductThumbnailView ptv = PRODUCT_THUMBNAIL_VIEW.findFirst
 				("product_id = ?", rv.getString("product_id"));
 		ObjectNode pvj = productThumbnailViewJson(ptv);
 
@@ -186,6 +194,35 @@ public class Transformations {
 
 		for (ReviewView rv : rvs) {
 			ab.add(yourReviewsViewJson(rv));
+		}
+
+		return a;
+
+	}
+
+	public static ObjectNode yourFeedbackViewJson(FeedbackView fv) {
+
+		JsonNode c = Tools.jsonToNode(fv.toJson(false));
+
+		ObjectNode on = Tools.MAPPER.valueToTree(c);
+
+		ProductThumbnailView ptv = PRODUCT_THUMBNAIL_VIEW.findFirst
+				("product_id = ?", fv.getString("product_id"));
+		ObjectNode pvj = productThumbnailViewJson(ptv);
+
+		on.put("thumbnail", pvj);
+
+		return on;
+	}
+
+	public static ObjectNode yourFeedbackViewJson(List<FeedbackView> fvs) {
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("feedback");
+
+		for (FeedbackView fv : fvs) {
+			ab.add(yourFeedbackViewJson(fv));
 		}
 
 		return a;
@@ -213,7 +250,7 @@ public class Transformations {
 
 		JsonNode c = Tools.jsonToNode(qv.toJson(false));
 
-		List<AnswerView> rcs = AnswerView.find("question_id = ?", qv.getString("id")).
+		List<AnswerView> rcs = ANSWER_VIEW.find("question_id = ?", qv.getString("id")).
 				orderBy("votes_sum desc");
 
 		ObjectNode on = Tools.MAPPER.valueToTree(c);
@@ -234,15 +271,15 @@ public class Transformations {
 		ObjectNode a = Tools.MAPPER.createObjectNode();
 
 		ArrayNode ab = a.putArray("cart_groups");
-		
-		
-		List<CartGroup> cgs = CartGroup.find("user_id = ?", userId);
+
+
+		List<CartGroup> cgs = CART_GROUP.find("user_id = ?", userId);
 
 		for (CartGroup cg : cgs) {
 			// each row is a distinct seller and payment?
 			String sellerId = cg.getString("seller_id");
 
-			List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?",
+			List<CartView> cvs = CART_VIEW.find("user_id = ? and seller_id = ?",
 					userId, sellerId);
 
 
@@ -269,9 +306,9 @@ public class Transformations {
 
 	public static ObjectNode cartGroupedJson(String userId, String sellerId) {
 
-		CartGroup cg = CartGroup.findFirst("user_id = ? and seller_id = ?", userId, sellerId);
+		CartGroup cg = CART_GROUP.findFirst("user_id = ? and seller_id = ?", userId, sellerId);
 
-		List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?",
+		List<CartView> cvs = CART_VIEW.find("user_id = ? and seller_id = ?",
 				userId, sellerId);
 
 
@@ -291,25 +328,25 @@ public class Transformations {
 
 
 	}
-	
+
 	public static ObjectNode orderGroupedJson(String userId, String view) {
 
 		ObjectNode a = Tools.MAPPER.createObjectNode();
 
 		ArrayNode ab = a.putArray("order_groups");
-		
+
 		List<OrderGroup> ogs;
-		
+
 		if (view.equals("open")) {
-			ogs = OrderGroup.find("user_id = ? and tracking_url is null", userId).orderBy("created_at desc");
+			ogs = ORDER_GROUP.find("user_id = ? and tracking_url is null", userId).orderBy("created_at desc");
 		} else {
-			ogs = OrderGroup.find("user_id = ?", userId).orderBy("created_at desc");
+			ogs = ORDER_GROUP.find("user_id = ?", userId).orderBy("created_at desc");
 		}
 		for (OrderGroup og : ogs) {
 			// each row is a distinct seller and payment?
 			String paymentId = og.getString("payment_id");
 
-			List<OrderView> cvs = OrderView.find("user_id = ? and payment_id = ?",
+			List<OrderView> cvs = ORDER_VIEW.find("user_id = ? and payment_id = ?",
 					userId, paymentId);
 
 
@@ -321,7 +358,6 @@ public class Transformations {
 			ArrayNode ac = on.putArray("products");
 			for (OrderView cv : cvs) {
 				ac.add(Tools.jsonToNode(cv.toJson(false)));
-
 			}
 			ab.add(on);
 
@@ -330,8 +366,56 @@ public class Transformations {
 
 		return a;
 
+	}
 
+	public static ObjectNode browseJson() {
+
+		List<BrowseView> bvs = BROWSE_VIEW.findAll();
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode lvl1 = a.putArray("level_1");
+
+		ArrayNode lvl2 = null;
+
+		String prevId = "";
+		for (BrowseView bv : bvs) {
+			String lvl1Id = bv.getString("id_1");
+			String lvl1Name = bv.getString("name_1");
+
+			String lvl2Id = bv.getString("id_2");
+			String lvl2Name = bv.getString("name_2");
+
+			log.info(lvl2Name);
+
+			// first add the lvl 2s
+			ObjectNode c = Tools.MAPPER.createObjectNode();
+			c.put("id", lvl2Id);
+			c.put("name", lvl2Name);
+
+
+			ObjectNode d = Tools.MAPPER.createObjectNode();
+			d.put("id", lvl1Id);
+			d.put("name", lvl1Name);
+
+
+			if (!prevId.equals(lvl1Id)) {
+				lvl1.add(d);
+				prevId = lvl1Id;
+				lvl2 = d.putArray("level_2");
+			}
+
+
+			lvl2.add(c);
+
+		}
+
+
+
+		return a;
 
 	}
-	
+
+
+
 }

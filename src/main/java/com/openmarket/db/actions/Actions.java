@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -20,6 +21,8 @@ import spark.Response;
 
 import com.bitmerchant.db.Tables.Order;
 import com.google.common.collect.ImmutableMap;
+import com.openmarket.db.Tables.CategoryTreeView;
+import com.openmarket.db.Tables.User;
 import com.openmarket.db.Tables.WishlistItem;
 import com.openmarket.db.Transformations;
 import com.openmarket.db.Tables.ProductThumbnailView;
@@ -36,15 +39,15 @@ public class Actions {
 	public static class UserActions {
 
 		public static User createUserSimple(String email) {
-			User user = User.create("email", email);
+			User user = USER.create("email", email);
 			Tools.writeRQL(user.toInsert());
-			user = User.findFirst("email = ?", email);
+			user = USER.findFirst("email = ?", email);
 
 			return user;
 		}
 		public static String userLogin(String email, String password, Response res) {
 
-			User user = User.findFirst("email = ?", email);
+			User user = USER.findFirst("email = ?", email);
 
 			if (user == null) {
 				throw new NoSuchElementException("Incorrect email");
@@ -88,7 +91,7 @@ public class Actions {
 
 			long now = new Date().getTime();
 
-			Login login = Login.findFirst("session_id = ? and expire_time > ?" , auth, now);
+			Login login = LOGIN.findFirst("session_id = ? and expire_time > ?" , auth, now);
 
 			if (login == null) {
 				throw new NoSuchElementException("Please log in first");
@@ -103,7 +106,7 @@ public class Actions {
 
 			Login login = getLoginFromAuth(auth);
 
-			User user = User.findById(login.getString("user_id"));
+			User user = USER.findById(login.getString("user_id"));
 
 
 
@@ -153,7 +156,7 @@ public class Actions {
 		public static User signupUserWithToken(String token, String password) {
 
 			log.info("token = " + token);
-			User user = User.findFirst("email_code = ?", token);
+			User user = USER.findFirst("email_code = ?", token);
 
 			if (user != null) {
 				// Encrypt the password
@@ -180,9 +183,9 @@ public class Actions {
 
 		public static Review createProductReview(String productId, String userId) {
 
-			Review r = Review.create("product_id", productId, "user_id", userId);
+			Review r = REVIEW.create("product_id", productId, "user_id", userId);
 			Tools.writeRQL(r.toInsert());
-			r = Review.findFirst(
+			r = REVIEW.findFirst(
 					"product_id = ? and user_id = ?", productId, userId);
 			return r;
 		}
@@ -190,8 +193,9 @@ public class Actions {
 		public static String saveProductReview(String productId, String userId,
 				String stars, String headline, String textHtml) {
 
+			String escapedHTML = StringEscapeUtils.escapeHtml4(textHtml).replace(";","semicolon");
 			// See if the review first exists
-			Review r = Review.findFirst(
+			Review r = REVIEW.findFirst(
 					"product_id = ? and user_id = ?", productId, userId);
 
 			String cmd;
@@ -199,13 +203,13 @@ public class Actions {
 				cmd = Tools.toUpdate("review", r.getId().toString(),
 						"stars", stars,
 						"headline", headline,
-						"text_html", textHtml);
+						"text_html", escapedHTML);
 			} else {
-				cmd = Review.create("product_id", productId, 
+				cmd = REVIEW.create("product_id", productId, 
 						"user_id", userId,
 						"stars", stars,
 						"headline", headline,
-						"text_html", textHtml).toInsert();
+						"text_html", escapedHTML).toInsert();
 			}
 
 
@@ -220,7 +224,7 @@ public class Actions {
 		public static String deleteProductReview(String reviewId, String userId) {
 
 			String message;
-			Review r = Review.findFirst("id = ?", reviewId);
+			Review r = REVIEW.findFirst("id = ?", reviewId);
 
 			if (r != null) {
 
@@ -240,15 +244,16 @@ public class Actions {
 
 			Integer voteInt = (vote.equals("up")) ? 1 : 0;
 			// See if the review first exists
-			ReviewVote r = ReviewVote.findFirst(
+			ReviewVote r = REVIEW_VOTE.findFirst(
 					"review_id = ? and user_id = ?", reviewId, userId);
 
+			log.info("review id = " + reviewId);
 			String cmd;
 			if (r != null) {
-				cmd = Tools.toUpdate("review_vote", r.getId().toString(),
-						"vote", voteInt);
+				r.set("vote", vote);
+				cmd = r.toUpdate();
 			} else {
-				cmd = ReviewVote.create("review_id", reviewId, 
+				cmd = REVIEW_VOTE.create("review_id", reviewId, 
 						"user_id", userId,
 						"vote", voteInt).toInsert();
 			}
@@ -266,7 +271,7 @@ public class Actions {
 
 			Integer voteInt = (vote.equals("up")) ? 1 : -1;
 			// See if the review first exists
-			QuestionVote r = QuestionVote.findFirst(
+			QuestionVote r = QUESTION_VOTE.findFirst(
 					"question_id = ? and user_id = ?", questionId, userId);
 
 			String cmd;
@@ -274,7 +279,7 @@ public class Actions {
 				cmd = Tools.toUpdate("question_vote", r.getId().toString(),
 						"vote", voteInt);
 			} else {
-				cmd = QuestionVote.create("question_id", questionId, 
+				cmd = QUESTION_VOTE.create("question_id", questionId, 
 						"user_id", userId,
 						"vote", voteInt).toInsert();
 			}
@@ -292,7 +297,7 @@ public class Actions {
 
 			Integer voteInt = (vote.equals("up")) ? 1 : -1;
 			// See if the review first exists
-			AnswerVote r = AnswerVote.findFirst(
+			AnswerVote r = ANSWER_VOTE.findFirst(
 					"answer_id = ? and user_id = ?", answerId, userId);
 
 			String cmd;
@@ -300,7 +305,7 @@ public class Actions {
 				cmd = Tools.toUpdate("answer_vote", r.getId().toString(),
 						"vote", voteInt);
 			} else {
-				cmd = AnswerVote.create("answer_id", answerId, 
+				cmd = ANSWER_VOTE.create("answer_id", answerId, 
 						"user_id", userId,
 						"vote", voteInt).toInsert();
 			}
@@ -316,7 +321,7 @@ public class Actions {
 		public static String askQuestion(String productId, String userId,
 				String text) {
 
-			Question q = Question.create("product_id", productId, "user_id", userId, "text", text);
+			Question q = QUESTION.create("product_id", productId, "user_id", userId, "text", text);
 			Tools.writeRQL(q.toInsert());
 
 			String message = "Question saved";
@@ -327,7 +332,7 @@ public class Actions {
 		public static String answerQuestion(String questionId, String userId,
 				String answer) {
 
-			Answer a = Answer.create("question_id", questionId, "user_id", userId, "text", answer);
+			Answer a = ANSWER.create("question_id", questionId, "user_id", userId, "text", answer);
 			Tools.writeRQL(a.toInsert());
 
 			String message = "Answer saved";
@@ -339,7 +344,7 @@ public class Actions {
 
 
 			// Check if item already exists
-			CartItem cartItem = CartItem.findFirst("user_id = ? and product_id = ? and purchased = ?", userId,
+			CartItem cartItem = CART_ITEM.findFirst("user_id = ? and product_id = ? and purchased = ?", userId,
 					productId, "0");
 			if (cartItem != null) {
 				Integer quantity = cartItem.getInteger("quantity");
@@ -349,7 +354,7 @@ public class Actions {
 
 			} else {
 				// Add the product to the cart
-				cartItem = CartItem.create("user_id", userId,
+				cartItem = CART_ITEM.create("user_id", userId,
 						"product_id", productId,
 						"quantity", 1);
 				Tools.writeRQL(cartItem.toInsert());
@@ -361,8 +366,8 @@ public class Actions {
 		}
 
 		public static String removeFromCart(String userId, String cartItemId) {
-			
-			CartItem ci = CartItem.findFirst("id = ?", cartItemId);
+
+			CartItem ci = CART_ITEM.findFirst("id = ?", cartItemId);
 			String message;
 			if (ci != null) {
 
@@ -373,16 +378,16 @@ public class Actions {
 			} else {
 				throw new NoSuchElementException("Couldn't delete the cart item");
 			}
-			
+
 			return message;
-			
+
 		}
 
 		public static String saveAddress(String userId, String fullName,
 				String street, String addrTwo, String city, String state,
 				String zipcode, String countryId) {
 
-			Address address = Address.create("user_id", userId,
+			Address address = ADDRESS.create("user_id", userId,
 					"full_name", fullName,
 					"address_line_1", street,
 					"address_line_2", addrTwo,
@@ -404,7 +409,7 @@ public class Actions {
 				String street, String addrTwo, String city, String state,
 				String zipcode, String countryId) {
 
-			Address address = Address.findFirst("id = ?", addressId);
+			Address address = ADDRESS.findFirst("id = ?", addressId);
 
 			address.set("user_id", userId,
 					"full_name", fullName,
@@ -428,7 +433,7 @@ public class Actions {
 		public static String deleteAddress(String userId, String addressId) {
 
 			String message;
-			Address addr = Address.findFirst("id = ?", addressId);
+			Address addr = ADDRESS.findFirst("id = ?", addressId);
 
 			if (addr != null) {
 
@@ -448,7 +453,7 @@ public class Actions {
 				String sellerId) {
 			String message;
 			// First, find all the active cart items for that user
-			List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?", 
+			List<CartView> cvs = CART_VIEW.find("user_id = ? and seller_id = ?", 
 					userId, sellerId);
 
 			Set<String> cartItemIds = new HashSet<String>();
@@ -466,7 +471,7 @@ public class Actions {
 
 			// If the shipment ID isn't null, then it needs to be updated, and don't change the cart_items
 			if (shipmentId != null) {
-				Shipment shipment = Shipment.findFirst("id = ?", shipmentId);
+				Shipment shipment = SHIPMENT.findFirst("id = ?", shipmentId);
 				shipment.set("address_id",addressId);
 
 				Tools.writeRQL(shipment.toUpdate());
@@ -474,7 +479,7 @@ public class Actions {
 			} 
 			// Otherwise, add a new shipment, update the cart items
 			else {
-				Shipment shipment = Shipment.create("address_id",addressId);
+				Shipment shipment = SHIPMENT.create("address_id",addressId);
 
 				Tools.writeRQL(shipment.toInsert());
 
@@ -483,7 +488,7 @@ public class Actions {
 
 			// Always update the cart items
 
-			LazyList<Shipment> shipments = Shipment.find("address_id = ? and tracking_url is NULL"
+			LazyList<Shipment> shipments = SHIPMENT.find("address_id = ? and tracking_url is NULL"
 					,addressId).orderBy("created_at desc");
 			Shipment shipment = shipments.get(0);
 
@@ -512,7 +517,7 @@ public class Actions {
 
 			String buttonId = o.getString("button_id");
 
-			Payment payment = Payment.findFirst("id = ?", paymentId);
+			Payment payment = PAYMENT.findFirst("id = ?", paymentId);
 
 			String iframeText = Tools.createBitmerchantIframe(buttonId, o.getId().toString(),
 					DataSources.WEB_SERVICE_EXTERNAL_URL());
@@ -531,7 +536,7 @@ public class Actions {
 			String message;
 
 			// Find all the active cart items for that user
-			List<CartView> cvs = CartView.find("user_id = ? and seller_id = ?", 
+			List<CartView> cvs = CART_VIEW.find("user_id = ? and seller_id = ?", 
 					userId, sellerId);
 
 			if (cvs.size() == 0) {
@@ -539,7 +544,7 @@ public class Actions {
 			}
 
 			// Construct the order jsonReq from cart group totals
-			CartGroup cg = CartGroup.findFirst("user_id = ? and seller_id = ?",
+			CartGroup cg = CART_GROUP.findFirst("user_id = ? and seller_id = ?",
 					userId, sellerId);
 
 
@@ -565,7 +570,7 @@ public class Actions {
 			}
 			// Otherwise, add a payment, and update the cart items
 			else {
-				Payment payment = Payment.create();
+				Payment payment = PAYMENT.create();
 
 				Tools.writeRQL(payment.toInsert());
 
@@ -573,7 +578,7 @@ public class Actions {
 			}
 			// Always update the cart items
 			// Fetch it to get its id
-			LazyList<Payment> payments = Payment.find("completed is null").orderBy("created_at desc");
+			LazyList<Payment> payments = PAYMENT.find("completed = 0").orderBy("created_at desc");
 			Payment payment = payments.get(0);
 			paymentId = payment.getId().toString();
 
@@ -594,7 +599,7 @@ public class Actions {
 		public static String getWishlistThumbnails(String userId) {
 
 			// Get users wishlist items
-			List<WishlistItem> wsItems = WishlistItem.find("user_id = ?", userId);
+			List<WishlistItem> wsItems = WISHLIST_ITEM.find("user_id = ?", userId);
 
 			if (wsItems.size() == 0) {
 				return "{\"products\": []}";
@@ -615,7 +620,7 @@ public class Actions {
 			}
 			log.info("in clause = " + inClause);
 
-			List<ProductThumbnailView> pvs = ProductThumbnailView.where(
+			List<ProductThumbnailView> pvs = PRODUCT_THUMBNAIL_VIEW.where(
 					"product_id in " + inClause.toString());
 
 			String json = Tools.nodeToJson(
@@ -628,13 +633,13 @@ public class Actions {
 
 
 			// Check if item already exists
-			WishlistItem wishlistItem = WishlistItem.findFirst("user_id = ? and product_id = ? and purchased = ?", userId,
+			WishlistItem wishlistItem = WISHLIST_ITEM.findFirst("user_id = ? and product_id = ? and purchased = ?", userId,
 					productId, "0");
 
 			// only add it if its not already there
 			if (wishlistItem == null){
 				// Add the product to the cart
-				wishlistItem = WishlistItem.create("user_id", userId,
+				wishlistItem = WISHLIST_ITEM.create("user_id", userId,
 						"product_id", productId,
 						"purchased", 0);
 				Tools.writeRQL(wishlistItem.toInsert());
@@ -645,8 +650,8 @@ public class Actions {
 			return message;
 		}
 		public static String removeFromWishlist(String userId, String productId) {
-			
-			WishlistItem ci = WishlistItem.findFirst("user_id = ? and product_id = ?",
+
+			WishlistItem ci = WISHLIST_ITEM.findFirst("user_id = ? and product_id = ?",
 					userId, productId);
 			String message;
 			if (ci != null) {
@@ -658,18 +663,68 @@ public class Actions {
 			} else {
 				throw new NoSuchElementException("Couldn't remove the wishlist item");
 			}
-			
+
 			return message;
+		}
+		public static String saveUsername(User user, String username) {
+
+			user.set("name",username);
+			String cmd = user.toUpdate();
+			Tools.writeRQL(cmd);
+
+			return "User name saved";
+		}
+		public static void createFeedbackFromPaymentSuccess(String paymentId) {
+
+			// find all the cart_item ids that match that paymentId
+			List<CartItem> cis = CART_ITEM.find("payment_id = ?", paymentId);
+
+			// insert empty feedback rows
+			for (CartItem ci : cis) {
+				String cmd = FEEDBACK.create("cart_item_id", ci.getId().toString()).toInsert();
+				Tools.writeRQL(cmd);
+			}
+
+			log.info("feedback rows created for payment id = " + paymentId);
+		}
+		public static String saveFeedback(String feedbackId, String userId,
+				String stars, String arrivedOnTime, String correctlyDescribed,
+				String promptService, String comments) {
+
+
+			String escapedHTML = (comments != null) ?
+					StringEscapeUtils.escapeHtml4(comments).replace(";","semicolon") : null;
+					// See if the review first exists
+
+					Feedback r = FEEDBACK.findFirst("id = ?", feedbackId);
+
+					if (r != null) {
+						r.set("stars", stars,
+								"arrived_on_time", arrivedOnTime,
+								"correctly_described", correctlyDescribed,
+								"prompt_service", promptService,
+								"comments", escapedHTML);
+					} 
+
+
+					Tools.writeRQL(r.toUpdate());
+
+					String message = "Feedback saved";
+
+					return message;
+
 		}
 
 
 	}
+
+
 	public static class PaymentActions {
 		public static void updatePayment(String paymentId) {
 
 
 			// update the payment to completed
-			Payment payment = Payment.findFirst("id = ?", paymentId);
+			Payment payment = PAYMENT.findFirst("id = ?", paymentId);
 			payment.set("completed","1");
 
 			Tools.writeRQL(payment.toUpdate());
@@ -688,15 +743,15 @@ public class Actions {
 
 		public static Seller createSellerSimple(String userId) {
 
-			Seller seller = Seller.create("user_id", userId);
+			Seller seller = SELLER.create("user_id", userId);
 			Tools.writeRQL(seller.toInsert());
-			seller = Seller.findFirst("user_id = ?", userId);
+			seller = SELLER.findFirst("user_id = ?", userId);
 
 			return seller;
 		}
 
 		public static Seller getSeller(String userId) {
-			Seller seller = Seller.findFirst("user_id = ?", userId);
+			Seller seller = SELLER.findFirst("user_id = ?", userId);
 			return seller;
 		}
 
@@ -722,11 +777,11 @@ public class Actions {
 		}
 
 		public static Product createNewProduct(Seller seller) {
-			Product p = Product.create("seller_id", seller.getId().toString());
+			Product p = PRODUCT.create("seller_id", seller.getId().toString());
 
 			Tools.writeRQL(p.toInsert());
 			//			p = Product.findFirst("seller_id = ?, max(created_at)", seller.getId().toString());
-			List<Product> ps = Product.where("seller_id = ?", seller.getId().toString())
+			List<Product> ps = PRODUCT.where("seller_id = ?", seller.getId().toString())
 					.orderBy("created_at desc");
 			return ps.get(0);
 
@@ -752,7 +807,7 @@ public class Actions {
 				String url) {
 
 			// See if the picture first exists
-			ProductPicture p = ProductPicture.findFirst(
+			ProductPicture p = PRODUCT_PICTURE.findFirst(
 					"product_id = ? and num_ = ?", productId, pictureNum);
 
 			String cmd;
@@ -762,7 +817,7 @@ public class Actions {
 						"num_", pictureNum,
 						"url", url);
 			} else {
-				cmd = ProductPicture.create("product_id", productId, 
+				cmd = PRODUCT_PICTURE.create("product_id", productId, 
 						"num_", pictureNum,
 						"url", url).toInsert();
 			}
@@ -778,9 +833,10 @@ public class Actions {
 		public static String saveProductDetails(String productId,
 				String summerNoteHtml) {
 
-			String escapedHTML = StringEscapeUtils.escapeHtml4(summerNoteHtml);
+			String escapedHTML = StringEscapeUtils.escapeHtml4(summerNoteHtml).replace(";","semicolon");
+			log.info("escaped html = " + escapedHTML);
 			// See if the ProductPage first exists
-			ProductPage p = ProductPage.findFirst(
+			ProductPage p = PRODUCT_PAGE.findFirst(
 					"product_id = ?", productId);
 
 			String cmd;
@@ -789,7 +845,7 @@ public class Actions {
 						"product_id", productId, 
 						"product_html", escapedHTML);
 			} else {
-				cmd = ProductPage.create("product_id", productId, 
+				cmd = PRODUCT_PAGE.create("product_id", productId, 
 						"product_html", escapedHTML).toInsert();
 			}
 
@@ -807,7 +863,7 @@ public class Actions {
 				String price3, String price4, String price5) {
 
 			// See if the ProductPrice first exists
-			ProductPrice p = ProductPrice.findFirst(
+			ProductPrice p = PRODUCT_PRICE.findFirst(
 					"product_id = ?", productId);
 
 			String cmd;
@@ -826,7 +882,7 @@ public class Actions {
 				cmd = p.toUpdate();
 
 			} else {
-				cmd = ProductPrice.create("product_id", productId, 
+				cmd = PRODUCT_PRICE.create("product_id", productId, 
 						"price", price,
 						"native_currency_id", currId,
 						"variable_price", variablePrice,
@@ -858,7 +914,7 @@ public class Actions {
 			Tools.writeRQL(updateProduct);
 
 			// See if the ProductPrice first exists
-			Auction a = Auction.findFirst(
+			Auction a = AUCTION.findFirst(
 					"product_id = ?", productId);
 
 			String cmd;
@@ -871,7 +927,7 @@ public class Actions {
 						"currency_id", currIso
 						);
 			} else {
-				cmd = Auction.create("product_id", productId, 
+				cmd = AUCTION.create("product_id", productId, 
 						"expire_time", auctionExpirationDate,
 						"start_amount", auctionStartPrice,
 						"reserve_amount", auctionReservePrice,
@@ -903,7 +959,7 @@ public class Actions {
 		public static void ensureSellerOwnsProduct(Request req, String productId) {
 			Seller seller = getSellerFromSessionId(req);
 
-			Product p = Product.findFirst("id = ?", productId);
+			Product p = PRODUCT.findFirst("id = ?", productId);
 
 			if (!p.getString("seller_id").equals(seller.getId().toString())) {
 				throw new NoSuchElementException("You don't own this product");
@@ -914,7 +970,7 @@ public class Actions {
 		public static String saveBullet(String productId, String bulletNum,
 				String bullet) {
 			// See if the picture first exists
-			ProductBullet p = ProductBullet.findFirst(
+			ProductBullet p = PRODUCT_BULLET.findFirst(
 					"product_id = ? and num_ = ?", productId, bulletNum);
 
 			String cmd;
@@ -924,7 +980,7 @@ public class Actions {
 						"num_", bulletNum,
 						"text", bullet);
 			} else {
-				cmd = ProductBullet.create("product_id", productId, 
+				cmd = PRODUCT_BULLET.create("product_id", productId, 
 						"num_", bulletNum,
 						"text", bullet).toInsert();
 			}
@@ -939,7 +995,7 @@ public class Actions {
 
 		public static String deleteBullet(String productId, String bulletNum) {
 
-			ProductBullet p = ProductBullet.findFirst(
+			ProductBullet p = PRODUCT_BULLET.findFirst(
 					"product_id = ? and num_ = ?", productId, bulletNum);
 
 			String message;
@@ -959,7 +1015,7 @@ public class Actions {
 		}
 
 		public static String deletePicture(String productId, String pictureNum) {
-			ProductPicture p = ProductPicture.findFirst(
+			ProductPicture p = PRODUCT_PICTURE.findFirst(
 					"product_id = ? and num_ = ?", productId, pictureNum);
 
 			String message;
@@ -982,19 +1038,19 @@ public class Actions {
 				String nativeCurrId) {
 
 			// First, create or fetch the shipping row(its not the product row)
-			Shipping s = Shipping.findFirst("product_id = ?", productId);
+			Shipping s = SHIPPING.findFirst("product_id = ?", productId);
 			String cmd;
 			if (s == null) {
-				cmd = Shipping.create("product_id", productId).toInsert();
+				cmd = SHIPPING.create("product_id", productId).toInsert();
 				Tools.writeRQL(cmd);
-				s = Shipping.findFirst("product_id = ?", productId);
+				s = SHIPPING.findFirst("product_id = ?", productId);
 			}
 
 			String shippingId = s.getId().toString();
 
 
 			// See if the shipping cost first exists
-			ShippingCost p = ShippingCost.findFirst(
+			ShippingCost p = SHIPPING_COST.findFirst(
 					"shipping_id = ? and num_ = ?", shippingId, shippingNum);
 
 			cmd = new String();
@@ -1006,7 +1062,7 @@ public class Actions {
 						"price", price,
 						"native_currency_id", nativeCurrId);
 			} else {
-				cmd = ShippingCost.create("shipping_id", shippingId, 
+				cmd = SHIPPING_COST.create("shipping_id", shippingId, 
 						"num_", shippingNum,
 						"to_country_id", toCountryId,
 						"price", price,
@@ -1023,10 +1079,10 @@ public class Actions {
 
 		public static String deleteShippingCost(String productId, String shippingNum) {
 
-			Shipping s = Shipping.findFirst("product_id = ?", productId);
+			Shipping s = SHIPPING.findFirst("product_id = ?", productId);
 			String shippingId = s.getId().toString();
 
-			ShippingCost p = ShippingCost.findFirst(
+			ShippingCost p = SHIPPING_COST.findFirst(
 					"shipping_id = ? and num_ = ?", shippingId, shippingNum);
 
 			String message;
@@ -1047,7 +1103,7 @@ public class Actions {
 		public static String saveShipping(String productId, String fromCountryId) {
 
 			// See if the shipping first exists
-			Shipping a = Shipping.findFirst(
+			Shipping a = SHIPPING.findFirst(
 					"product_id = ?", productId);
 
 			String cmd;
@@ -1056,7 +1112,7 @@ public class Actions {
 						"product_id", productId, 
 						"from_country_id", fromCountryId);
 			} else {
-				cmd = Shipping.create("product_id", productId, 
+				cmd = SHIPPING.create("product_id", productId, 
 						"from_country_id", fromCountryId).toInsert();
 			}
 
@@ -1071,7 +1127,7 @@ public class Actions {
 				String isPhysical) {
 
 			// See if the shipping first exists
-			Product a = Product.findFirst(
+			Product a = PRODUCT.findFirst(
 					"id = ?", productId);
 
 			String cmd;
@@ -1094,10 +1150,10 @@ public class Actions {
 
 
 			if (id.equals("null")) {
-				return CategoryTreeView.findFirst("id_1 = ?", 1).toJson(false, "id_1");
+				return CATEGORY_TREE_VIEW.findFirst("id_1 = ?", 1).toJson(false, "id_1");
 			} 
 
-			CategoryTreeView c = CategoryTreeView.findFirst("id_1 = ? OR "
+			CategoryTreeView c = CATEGORY_TREE_VIEW.findFirst("id_1 = ? OR "
 					+ "id_2 = ? OR "
 					+ "id_3 = ? OR "
 					+ "id_4 = ? OR "
@@ -1108,6 +1164,65 @@ public class Actions {
 			return c.toJson(false);
 
 		}
+
+		public static Set<Integer> getAllCategoryChildren(Integer categoryId) {
+			String query = "id_1 = " + categoryId + " or "
+					+ "id_2 = " + categoryId + " or "
+					+ "id_3 = " + categoryId + " or "
+					+ "id_4 = " + categoryId + " or "
+					+ "id_5 = " + categoryId + " or "
+					+ "id_6 = " + categoryId + " or "
+					+ "id_7 = " + categoryId + "";
+			List<CategoryTreeView> cvs = CATEGORY_TREE_VIEW.find(query);
+
+			Set<Integer> categoryIds = new LinkedHashSet<Integer>();
+
+			for (CategoryTreeView cv : cvs) {
+				// loop through the 7
+				for (int i = 1; i < 8; i++) {
+					Integer id = cv.getInteger("id_" + i);
+					if (id != null && id > categoryId) {
+						categoryIds.add(id);
+					}
+				}
+
+			}
+
+			return categoryIds;
+		}
+
+		public static String getCategoryThumbnails(String categoryId) {
+			// have to get all the children here
+			Set<Integer> children = getAllCategoryChildren(Integer.parseInt(categoryId));
+			children.add(Integer.parseInt(categoryId));
+			
+			// Construct an in clause
+			StringBuilder inClause = new StringBuilder();
+			inClause.append("(");
+			Iterator<Integer> childrenIt = children.iterator();
+			for (;;) {
+				Integer id = childrenIt.next();
+				inClause.append(id);
+				if (childrenIt.hasNext()) {
+					inClause.append(",");
+				} else {
+					inClause.append(")");
+					break;
+				}
+			}
+			log.info("in clause = " + inClause);
+
+			List<ProductThumbnailView> pvs = PRODUCT_THUMBNAIL_VIEW.where(
+					"category_id in " + inClause.toString());
+
+			String json = Tools.nodeToJson(Transformations.productThumbnailViewJson(pvs));
+			
+			return json;
+		}
+
+
+
+
 	}
 
 
@@ -1128,7 +1243,7 @@ public class Actions {
 			Boolean secure = false;
 
 			// Store the users user in the DB, give them a session id
-			Login login = Login.create("user_id", user.getId(),
+			Login login = LOGIN.create("user_id", user.getId(),
 					"session_id", authenticatedSessionId,
 					"time_", now,
 					"expire_time", expireTime);
@@ -1152,6 +1267,7 @@ public class Actions {
 			String sessionId = req.cookie("authenticated_session_id");
 			return sessionId;
 		}
+
 
 	}
 }

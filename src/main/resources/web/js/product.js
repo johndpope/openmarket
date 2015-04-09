@@ -75,3 +75,14 @@ function askQuestionBtn() {
 
     });
 }
+
+function writeReviewBtn() {
+
+  $('#writeReviewBtn').click(function(e1) {
+    simplePost('create_product_review/' + productId, null, null, reviewRedirect, null, null);
+
+
+  });
+
+}
+

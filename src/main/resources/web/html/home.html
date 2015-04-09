@@ -57,29 +57,33 @@
             <li id="searchbar">
               <form id="search_form" class="navbar-form navbar-left navbar-input-group " role="search">
                 <div class="input-group">
-                  <div class="input-group-btn">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">All <span class="caret"></span>
-                    </button>
-                  </div>
                   <div class="form-group">
-                    <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for items or shops" autofocus="autofocus">
+                    <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for Items, Shops, or Categories" autofocus="autofocus">
                   </div>
                   <span class="input-group-btn">
-              <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
-              </button>
-              </span>
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
+                        </button>
+                   </span>
                 </div>
               </form>
             </li>
-            <li class="dropdown">
-              <div class="navbar-form">
-                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
+            <li id="top_categories_div" class="dropdown">
+              <script id="top_categories_template" type="x-tmpl-mustache">
+                <div class="navbar-form">
+                  <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="/api.html">API Reference</a>
-                  </li>
-                </ul>
-              </div>
+                  <ul class="dropdown-menu" role="menu">
+                    {{#.}}
+                    <li><a href="/category/{{id}}">{{name}}</a>
+                    </li>
+                    {{/.}}
+                    <li class="divider">
+                    </li>
+                    <li><a href="/browse"> View all</a>
+                    </li>
+                  </ul>
+                </div>
+              </script>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -100,12 +104,11 @@
                         <p class="text-muted"><small>{{shop_name}}</small></p>
                       </div>
                     </div>
-                      {{/products}} 
-                    {{#products.0}}
+                    {{/products}} {{#products.0}}
                     <div class="row">
-                    <div class="col-md-offset-1 col-md-10">
-                    <a href="/wishlist" class="btn btn-default btn-block">View Wishlist ({{products.length}} items)</a> 
-                    </div>
+                      <div class="col-md-offset-1 col-md-10">
+                        <a href="/wishlist" class="btn btn-default btn-block">View Wishlist ({{products.length}} items)</a>
+                      </div>
                     </div>
                     {{/products.0}}
                   </script>
@@ -129,12 +132,11 @@
                         <p class="text-muted"><small>Quantity: {{quantity}}</small></p>
                       </div>
                     </div>
-                      {{/.}} 
-                    {{#0}}
+                    {{/.}} {{#0}}
                     <div class="row">
-                    <div class="col-md-offset-1 col-md-10">
-                    <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a> 
-                    </div>
+                      <div class="col-md-offset-1 col-md-10">
+                        <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a>
+                      </div>
                     </div>
                     {{/0}}
                   </script>
@@ -151,7 +153,7 @@
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="/orders.html"><i class="fa fa-shopping-cart fa-fw"></i> Purchases and Orders</a>
+                  <li><a href="/orders"><i class="fa fa-shopping-cart fa-fw"></i> Purchases and Orders</a>
                   </li>
                   <li><a href="/dashboard"><i class="fa fa-cog fa-fw"></i> Account Settings</a>
                   </li>

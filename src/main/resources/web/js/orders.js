@@ -13,7 +13,7 @@ function setupCart() {
 
   var url = 'get_orders_grouped';
   if (viewAllOrOpen != null) {
-    url += '/' + viewAllOrOpen;
+    url += '?view=' + viewAllOrOpen;
   }
   
   getJson(url).done(function(e) {

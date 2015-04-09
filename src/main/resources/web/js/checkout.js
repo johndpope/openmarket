@@ -69,6 +69,7 @@ function createPayment() {
   }, null, null);
 }
 
+
 function deleteAddress() {
   $('.delete_shipping').click(function(e) {
     var addressId = this.id.split('_').pop();

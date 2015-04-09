@@ -144,27 +144,34 @@
                         </div>
                         {{/thumbnail.pictures}}
                       </div>
+                      {{#thumbnail.pictures.1}}
                       <a class="left carousel-control" href=".item-{{product_id}}" role="button" data-slide="prev">
                         <span class="icon-prev"></span>
                       </a>
                       <a class="right carousel-control" href=".item-{{product_id}}" role="button" data-slide="next">
                         <span class="icon-next"></span>
                       </a>
+                      {{/thumbnail.pictures.1}}
                     </div>
                   </div>
                   <div class="col-md-8">
                     <a href=""> {{thumbnail.title}} </a>
-                    <p class="text-muted"> Created on {{created_at}} </p>
+                    <p class="text-muted"> Created on {{#otherdateformat}}{{created_at}}{{/otherdateformat}}</p>
                     <form id="review-{{product_id}}-form">
                       <input name="stars" data-size="xs" data-min="0" data-max="5" data-step="0.5" data-symbol="&#xf005;" data-glyphicon="false" data-rating-class="rating-fa">
                       <input name="headline" type="inputEmail3" class="form-control" placeholder="Write a Review headline here" minlength="6" maxlength="90" data-bv-notempty="true" data-bv-notempty-message="A headline is required" />
                       <br>
+                  
                       <textarea id="text-{{product_id}}" name="text_html" class="summernote hide"></textarea>
+                      
                       <button class="btn btn-default btn-block" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Save Review</button>
                     </form>
                   </div>
                 </div>
               </div>
+              {{/reviews}}
+              {{^reviews}}
+              <h4> No reviews written</h4>
               {{/reviews}}
             </script>
           </div>

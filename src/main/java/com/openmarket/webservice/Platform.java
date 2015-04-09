@@ -3,17 +3,14 @@ package com.openmarket.webservice;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-
 import java.util.List;
 import java.util.Map;
-
 
 import org.eclipse.jetty.server.UserIdentity;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import com.bitmerchant.db.Tables.Order;
 import com.bitmerchant.db.Tables.OrderView;
@@ -22,9 +19,9 @@ import com.openmarket.db.actions.Actions.CategoryActions;
 import com.openmarket.db.actions.Actions.PaymentActions;
 import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
+import com.openmarket.db.actions.Actions.WebActions;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
-
 
 import static com.openmarket.db.Tables.*;
 
@@ -58,6 +55,28 @@ public class Platform {
 
 				String message = UserActions.sendSignUpEmail(user);
 
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		post("/send_reset_password_email", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+				
+				String message = UserActions.sendSignUpEmail(user);
 
 				return message;
 
@@ -191,6 +210,34 @@ public class Platform {
 			}
 
 		});
+		
+		post("/save_username", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				String username = vars.get("username");
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+
+				String message = UserActions.saveUsername(user, username);
+
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+
 
 		post("/create_product", (req, res) -> {
 			try {
@@ -1164,6 +1211,9 @@ public class Platform {
 
 		});
 		
+		/** 
+		 * This is a successful payment
+		 */
 		post("/callback/:paymentId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -1174,7 +1224,8 @@ public class Platform {
 				Tools.dbInit();		
 				log.info("i got the callback");
 				PaymentActions.updatePayment(paymentId);
-
+				UserActions.createFeedbackFromPaymentSuccess(paymentId);
+				
 				return null;
 
 			} catch (Exception e) {
@@ -1213,6 +1264,51 @@ public class Platform {
 
 		});
 		
+		post("/save_feedback/:feedbackId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				log.info(vars.toString());
+
+				String feedbackId = req.params(":feedbackId");
+
+				String stars = vars.get("stars");
+				String arrivedOnTime = vars.get("arrived_on_time");
+				String correctlyDescribed = vars.get("correctly_described");
+				String promptService = vars.get("prompt_service");
+				String comments = vars.get("comments");
+
+				Tools.dbInit();
+						
+				String message = null;
+
+				User user = UserActions.getUserFromSessionId(req);
+
+				message = UserActions.saveFeedback(feedbackId, 
+						user.getId().toString(), 
+						stars, 
+						arrivedOnTime, 
+						correctlyDescribed,
+						promptService,
+						comments);
+
+
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
 		
 
 		get("/get_review_vote/:reviewId", (req, res) -> {
@@ -1227,7 +1323,7 @@ public class Platform {
 
 				User user = UserActions.getUserFromSessionId(req);
 
-				ReviewVote rv = ReviewVote.findFirst("user_id = ? and id = ?",
+				ReviewVote rv = REVIEW_VOTE.findFirst("user_id = ? and id = ?",
 						user.getId().toString(),
 						reviewId);
 
@@ -1263,7 +1359,7 @@ public class Platform {
 
 				User user = UserActions.getUserFromSessionId(req);
 
-				QuestionVote rv = QuestionVote.findFirst("user_id = ? and id = ?",
+				QuestionVote rv = QUESTION_VOTE.findFirst("user_id = ? and id = ?",
 						user.getId().toString(),
 						questionId);
 
@@ -1299,7 +1395,7 @@ public class Platform {
 
 				User user = UserActions.getUserFromSessionId(req);
 
-				AnswerVote rv = AnswerVote.findFirst("user_id = ? and id = ?",
+				AnswerVote rv = ANSWER_VOTE.findFirst("user_id = ? and id = ?",
 						user.getId().toString(),
 						answerId);
 				
@@ -1333,7 +1429,7 @@ public class Platform {
 
 				String json = null;
 
-				List<ReviewView> rvs = ReviewView.find("product_id = ?", productId);
+				List<ReviewView> rvs = REVIEW_VIEW.find("product_id = ?", productId);
 
 				json = Tools.nodeToJson(Transformations.reviewViewJson(rvs));
 
@@ -1351,7 +1447,7 @@ public class Platform {
 
 
 
-		get("/category/:parentId", (req, res) -> {
+		get("/get_category/:parentId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.logRequestInfo(req);
@@ -1362,9 +1458,9 @@ public class Platform {
 				String json;
 				if (parentId.equals("null")) {
 					parentId = null;
-					json = Category.find("parent is ?", parentId).toJson(false, "id", "name", "parent");
+					json = CATEGORY.find("parent is ?", parentId).toJson(false, "id", "name", "parent");
 				} else {
-					json = Category.find("parent = ?", parentId).toJson(false, "id", "name", "parent");
+					json = CATEGORY.find("parent = ?", parentId).toJson(false, "id", "name", "parent");
 				}
 
 				return json;
@@ -1378,7 +1474,7 @@ public class Platform {
 
 		});
 
-		get("/category_tree/:id", (req, res) -> {
+		get("/get_category_tree/:id", (req, res) -> {
 
 			try {
 				String id = req.params(":id");
@@ -1402,7 +1498,7 @@ public class Platform {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				String json = TimeSpanView.findAll().toJson(false);
+				String json = TIME_SPAN_VIEW.findAll().toJson(false);
 
 				return json;
 
@@ -1421,7 +1517,7 @@ public class Platform {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				String json = Country.findAll().toJson(false);
+				String json = COUNTRY.findAll().toJson(false);
 
 				return json;
 
@@ -1438,7 +1534,7 @@ public class Platform {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				String json = Currency.findAll().toJson(false);
+				String json = CURRENCY.findAll().toJson(false);
 
 				return json;
 			} catch (Exception e) {
@@ -1452,6 +1548,25 @@ public class Platform {
 
 		});
 
+		get("/get_user", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+
+				String json = user.toJson(false);
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
 
 		get("/get_seller", (req, res) -> {
 
@@ -1478,7 +1593,7 @@ public class Platform {
 				Tools.allowAllHeaders(req, res);
 				String productId = req.params(":productId");
 				Tools.dbInit();
-				String json = ProductBullet.where("product_id = ?", productId).
+				String json = PRODUCT_BULLET.where("product_id = ?", productId).
 						orderBy("num_ asc").toJson(false);
 
 				return json;
@@ -1497,7 +1612,7 @@ public class Platform {
 				Tools.allowAllHeaders(req, res);
 				String productId = req.params(":productId");
 				Tools.dbInit();
-				String json = ProductPicture.where("product_id = ?", productId).
+				String json = PRODUCT_PICTURE.where("product_id = ?", productId).
 						orderBy("num_ asc").toJson(false);
 
 				return json;
@@ -1517,7 +1632,7 @@ public class Platform {
 				String productId = req.params(":productId");
 				Tools.dbInit();
 
-				Shipping s = Shipping.findFirst("product_id = ?", productId);
+				Shipping s = SHIPPING.findFirst("product_id = ?", productId);
 
 				String json;
 				if (s != null) {
@@ -1544,9 +1659,9 @@ public class Platform {
 				Tools.dbInit();
 
 				String json;
-				Shipping s = Shipping.findFirst("product_id = ?", productId);
+				Shipping s = SHIPPING.findFirst("product_id = ?", productId);
 				if (s != null) {
-					json = ShippingCost.where("shipping_id = ?", s.getId().toString()).toJson(false);
+					json = SHIPPING_COST.where("shipping_id = ?", s.getId().toString()).toJson(false);
 				} else {
 					json = "[]";
 				}
@@ -1571,7 +1686,7 @@ public class Platform {
 				Tools.dbInit();
 				Seller seller = SellerActions.getSellerFromSessionId(req);
 
-				List<ProductThumbnailView> pvs = ProductThumbnailView.where(
+				List<ProductThumbnailView> pvs = PRODUCT_THUMBNAIL_VIEW.where(
 						"seller_id = ?", seller.getId().toString());
 
 				String json = Tools.nodeToJson(
@@ -1610,6 +1725,27 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
+		
+		get("/get_category_thumbnails/:categoryId", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				String categoryId = req.params(":categoryId");
+				
+				String json = CategoryActions.getCategoryThumbnails(categoryId);
+				log.info(json);
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
 
 		get("/get_product/:productId", (req, res) -> {
 
@@ -1619,7 +1755,7 @@ public class Platform {
 				Tools.dbInit();
 				String productId = req.params(":productId");
 
-				ProductView pv = ProductView.findFirst(
+				ProductView pv = PRODUCT_VIEW.findFirst(
 						"id = ?", productId);
 
 				String json = Tools.nodeToJson(
@@ -1645,12 +1781,39 @@ public class Platform {
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
 
-				List<ReviewView> rvs = ReviewView.where("user_id = ?", user.getId().toString())
+				List<ReviewView> rvs = REVIEW_VIEW.where("user_id = ?", user.getId().toString())
 						.orderBy("created_at desc");
 
 
 				String json = Tools.nodeToJson(
 						Transformations.yourReviewsViewJson(rvs));
+
+
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
+		
+		get("/get_your_feedback", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+
+				List<FeedbackView> fvs = FEEDBACK_VIEW.where("user_id = ?", user.getId().toString())
+						.orderBy("created_at desc");
+
+
+				String json = Tools.nodeToJson(
+						Transformations.yourFeedbackViewJson(fvs));
 
 
 
@@ -1675,7 +1838,7 @@ public class Platform {
 				String json = null;
 				
 				// get the cart items
-				LazyList<CartView> cvs = CartView.find("user_id = ?", user.getId().toString());
+				LazyList<CartView> cvs = CART_VIEW.find("user_id = ?", user.getId().toString());
 				if (cvs == null) {
 					json = "[]";
 				} else {
@@ -1744,14 +1907,15 @@ public class Platform {
 
 		});
 		
-		get("/get_orders_grouped/:view", (req, res) -> {
+		get("/get_orders_grouped", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
 				
 				User user = UserActions.getUserFromSessionId(req);
-				String view = req.params(":view");
+				String view = (req.queryParams("view") != null) ? req.queryParams("view") : "all";
+				
 				
 				String json = null;
 				
@@ -1779,7 +1943,70 @@ public class Platform {
 				
 				String json = null;
 				
-				json = AddressView.find("user_id = ?", user.getId().toString()).toJson(false);
+				json = ADDRESS_VIEW.find("user_id = ?", user.getId().toString()).toJson(false);
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_browse", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				String json = Tools.nodeToJson(Transformations.browseJson());
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_top_categories", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				// Finds the top level categories
+				String json = CATEGORY.find("parent is null").toJson(false);
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_subcategories/:categoryId", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				
+				String categoryId = req.params(":categoryId");
+				
+				String json = CATEGORY.find("parent = ? or id = ?", categoryId, categoryId).toJson(false);
 				
 				return json;
 
@@ -1802,7 +2029,7 @@ public class Platform {
 				String paymentId = req.params(":paymentId");
 				String json = null;
 				
-				json = Payment.findFirst("id = ?", paymentId).toJson(false);
+				json = PAYMENT.findFirst("id = ?", paymentId).toJson(false);
 				
 				return json;
 
@@ -1819,6 +2046,13 @@ public class Platform {
 
 
 		// All the webpages
+		
+		get("/category/:categoryId", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			return Tools.readFile(DataSources.PAGES("category"));
+		});
+		
+		
 		get("/product/edit/:productId", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);	
 			return Tools.readFile(DataSources.PAGES("product_edit"));

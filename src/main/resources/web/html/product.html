@@ -137,12 +137,14 @@
                           </div>
                           {{/pictures}}
                         </div>
+                        {{#pictures.1}}
                         <a class="left carousel-control" href=".item-{{id}}" role="button" data-slide="prev">
                           <span class="icon-prev"></span>
                         </a>
                         <a class="right carousel-control" href=".item-{{id}}" role="button" data-slide="next">
                           <span class="icon-next"></span>
                         </a>
+                         {{/pictures.1}}
                       </div>
                     </div>
                   </div>
@@ -184,7 +186,7 @@
                       {{headline}}
                       </h4>
                             <span class="text-muted">By blank on {{created_at}}</span>
-                            <br> {{{text_html}}} <br>
+                            <br> {{#htmlDecode}}{{{text_html}}}{{/htmlDecode}} <br>
                             <a href="" id="review_comments_btn_{{id}}">{{comments.length}} Comments <span class="caret"></a>
                             <span class="text-muted">&nbsp;&nbsp;&nbsp;</span>
                             <span id="review_vote_helpful_{{id}}" class="btn btn-sm btn-default vote-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>" type="submit"><i class='fa fa-thumbs-o-up'> Helpful</i>

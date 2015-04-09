@@ -140,8 +140,8 @@
                       {{#numToStars}} {{stars}} {{/numToStars}}
                       {{headline}}
                       </h4>
-                    <span class="text-muted">By blank on {{created_at}}</span>
-                    <br> {{{text_html}}}
+                    <span class="text-muted">By blank on {{#otherdateformat}}{{created_at}}{{/otherdateformat}}</span>
+                    <br> {{#htmlDecode}}{{{text_html}}}{{/htmlDecode}}
                     <a href="" id="review_comments_btn_{{id}}">{{comments.length}} Comments <span class="caret"></a>
                     <span class="text-muted">&nbsp;&nbsp;&nbsp;</span>
                     <span id="review_vote_helpful_{{id}}" class="btn btn-sm btn-default vote-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>" type="submit"><i class='fa fa-thumbs-o-up'> Helpful</i>

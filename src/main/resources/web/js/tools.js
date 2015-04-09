@@ -247,7 +247,7 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
   // event.preventDefault();
 }
 
-function simplePost(shortUrl, postData, reload, successFunctions, noToast, external) {
+function simplePost(shortUrl, postData, reload, successFunctions, noToast, external, btnId) {
 
 
   // !!!!!!They must have names unfortunately
@@ -259,6 +259,8 @@ function simplePost(shortUrl, postData, reload, successFunctions, noToast, exter
   noToast = (typeof noToast === "undefined") ? false : noToast;
   external = (typeof external === "undefined") ? false : external;
 
+    btnId = (typeof btnId === "undefined") ? false : btnId;
+
   var url;
   if (external) {
     url = externalSparkService + shortUrl;
@@ -266,6 +268,12 @@ function simplePost(shortUrl, postData, reload, successFunctions, noToast, exter
     url = sparkService + shortUrl;
   }
 
+    // var btn = $("[type=submit]");
+    // var btn = $(this).closest(".btn");
+    var btn = $(btnId);
+
+  // Loading
+  btn.button('loading');
 
   // console.log(url);
   $.ajax({
@@ -292,6 +300,7 @@ function simplePost(shortUrl, postData, reload, successFunctions, noToast, exter
       if (successFunctions != null) {
         successFunctions(data);
       }
+      btn.button('reset');
       if (reload) {
         // refresh the page, too much info has now changed
         window.setTimeout(function() {
@@ -309,6 +318,7 @@ function simplePost(shortUrl, postData, reload, successFunctions, noToast, exter
       if (!noToast) {
         toastr.error(request.responseText);
       }
+      btn.button('reset');
     }
   });
 
@@ -611,8 +621,11 @@ var otherDateFormatObj = {
       var a = timeStrArr.map(function toInt(x) {
         return parseInt(x);
       });
-      var date = new Date(a[0], a[1], a[2], a[3], a[4], a[5]);
-      // console.log(t);
+      // months are off by 1 in js, and hours are off by the timezone offset
+      var tzOffset = new Date().getTimezoneOffset()/60;
+      var date = new Date(a[0], a[1]-1 , a[2], a[3] - tzOffset, a[4], a[5]);
+      console.log(a);
+      console.log(date);
       return date.customFormat("#YYYY#/#MM#/#DD# #hh#:#mm# #AMPM#")
     }
   }
@@ -629,7 +642,9 @@ var currencyFormatter = {
 var htmlDecoder = {
   "htmlDecode": function() {
     return function(text, render) {
-      return $('<div/>').html(render(text)).text();
+      var t = render(text).replace(/semicolon/g,';');
+      console.log(t);
+      return $('<div/>').html(t).text();
     }
   }
 };
@@ -690,7 +705,7 @@ var delay = (function() {
 })();
 
 function htmlDecode(value) {
-  return $('<div/>').html(value).text();
+  return $('<div/>').html(value.replace(/semicolon/g,';')).text();
 }
 
 if (typeof String.prototype.startsWith != 'function') {
@@ -709,15 +724,6 @@ function loggedIn() {
 }
 
 
-function writeReviewBtn() {
-
-  $('#writeReviewBtn').click(function(e1) {
-    simplePost('create_product_review/' + productId, null, null, reviewRedirect, null, null);
-
-
-  });
-
-}
 
 function voteBtn() {
   $('.vote-btn').click(function(e) {
@@ -742,7 +748,7 @@ function voteBtn() {
           var downVoteId = '#review_vote_not_helpful_' + reviewId;
           $(id).addClass('btn-success');
           $(downVoteId).removeClass('btn-danger');
-        }), null, null);
+        }), null, null, id);
 
 
       } else {
@@ -753,7 +759,7 @@ function voteBtn() {
           var upVoteId = '#review_vote_helpful_' + reviewId;
           $(id).addClass('btn-danger');
           $(upVoteId).removeClass('btn-success');
-        }), null, null);
+        }), null, null, id);
 
       }
     }
@@ -777,7 +783,7 @@ function voteBtn() {
           $(downVoteId).removeClass('btn-danger');
           $('#question_vote_number_' + questionId).text(++voteNumber);
 
-        }), null, null);
+        }), null, null, id);
 
 
       } else {
@@ -789,7 +795,7 @@ function voteBtn() {
           $(id).addClass('btn-danger');
           $(upVoteId).removeClass('btn-success');
           $('#question_vote_number_' + questionId).text(--voteNumber);
-        }), null, null);
+        }), null, null, id);
 
       }
     }
@@ -870,13 +876,15 @@ function fillReviewVotes(reviews) {
   reviews.forEach(function(e) {
     var reviewId = e['id'];
 
+    console.log('review id = ' + reviewId);
+
     // get the users vote on that review
     var url = 'get_review_vote/' + reviewId;
 
     getJson(url).done(function(e1) {
       var reviewVote = JSON.parse(e1);
-      var voteInt = reviewVote['vote'];
       console.log(reviewVote);
+      var voteInt = (reviewVote['vote'] == 'up') ? 1 : 0;
 
       console.log(voteInt);
       if (voteInt == 1) {
@@ -903,7 +911,7 @@ function fillQuestionVotes(questions) {
     getJson(url).done(function(e1) {
       if (e1 != '[]') {
         var questionVote = JSON.parse(e1);
-        var voteInt = questionVote['vote'];
+        var voteInt = (questionVote['vote'] == 'up') ? 1 : 0;
         console.log(questionVote);
 
         console.log(voteInt);
@@ -931,7 +939,7 @@ function fillAnswerVotes(answers) {
     getJson(url).done(function(e1) {
       if (e1 != '[]') {
         var answerVote = JSON.parse(e1);
-        var voteInt = answerVote['vote'];
+        var voteInt = (answerVote['vote'] == 'up') ? 1 : 0;
         console.log(answerVote);
 
         console.log(voteInt);
