@@ -98,12 +98,12 @@ WITH RECURSIVE t(n) AS (VALUES(3) UNION select id from category, t where parent=
 
 
 -- Alternate getting of children
-select distinct coalesce(id_7, id_6, id_5, id_4, id_3, id_2, id_1) from category_tree_view 
+select id_7, id_6, id_5, id_4, id_3, id_2, id_1 from category_tree_view 
 where 
-id_1 = 13 or
-id_2 = 13 or
-id_3 = 13 or
-id_4 = 13 or
-id_5 = 13 or
-id_6 = 13 or
-id_7 = 13;
+id_1 = ? or
+id_2 = ? or
+id_3 = ? or
+id_4 = ? or
+id_5 = ? or
+id_6 = ? or
+id_7 = ?;

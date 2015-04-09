@@ -3,9 +3,11 @@ package com.openmarket.webservice;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.jetty.server.UserIdentity;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
@@ -1746,6 +1748,52 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
+		
+		get("/get_shop_thumbnails/:sellerId", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				String sellerId = req.params(":sellerId");
+				List<ProductThumbnailView> pvs = PRODUCT_THUMBNAIL_VIEW.find("seller_id = ?", sellerId);
+			
+				String json = Tools.nodeToJson(Transformations.productThumbnailViewJson(pvs));
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
+		
+		get("/get_trending_thumbnails/:sortType", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+
+				Tools.dbInit();
+				
+				
+				String sortType = URLDecoder.decode(req.params(":sortType"),"UTF-8");
+				log.info("sort type = " + sortType);
+			
+				List<ProductThumbnailView> pvs = PRODUCT_THUMBNAIL_VIEW.findAll().limit(3).orderBy(sortType);
+			
+				String json = Tools.nodeToJson(Transformations.productThumbnailViewJson(pvs));
+
+				return json;
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+		});
 
 		get("/get_product/:productId", (req, res) -> {
 
@@ -2042,10 +2090,89 @@ public class Platform {
 			}
 
 		});
+		
+		get("/category_search/:query", (req, res) -> {
+			
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+								
+				String query = req.params(":query");
+				String json = null;
+				
+				json = CATEGORY.find("name like ?", "%" + query + "%").toJson(false);
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+
+		});
+		
+		get("/product_search/:query", (req, res) -> {
+			
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+								
+				String query = req.params(":query");
+				String json = null;
+				
+				List<ProductThumbnailView> pvs = 
+						PRODUCT_THUMBNAIL_VIEW.find("title like ?", "%" + query + "%");
+				json = Transformations.searchProductThumbnailViewJson(pvs);
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+
+		});
+		
+		get("/shop_search/:query", (req, res) -> {
+			
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+								
+				String query = req.params(":query");
+				String json = null;
+				
+				json = SELLER.find("shop_name like ?", "%" + query + "%").toJson(false);
+				
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+
+		});
 
 
 
 		// All the webpages
+		
+		
+		get("/shop/:sellerId", (req, res) -> {
+			Tools.allowOnlyLocalHeaders(req, res);	
+			return Tools.readFile(DataSources.PAGES("shop"));
+		});
 		
 		get("/category/:categoryId", (req, res) -> {
 			Tools.allowOnlyLocalHeaders(req, res);	

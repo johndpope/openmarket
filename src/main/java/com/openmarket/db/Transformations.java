@@ -9,6 +9,7 @@ import static com.openmarket.db.Tables.REVIEW_COMMENT;
 import static com.openmarket.db.Tables.REVIEW_VIEW;
 import static com.openmarket.db.Tables.SHIPPING_COST_VIEW;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.openmarket.db.Tables.ProductThumbnailView;
 import com.openmarket.db.actions.Actions;
 import com.openmarket.tools.Tools;
 
@@ -63,6 +65,35 @@ public class Transformations {
 		}
 
 		return a;
+	}
+	
+	public static String searchProductThumbnailViewJson(List<ProductThumbnailView> pvs) {
+		if (pvs.size() == 0) {
+			return "[]";
+		}
+		
+
+		StringBuilder s = new StringBuilder();
+		s.append("[");
+
+		Iterator<ProductThumbnailView> pvIt = pvs.iterator();
+		for (;;) {
+			ProductThumbnailView pv = pvIt.next();
+			s.append(productThumbnailViewJson(pv));
+			
+			if (pvIt.hasNext()) {
+				s.append(",");
+			} else {
+				break;
+			}
+
+		}
+
+		s.append("]");
+		
+		log.info(s.toString());
+		
+		return s.toString();
 	}
 
 	public static ObjectNode productViewJson(ProductView pv) {

@@ -57,7 +57,7 @@ function saveShopName() {
 }
 
 function addNewItem() {
-  $('#add_product').click(function() {
+  $('.add_product').click(function() {
     simplePost('create_product', null, null, newItemRedirect, null, null);
   });
 }

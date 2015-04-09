@@ -22,7 +22,7 @@
   <!--   toastr css -->
   <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
   <!--   typeahead css -->
-  <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
+  <link href="typeaheadjs.css" rel="stylesheet" />
   <!-- Pickadate -->
   <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
   <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
@@ -56,12 +56,13 @@
           <ul class="nav navbar-nav">
             <li id="searchbar">
               <form id="search_form" class="navbar-form navbar-left navbar-input-group " role="search">
+                <input id='search_id' type='hidden' name='id' />
                 <div class="input-group">
-                  <div class="form-group">
-                    <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for Items, Shops, or Categories" autofocus="autofocus">
+                  <div id="search_box" class="form-group">
+                    <input name="search_input" type="text" class="form-control typeahead rounded-left" placeholder="Search for Items, Shops, or Categories" autofocus="autofocus">
                   </div>
                   <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
+                    <button type="submit" class="btn btn-default rounded-right"><i class="fa fa-search"></i>
                         </button>
                    </span>
                 </div>
@@ -106,9 +107,13 @@
                     </div>
                     {{/products}} {{#products.0}}
                     <div class="row">
+                      <hr>
                       <div class="col-md-offset-1 col-md-10">
                         <a href="/wishlist" class="btn btn-default btn-block">View Wishlist ({{products.length}} items)</a>
                       </div>
+                    </div>
+                    <div class="row">
+                      <br>
                     </div>
                     {{/products.0}}
                   </script>
@@ -134,9 +139,13 @@
                     </div>
                     {{/.}} {{#0}}
                     <div class="row">
+                    <hr>
                       <div class="col-md-offset-1 col-md-10">
                         <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a>
                       </div>
+                    </div>
+                    <div class="row">
+                      <br>
                     </div>
                     {{/0}}
                   </script>
@@ -175,51 +184,6 @@
       <!-- The Page -->
       <div class="row-fluid">
         <div class="othermain-col col-md-12">
-          <div class="row">
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="3000">
-              <!-- Indicators -->
-              <ol class="carousel-indicators">
-                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-              </ol>
-              <!-- Wrapper for slides -->
-              <div class="carousel-inner" role="listbox">
-                <div class="item active">
-                  <img src="holder.js/1016x400/social">
-                  <div class="carousel-caption">
-                    <h3>ARGE</h3>
-                    <p>okay</p>
-                  </div>
-                </div>
-                <div class="item">
-                  <img src="holder.js/1016x400/social">
-                  <div class="carousel-caption">
-                    ARG
-                  </div>
-                </div>
-                <div class="item">
-                  <img src="holder.js/1016x400/social">
-                  <div class="carousel-caption">
-                    ARG3
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Sign up -->
-          <div class="row logged-out">
-            <br>
-            <div class="col-md-offset-4 col-md-8 ">
-              <form id="signup_form" class="form-inline">
-                <div class="form-group">
-                  <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="Email" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
-                </div>
-                <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign Up Now</button>
-              </form>
-            </div>
-          </div>
-          <hr class="thin-hr">
           <!-- Trending items -->
           <div class="row">
             <div class="col-md-12">
@@ -227,107 +191,17 @@
             </div>
           </div>
           <br>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-body panel-picture-small">
-                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
-                </div>
-                <div class="panel-footer">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="text-center text-overflow">
-                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="spacer"></div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-success text-right"> 40.00 USD</div>
-                    </div>
-                  </div>
-                  <div class="font-spacer">&nbsp;</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-body panel-picture-small">
-                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
-                </div>
-                <div class="panel-footer">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="text-center text-overflow">
-                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="spacer"></div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-success text-right"> 40.00 USD</div>
-                    </div>
-                  </div>
-                  <div class="font-spacer">&nbsp;</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-body panel-picture-small">
-                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
-                </div>
-                <div class="panel-footer">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="text-center text-overflow">
-                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="spacer"></div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-success text-right"> 40.00 USD</div>
-                    </div>
-                  </div>
-                  <div class="font-spacer">&nbsp;</div>
-                </div>
-              </div>
-            </div>
+          <div class="row" id="trending_div">
           </div>
-          <hr class="thin-hr">
+          <hr class="thin-hr hide">
           <!-- Recommended for you  -->
-          <div class="row">
+          <div class="row hide">
             <div class="col-md-12">
               <h1 class="text-center"> Recommended for you  <br>   <small> Shop for items based on what you’ve viewed.</small></h1>
             </div>
           </div>
           <br>
-          <div class="row">
+          <div class="row hide">
             <div class="col-md-4">
               <div class="panel panel-default">
                 <div class="panel-body panel-picture-small">
@@ -427,103 +301,68 @@
             </div>
           </div>
           <br>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-body panel-picture-small">
-                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
-                </div>
-                <div class="panel-footer">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="text-center text-overflow">
-                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+          <div class="row" id="greatest_div">
+            <script id="thumbnails_template" type="x-tmpl-mustache">
+              {{#products}}
+              <div class="col-md-4">
+                <div class="panel panel-default">
+                  <div class="panel-body">
+                    <div class="carousel slide item-{{product_id}}" data-ride="carousel" data-interval="false">
+                      <div class="carousel-inner" role="listbox">
+                        {{#pictures}}
+                        <div class="item pic_num-{{num_}} img-responsive center-block">
+                          <a href="{{sparkURL}}product/{{product_id}}"><img class="panel-picture-small scale" src="{{url}}"></a>
+                        </div>
+                        {{/pictures}} {{^pictures}}
+                        <div class="item pic_num-1 active img-responsive center-block">
+                          <a href="{{sparkURL}}product/{{product_id}}"><img class="panel-picture-small scale" src="http://i.ytimg.com/vi/G5pxWdJnnYg/maxresdefault.jpg"></a>
+                        </div>
+                        {{/pictures}}
                       </div>
+                      {{#pictures.1}}
+                      <a class="left carousel-control" href=".item-{{product_id}}" role="button" data-slide="prev">
+                        <span class="icon-prev"></span>
+                      </a>
+                      <a class="right carousel-control" href=".item-{{product_id}}" role="button" data-slide="next">
+                        <span class="icon-next"></span>
+                      </a>
+                      {{/pictures.1}}
                     </div>
                   </div>
-                  <div class="spacer"></div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
+                  <div class="panel-footer">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="text-center text-overflow">
+                          <a href="/product/{{product_id}}">{{title}}</a>
+                        </div>
                       </div>
                     </div>
-                    <div class="col-md-4">
-                      <div class="text-success text-right"> 40.00 USD</div>
-                    </div>
-                  </div>
-                  <div class="font-spacer">&nbsp;</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-body panel-picture-small">
-                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
-                </div>
-                <div class="panel-footer">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="text-center text-overflow">
-                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
+                    <div class="spacer"></div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="text-center text-muted text-overflow"> {{shop_name}}</div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="text-info text-center"> {{number_of_reviews}} <small>{{#numToStars}} {{review_avg}} {{/numToStars}}</small>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="text-success text-right"> {{price}} <small>{{price_iso}}</small></div>
                       </div>
                     </div>
+                    <div class="font-spacer">&nbsp;</div>
                   </div>
-                  <div class="spacer"></div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-success text-right"> 40.00 USD</div>
-                    </div>
-                  </div>
-                  <div class="font-spacer">&nbsp;</div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-body panel-picture-small">
-                  <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%">
-                </div>
-                <div class="panel-footer">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="text-center text-overflow">
-                        <a href="">Abstract Print of Original Oil Painting "Blue Nude" 11 x 14</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="spacer"></div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="text-center text-muted text-overflow"> this is the name of the shop long</div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-info text-center"> 1016 <i class="fa fa-star"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="text-success text-right"> 40.00 USD</div>
-                    </div>
-                  </div>
-                  <div class="font-spacer">&nbsp;</div>
-                </div>
-              </div>
-            </div>
+              {{/products}} {{^products}}
+              <h4> No items</h4> {{/products}}
+            </script>
           </div>
           <hr class="thin-hr">
           <!-- About OpenMarket -->
           <div class="row">
             <div class="col-md-12">
-              <h1 class="text-center"> OpenMarket  <br>   <small> The first decentralized online shopping platform.</small></h1>
+              <h1 class="text-center"> OpenMarket  <br>   <small> A decentralized online shopping platform.</small></h1>
             </div>
           </div>
           <br>
@@ -534,19 +373,19 @@
                   <div class="row">
                     <!-- <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%"> -->
                     <div class="text-center">
-                      <i class="fa fa-code-fork fa-6"></i>
+                      <a class="text-normal" href="https://github.com/tchoulihan/openmarket"><i class="fa fa-code-fork fa-6"></i></a>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
                       <h2 class="text-center">
-                        <a href="">Open-Source</a>
+                        <a href="https://github.com/tchoulihan/openmarket">Open-Source</a>
                       </h2>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <h4 class="text-center text-muted"> OpenMarket is completely open-source, and extremely secure. </h4>
+                      <h4 class="text-center text-muted"> OpenMarket is completely <a class="text-muted" href="https://github.com/tchoulihan/openmarket">open-source</a>, and extremely secure. </h4>
                     </div>
                   </div>
                 </div>
@@ -558,19 +397,19 @@
                   <div class="row">
                     <!-- <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%"> -->
                     <div class="text-center">
-                      <i class="fa fa-server fa-6"></i>
+                      <a class="text-normal" href="/nodes"><i class="fa fa-server fa-6"></i></a>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
                       <h2 class="text-center">
-                        <a href="">Decentralized</a>
+                        <a href="/nodes">Decentralized</a>
                       </h2>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <h4 class="text-center text-muted"> OpenMarket is hosted by a network of sellers, to make sure that it is always available. </h4>
+                      <h4 class="text-center text-muted"> OpenMarket is hosted by a <a class="text-muted" href="/nodes">network of sellers</a>, to make sure that it is always available. </h4>
                     </div>
                   </div>
                 </div>
@@ -582,7 +421,7 @@
                   <div class="row">
                     <!-- <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%"> -->
                     <div class="text-center">
-                      <i class="fa fa-coffee fa-6"></i>
+                      <a class="text-normal" href=""><i class="fa fa-coffee fa-6"></i></a>
                     </div>
                   </div>
                   <div class="row">
@@ -594,8 +433,32 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <h4 class="text-center text-muted"> OpenMarket is entirely free to use, for both buyers and sellers. You can donate here.</h4>
+                      <h4 class="text-center text-muted"> OpenMarket is entirely free to use, for both buyers and sellers. You can donate <a href="" class="text-muted">here</a>.</h4>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="thin-hr logged-out">
+          <!-- Sign up -->
+          <div class="row logged-out">
+            <br>
+            <div class="col-md-offset-2 col-md-8 ">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="col-md-6 vertical-line">
+                    <h3> Sign up <br> <small> for OpenMarket</small></h3>
+                  </div>
+                  <div class="col-md-6">
+                    <br>
+                    <form id="signup_form">
+                      <div class="input-group">
+                        <input name="email" type="inputEmail3" class="form-control" id="inputEmail3" placeholder="Email" data-bv-emailaddress="true" data-bv-emailaddress-message="The input is not a valid email address" data-bv-notempty="true" data-bv-notempty-message="An email is required" />
+                        <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Sign Up</button></span>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
