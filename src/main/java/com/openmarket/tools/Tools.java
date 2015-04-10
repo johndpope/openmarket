@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -531,6 +532,45 @@ public class Tools {
 
 		message = "Rqlite write status : " + message;
 		log.info(message);
+		return message;
+	}
+	
+	public static ObjectNode rqlStatus() {
+
+		ObjectNode on = MAPPER.createObjectNode();
+		
+		
+
+		on.put("raft", jsonToNode(rqlGetEndpoint("raft")));
+		on.put("diagnostics", jsonToNode(rqlGetEndpoint("diagnostics")));
+		on.put("statistics", jsonToNode(rqlGetEndpoint("statistics")));
+		
+		
+		return on;
+	}
+	
+	public static String rqlGetEndpoint(String endPoint) {
+		String postURL = DataSources.MASTER_NODE_URL + "/" + endPoint + "?pretty";
+
+		String message = "";
+		try {
+
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+
+			HttpGet httpPost = new HttpGet(postURL);
+//			httpPost.setEntity(new StringEntity(reformatted));
+
+			ResponseHandler<String> handler = new BasicResponseHandler();
+
+			CloseableHttpResponse response = httpClient.execute(httpPost);
+
+			message = handler.handleResponse(response);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return message;
 	}
 	

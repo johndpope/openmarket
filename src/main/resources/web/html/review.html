@@ -58,56 +58,119 @@
           <ul class="nav navbar-nav">
             <li id="searchbar">
               <form id="search_form" class="navbar-form navbar-left navbar-input-group " role="search">
+                <input id='search_id' type='hidden' name='id' />
                 <div class="input-group">
-                  <div class="input-group-btn">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">All <span class="caret"></span>
-                    </button>
-                  </div>
-                  <div class="form-group">
-                    <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for items or shops" autofocus="autofocus">
+                  <div id="search_box" class="form-group">
+                    <input name="search_input" type="text" class="form-control typeahead rounded-left" placeholder="Search for Items, Shops, or Categories">
                   </div>
                   <span class="input-group-btn">
-              <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
-              </button>
-              </span>
+                    <button type="submit" class="btn btn-default rounded-right"><i class="fa fa-search"></i>
+                        </button>
+                   </span>
                 </div>
               </form>
             </li>
-            <li class="dropdown">
-              <div class="navbar-form">
-                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
+            <li id="top_categories_div" class="dropdown">
+              <script id="top_categories_template" type="x-tmpl-mustache">
+                <div class="navbar-form">
+                  <a class="dropdown-toggle btn btn-default rounded-right rounded-left" data-toggle="dropdown">Browse <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="/api.html">API Reference</a>
-                  </li>
-                </ul>
-              </div>
+                  <ul class="dropdown-menu" role="menu">
+                    {{#.}}
+                    <li><a href="/category/{{id}}">{{name}}</a>
+                    </li>
+                    {{/.}}
+                    <li class="divider">
+                    </li>
+                    <li><a href="/browse"> View all</a>
+                    </li>
+                  </ul>
+                </div>
+              </script>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#login">Wishlist <span class="caret"></span></a>
+            <li class="dropdown">
+              <a id="wishlist_dropdown_title" class="dropdown-toggle" data-toggle="dropdown" href="/wishlist">Wishlist <span class="caret"></span></a>
+              <ul id="wishlist_dropdown" class="dropdown-menu extra-width hide" role="menu">
+                <div id="wishlist_div">
+                  <script id="wishlist_template" type="x-tmpl-mustache">
+                    {{#products}}
+                    <div class="row">
+                      <div class="col-xs-3">
+                        <div class="img-responsive center-block">
+                          <a href="/product/{{product_id}}"><img class="cart-picture scale" src="{{pictures.0.url}}"></a>
+                        </div>
+                      </div>
+                      <div class="col-xs-9">
+                        <a href="/product/{{product_id}}" class="text-overflow"> {{title}}</a>
+                        <p class="text-muted"><small>{{shop_name}}</small></p>
+                      </div>
+                    </div>
+                    {{/products}} {{#products.0}}
+                    <div class="row">
+                      <hr>
+                      <div class="col-md-offset-1 col-md-10">
+                        <a href="/wishlist" class="btn btn-default btn-block">View Wishlist ({{products.length}} items)</a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <br>
+                    </div>
+                    {{/products.0}}
+                  </script>
+                </div>
+              </ul>
             </li>
-            <li><a href="/about">Cart <span class="caret"></span></a>
+            <li class="dropdown">
+              <a id="cart_dropdown_title" class="dropdown-toggle" data-toggle="dropdown" href="/cart">Cart <span class="caret"></span></a>
+              <ul id="cart_dropdown" class="dropdown-menu extra-width hide" role="menu">
+                <div id="cart_div">
+                  <script id="cart_template" type="x-tmpl-mustache">
+                    {{#.}}
+                    <div class="row">
+                      <div class="col-xs-3">
+                        <div class="img-responsive center-block">
+                          <a href="/product/{{product_id}}"><img class="cart-picture scale" src="{{url}}"></a>
+                        </div>
+                      </div>
+                      <div class="col-xs-9">
+                        <a href="/product/{{product_id}}" class="text-overflow"> {{title}}</a>
+                        <p class="text-muted"><small>Quantity: {{quantity}}</small></p>
+                      </div>
+                    </div>
+                    {{/.}} {{#0}}
+                    <div class="row">
+                    <hr>
+                      <div class="col-md-offset-1 col-md-10">
+                        <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <br>
+                    </div>
+                    {{/0}}
+                  </script>
+                </div>
+              </ul>
             </li>
             <li class="dropdown logged-out">
               <div class="navbar-form">
-                <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
+                <a class="btn btn-default rounded-left rounded-right" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
               </div>
             </li>
             <li class="dropdown logged-in">
               <div class="navbar-form">
-                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
+                <a class="dropdown-toggle btn btn-default rounded-left rounded-right" data-toggle="dropdown">You <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="/api.html">Orders</a>
+                  <li><a href="/orders"><i class="fa fa-shopping-cart fa-fw"></i> Purchases and Orders</a>
                   </li>
-                  <li><a href="/api.html">WishList</a>
-                  </li>
-                  <li><a href="/api.html">Settings</a>
+                  <li><a href="/dashboard"><i class="fa fa-cog fa-fw"></i> Account Settings</a>
                   </li>
                   <li class="divider">
                   </li>
-                  <li><a id="logouthref" href="#">Sign out</a>
+                  <li><a id="logouthref" href="#"><i class="fa fa-sign-out fa-fw"></i> Sign out</a>
                   </li>
                 </ul>
               </div>

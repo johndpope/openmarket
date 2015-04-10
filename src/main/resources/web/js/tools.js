@@ -4,9 +4,14 @@ var externalSparkService = 'http://96.28.13.51:4567/';
 
 
 
+
+
+
+
 var sparkServiceObj = {
-  sparkUrl: sparkService
+  sparkUrl: externalSparkService
 };
+sparkService = externalSparkService;
 
 var pageNumbers = {};
 // var cookie_path_name = "/";
@@ -259,7 +264,7 @@ function simplePost(shortUrl, postData, reload, successFunctions, noToast, exter
   noToast = (typeof noToast === "undefined") ? false : noToast;
   external = (typeof external === "undefined") ? false : external;
 
-    btnId = (typeof btnId === "undefined") ? false : btnId;
+  btnId = (typeof btnId === "undefined") ? false : btnId;
 
   var url;
   if (external) {
@@ -268,9 +273,9 @@ function simplePost(shortUrl, postData, reload, successFunctions, noToast, exter
     url = sparkService + shortUrl;
   }
 
-    // var btn = $("[type=submit]");
-    // var btn = $(this).closest(".btn");
-    var btn = $(btnId);
+  // var btn = $("[type=submit]");
+  // var btn = $(this).closest(".btn");
+  var btn = $(btnId);
 
   // Loading
   btn.button('loading');
@@ -622,8 +627,8 @@ var otherDateFormatObj = {
         return parseInt(x);
       });
       // months are off by 1 in js, and hours are off by the timezone offset
-      var tzOffset = new Date().getTimezoneOffset()/60;
-      var date = new Date(a[0], a[1]-1 , a[2], a[3] - tzOffset, a[4], a[5]);
+      var tzOffset = new Date().getTimezoneOffset() / 60;
+      var date = new Date(a[0], a[1] - 1, a[2], a[3] - tzOffset, a[4], a[5]);
       console.log(a);
       console.log(date);
       return date.customFormat("#YYYY#/#MM#/#DD# #hh#:#mm# #AMPM#")
@@ -642,7 +647,7 @@ var currencyFormatter = {
 var htmlDecoder = {
   "htmlDecode": function() {
     return function(text, render) {
-      var t = render(text).replace(/semicolon/g,';');
+      var t = render(text).replace(/semicolon/g, ';');
       console.log(t);
       return $('<div/>').html(t).text();
     }
@@ -705,7 +710,7 @@ var delay = (function() {
 })();
 
 function htmlDecode(value) {
-  return $('<div/>').html(value.replace(/semicolon/g,';')).text();
+  return $('<div/>').html(value.replace(/semicolon/g, ';')).text();
 }
 
 if (typeof String.prototype.startsWith != 'function') {

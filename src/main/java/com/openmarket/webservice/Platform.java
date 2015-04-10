@@ -1,5 +1,24 @@
 package com.openmarket.webservice;
 
+import static com.openmarket.db.Tables.ADDRESS_VIEW;
+import static com.openmarket.db.Tables.ANSWER_VOTE;
+import static com.openmarket.db.Tables.CART_VIEW;
+import static com.openmarket.db.Tables.CATEGORY;
+import static com.openmarket.db.Tables.COUNTRY;
+import static com.openmarket.db.Tables.CURRENCY;
+import static com.openmarket.db.Tables.FEEDBACK_VIEW;
+import static com.openmarket.db.Tables.PAYMENT;
+import static com.openmarket.db.Tables.PRODUCT_BULLET;
+import static com.openmarket.db.Tables.PRODUCT_PICTURE;
+import static com.openmarket.db.Tables.PRODUCT_THUMBNAIL_VIEW;
+import static com.openmarket.db.Tables.PRODUCT_VIEW;
+import static com.openmarket.db.Tables.QUESTION_VOTE;
+import static com.openmarket.db.Tables.REVIEW_VIEW;
+import static com.openmarket.db.Tables.REVIEW_VOTE;
+import static com.openmarket.db.Tables.SELLER;
+import static com.openmarket.db.Tables.SHIPPING;
+import static com.openmarket.db.Tables.SHIPPING_COST;
+import static com.openmarket.db.Tables.TIME_SPAN_VIEW;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -7,25 +26,30 @@ import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.eclipse.jetty.server.UserIdentity;
 import org.javalite.activejdbc.LazyList;
-import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bitmerchant.db.Tables.Order;
-import com.bitmerchant.db.Tables.OrderView;
+import com.openmarket.db.Tables.AnswerVote;
+import com.openmarket.db.Tables.CartView;
+import com.openmarket.db.Tables.FeedbackView;
+import com.openmarket.db.Tables.Product;
+import com.openmarket.db.Tables.ProductThumbnailView;
+import com.openmarket.db.Tables.ProductView;
+import com.openmarket.db.Tables.QuestionVote;
+import com.openmarket.db.Tables.Review;
+import com.openmarket.db.Tables.ReviewView;
+import com.openmarket.db.Tables.ReviewVote;
+import com.openmarket.db.Tables.Seller;
+import com.openmarket.db.Tables.Shipping;
+import com.openmarket.db.Tables.User;
 import com.openmarket.db.Transformations;
 import com.openmarket.db.actions.Actions.CategoryActions;
 import com.openmarket.db.actions.Actions.PaymentActions;
 import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
-import com.openmarket.db.actions.Actions.WebActions;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
-
-import static com.openmarket.db.Tables.*;
 
 public class Platform {
 
@@ -38,7 +62,7 @@ public class Platform {
 
 
 		get("/home/:derp", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowAllHeaders(req, res);
 			return "ur a NEWB";
 		});
 
@@ -69,7 +93,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/send_reset_password_email", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -77,7 +101,7 @@ public class Platform {
 
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String message = UserActions.sendSignUpEmail(user);
 
 				return message;
@@ -212,7 +236,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/save_username", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -441,7 +465,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/set_product_physical/:productId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -451,7 +475,7 @@ public class Platform {
 
 				log.info("vars = " + vars.toString());
 				String productId = req.params(":productId");
-				
+
 				String isPhysical = vars.get("is_physical");
 
 
@@ -647,9 +671,9 @@ public class Platform {
 					SellerActions.saveAuction(productId, isAuction, auctionExpirationDate,
 							auctionStartPrice, auctionReservePrice, currIso);
 				}
-				
-				
-			
+
+
+
 				return message;
 
 			} catch (Exception e) {
@@ -920,7 +944,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/answer_question/:questionId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -956,7 +980,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/add_to_cart/:productId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -969,7 +993,7 @@ public class Platform {
 				User user = UserActions.getUserFromSessionId(req);
 
 				String json = null;
-			
+
 
 				json = UserActions.addToCart(user.getId().toString(), productId);
 
@@ -985,7 +1009,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/remove_from_cart/:cartItemId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -998,7 +1022,7 @@ public class Platform {
 				User user = UserActions.getUserFromSessionId(req);
 
 				String json = null;
-			
+
 
 				json = UserActions.removeFromCart(user.getId().toString(), cartItemId);
 
@@ -1014,7 +1038,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/add_to_wishlist/:productId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -1027,7 +1051,7 @@ public class Platform {
 				User user = UserActions.getUserFromSessionId(req);
 
 				String json = null;
-			
+
 
 				json = UserActions.addToWishlist(user.getId().toString(), productId);
 
@@ -1043,7 +1067,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/remove_from_wishlist/:productId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -1056,7 +1080,7 @@ public class Platform {
 				User user = UserActions.getUserFromSessionId(req);
 
 				String json = null;
-			
+
 
 				json = UserActions.removeFromWishlist(user.getId().toString(), productId);
 
@@ -1072,17 +1096,17 @@ public class Platform {
 			}
 
 		});
-		
-		
+
+
 		post("/save_address", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.logRequestInfo(req);
 
 				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
-				
 
-				
+
+
 				String fullName = vars.get("full_name");
 				String street = vars.get("street");
 				String addrTwo = vars.get("addr_two");
@@ -1093,7 +1117,7 @@ public class Platform {
 
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String message = UserActions.saveAddress(user.getId().toString(),
 						fullName,
 						street,
@@ -1114,16 +1138,16 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/edit_address/:addressId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.logRequestInfo(req);
 
 				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
-				
+
 				String addressId = req.params(":addressId");
-				
+
 				String fullName = vars.get("full_name");
 				String street = vars.get("street");
 				String addrTwo = vars.get("addr_two");
@@ -1134,7 +1158,7 @@ public class Platform {
 
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String message = UserActions.editAddress(user.getId().toString(),
 						addressId,
 						fullName,
@@ -1144,7 +1168,7 @@ public class Platform {
 						state,
 						zipcode,
 						countryId);
-				
+
 
 
 
@@ -1159,7 +1183,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/save_shipment/:addressId/:sellerId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -1167,10 +1191,10 @@ public class Platform {
 
 				String addressId = req.params(":addressId");
 				String sellerId = req.params(":sellerId");
-				
+
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String message = UserActions.saveShipment(user.getId().toString(),
 						addressId, sellerId);
 
@@ -1185,18 +1209,18 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/create_payment/:sellerId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.logRequestInfo(req);
 
 				String sellerId = req.params(":sellerId");
-				
+
 				Tools.dbInit();
 				com.bitmerchant.tools.Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String message = UserActions.createPayment(user.getId().toString(),
 						sellerId);
 
@@ -1212,7 +1236,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		/** 
 		 * This is a successful payment
 		 */
@@ -1222,12 +1246,12 @@ public class Platform {
 				Tools.logRequestInfo(req);
 
 				String paymentId = req.params(":paymentId");
-				
+
 				Tools.dbInit();		
 				log.info("i got the callback");
 				PaymentActions.updatePayment(paymentId);
 				UserActions.createFeedbackFromPaymentSuccess(paymentId);
-				
+
 				return null;
 
 			} catch (Exception e) {
@@ -1239,10 +1263,10 @@ public class Platform {
 			}
 
 		});
-		
-		
-		
-		
+
+
+
+
 		post("/delete_address/:addressId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -1252,7 +1276,7 @@ public class Platform {
 
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String message = UserActions.deleteAddress(user.getId().toString(),addressId);
 				return message;
 
@@ -1265,7 +1289,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/save_feedback/:feedbackId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -1283,7 +1307,7 @@ public class Platform {
 				String comments = vars.get("comments");
 
 				Tools.dbInit();
-						
+
 				String message = null;
 
 				User user = UserActions.getUserFromSessionId(req);
@@ -1310,8 +1334,8 @@ public class Platform {
 			}
 
 		});
-		
-		
+
+
 
 		get("/get_review_vote/:reviewId", (req, res) -> {
 			try {
@@ -1400,7 +1424,7 @@ public class Platform {
 				AnswerVote rv = ANSWER_VOTE.findFirst("user_id = ? and id = ?",
 						user.getId().toString(),
 						answerId);
-				
+
 				if (rv != null) {
 					json = rv.toJson(false); }
 				else {
@@ -1705,7 +1729,7 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
-		
+
 		get("/wishlist_thumbnails", (req, res) -> {
 
 			try {
@@ -1713,8 +1737,8 @@ public class Platform {
 
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
-				
-				
+
+
 				String json = UserActions.getWishlistThumbnails(user.getId().toString());
 				log.info(json);
 
@@ -1727,7 +1751,7 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
-		
+
 		get("/get_category_thumbnails/:categoryId", (req, res) -> {
 
 			try {
@@ -1735,7 +1759,7 @@ public class Platform {
 
 				Tools.dbInit();
 				String categoryId = req.params(":categoryId");
-				
+
 				String json = CategoryActions.getCategoryThumbnails(categoryId);
 				log.info(json);
 
@@ -1748,7 +1772,7 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
-		
+
 		get("/get_shop_thumbnails/:sellerId", (req, res) -> {
 
 			try {
@@ -1757,7 +1781,7 @@ public class Platform {
 				Tools.dbInit();
 				String sellerId = req.params(":sellerId");
 				List<ProductThumbnailView> pvs = PRODUCT_THUMBNAIL_VIEW.find("seller_id = ?", sellerId);
-			
+
 				String json = Tools.nodeToJson(Transformations.productThumbnailViewJson(pvs));
 
 				return json;
@@ -1769,20 +1793,19 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
-		
+
 		get("/get_trending_thumbnails/:sortType", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 
 				Tools.dbInit();
-				
-				
+
+
 				String sortType = URLDecoder.decode(req.params(":sortType"),"UTF-8");
-				log.info("sort type = " + sortType);
-			
+
 				List<ProductThumbnailView> pvs = PRODUCT_THUMBNAIL_VIEW.findAll().limit(3).orderBy(sortType);
-			
+
 				String json = Tools.nodeToJson(Transformations.productThumbnailViewJson(pvs));
 
 				return json;
@@ -1847,7 +1870,7 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
-		
+
 		get("/get_your_feedback", (req, res) -> {
 
 			try {
@@ -1874,17 +1897,17 @@ public class Platform {
 				Tools.dbClose();
 			}
 		});
-		
+
 		get("/get_cart", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String json = null;
-				
+
 				// get the cart items
 				LazyList<CartView> cvs = CART_VIEW.find("user_id = ?", user.getId().toString());
 				if (cvs == null) {
@@ -1892,7 +1915,7 @@ public class Platform {
 				} else {
 					json = cvs.toJson(false);
 				}
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -1904,19 +1927,19 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_cart_grouped", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String json = null;
-				
+
 				json = Tools.nodeToJson(Transformations.cartGroupedJson(user.getId().toString()));
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -1928,21 +1951,21 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_cart_grouped/:sellerId", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				User user = UserActions.getUserFromSessionId(req);
 				String sellerId = req.params(":sellerId");
-				
+
 				String json = null;
-				
+
 				json = Tools.nodeToJson(Transformations.cartGroupedJson(
 						user.getId().toString(),sellerId));
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -1954,21 +1977,21 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_orders_grouped", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				User user = UserActions.getUserFromSessionId(req);
 				String view = (req.queryParams("view") != null) ? req.queryParams("view") : "all";
-				
-				
+
+
 				String json = null;
-				
+
 				json = Tools.nodeToJson(Transformations.orderGroupedJson(user.getId().toString(), view));
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -1980,19 +2003,19 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_addresses", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				User user = UserActions.getUserFromSessionId(req);
-				
+
 				String json = null;
-				
+
 				json = ADDRESS_VIEW.find("user_id = ?", user.getId().toString()).toJson(false);
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -2004,15 +2027,15 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_browse", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				String json = Tools.nodeToJson(Transformations.browseJson());
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -2024,16 +2047,16 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_top_categories", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				// Finds the top level categories
 				String json = CATEGORY.find("parent is null").toJson(false);
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -2045,17 +2068,17 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_subcategories/:categoryId", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-				
+
 				String categoryId = req.params(":categoryId");
-				
+
 				String json = CATEGORY.find("parent = ? or id = ?", categoryId, categoryId).toJson(false);
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -2067,18 +2090,18 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_payment/:paymentId", (req, res) -> {
 
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-								
+
 				String paymentId = req.params(":paymentId");
 				String json = null;
-				
+
 				json = PAYMENT.findFirst("id = ?", paymentId).toJson(false);
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -2090,18 +2113,18 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/category_search/:query", (req, res) -> {
-			
+
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-								
+
 				String query = req.params(":query");
 				String json = null;
-				
+
 				json = CATEGORY.find("name like ?", "%" + query + "%").toJson(false);
-				
+
 				return json;
 
 			} catch (Exception e) {
@@ -2114,16 +2137,16 @@ public class Platform {
 
 
 		});
-		
+
 		get("/product_search/:query", (req, res) -> {
-			
+
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-								
+
 				String query = req.params(":query");
 				String json = null;
-				
+
 				List<ProductThumbnailView> pvs = 
 						PRODUCT_THUMBNAIL_VIEW.find("title like ?", "%" + query + "%");
 				json = Transformations.searchProductThumbnailViewJson(pvs);
@@ -2139,18 +2162,40 @@ public class Platform {
 
 
 		});
-		
+
 		get("/shop_search/:query", (req, res) -> {
-			
+
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.dbInit();
-								
+
 				String query = req.params(":query");
 				String json = null;
-				
+
 				json = SELLER.find("shop_name like ?", "%" + query + "%").toJson(false);
-				
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+
+		});
+
+		get("/get_network", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+				String json = null;
+
+				json = Tools.nodeToJson(Tools.rqlStatus());
+
 				return json;
 
 			} catch (Exception e) {
@@ -2167,36 +2212,36 @@ public class Platform {
 
 
 		// All the webpages
-		
-		
+
+
 		get("/shop/:sellerId", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowAllHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("shop"));
 		});
-		
+
 		get("/category/:categoryId", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowAllHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("category"));
 		});
-		
-		
+
+
 		get("/product/edit/:productId", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowAllHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("product_edit"));
 		});
 
 		get("/product/review/:productId", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowAllHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("review"));
 		});
 
 		get("/product/:productId", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowAllHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("product"));
 		});
-		
+
 		get("/checkout/:sellerId", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);	
+			Tools.allowAllHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("checkout"));
 		});
 
@@ -2206,7 +2251,7 @@ public class Platform {
 
 
 		get("/", (req, res) -> {
-			Tools.allowOnlyLocalHeaders(req, res);
+			Tools.allowAllHeaders(req, res);
 			return Tools.readFile(DataSources.PAGES("home"));
 		});
 	}

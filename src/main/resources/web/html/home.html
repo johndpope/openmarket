@@ -9,7 +9,7 @@
   <meta name="author" content="">
   <title>OpenMarket</title>
   <!-- favicon -->
-  <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/pics/favicon.ico" type="image/x-icon" />
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
   <!-- Link to font awesome -->
@@ -22,7 +22,7 @@
   <!--   toastr css -->
   <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
   <!--   typeahead css -->
-  <link href="typeaheadjs.css" rel="stylesheet" />
+  <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
   <!-- Pickadate -->
   <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
   <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
@@ -59,7 +59,7 @@
                 <input id='search_id' type='hidden' name='id' />
                 <div class="input-group">
                   <div id="search_box" class="form-group">
-                    <input name="search_input" type="text" class="form-control typeahead rounded-left" placeholder="Search for Items, Shops, or Categories" autofocus="autofocus">
+                    <input name="search_input" type="text" class="form-control typeahead rounded-left" placeholder="Search for Items, Shops, or Categories">
                   </div>
                   <span class="input-group-btn">
                     <button type="submit" class="btn btn-default rounded-right"><i class="fa fa-search"></i>
@@ -71,7 +71,7 @@
             <li id="top_categories_div" class="dropdown">
               <script id="top_categories_template" type="x-tmpl-mustache">
                 <div class="navbar-form">
-                  <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
+                  <a class="dropdown-toggle btn btn-default rounded-right rounded-left" data-toggle="dropdown">Browse <span class="caret"></span>
                 </a>
                   <ul class="dropdown-menu" role="menu">
                     {{#.}}
@@ -154,12 +154,12 @@
             </li>
             <li class="dropdown logged-out">
               <div class="navbar-form">
-                <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
+                <a class="btn btn-default rounded-left rounded-right" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
               </div>
             </li>
             <li class="dropdown logged-in">
               <div class="navbar-form">
-                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
+                <a class="dropdown-toggle btn btn-default rounded-left rounded-right" data-toggle="dropdown">You <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="/orders"><i class="fa fa-shopping-cart fa-fw"></i> Purchases and Orders</a>
@@ -340,7 +340,7 @@
                     <div class="spacer"></div>
                     <div class="row">
                       <div class="col-md-4">
-                        <div class="text-center text-muted text-overflow"> {{shop_name}}</div>
+                        <a class="text-center text-muted text-overflow" href="/shop/{{seller_id}}"> {{shop_name}}</a>
                       </div>
                       <div class="col-md-4">
                         <div class="text-info text-center"> {{number_of_reviews}} <small>{{#numToStars}} {{review_avg}} {{/numToStars}}</small>
@@ -397,19 +397,19 @@
                   <div class="row">
                     <!-- <img src="holder.js/800x600/social" style="max-width: 100%;max-height: 100%"> -->
                     <div class="text-center">
-                      <a class="text-normal" href="/nodes"><i class="fa fa-server fa-6"></i></a>
+                      <a class="text-normal" href="/network"><i class="fa fa-server fa-6"></i></a>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
                       <h2 class="text-center">
-                        <a href="/nodes">Decentralized</a>
+                        <a href="/network">Decentralized</a>
                       </h2>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <h4 class="text-center text-muted"> OpenMarket is hosted by a <a class="text-muted" href="/nodes">network of sellers</a>, to make sure that it is always available. </h4>
+                      <h4 class="text-center text-muted"> OpenMarket is hosted by a <a class="text-muted" href="/network">network of sellers</a>, to make sure that it is always available. </h4>
                     </div>
                   </div>
                 </div>

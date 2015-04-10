@@ -1,4 +1,4 @@
-var wishlistTemplate = $('#wishlist_template').html();
+var wishlistTemplate = $('#wishlist_page_template').html();
 
 $(document).ready(function() {
 
@@ -11,7 +11,7 @@ function fillWishList() {
   getJson('wishlist_thumbnails').done(function(e) {
     var data = JSON.parse(e);
     console.log(data);
-    fillMustacheWithJson(data, wishlistTemplate, '#wishlist_div');
+    fillMustacheWithJson(data, wishlistTemplate, '#wishlist_page_div');
     $('.pic_num-1').addClass('active');
 
     setupRemoveFromWishlist();

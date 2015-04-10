@@ -214,7 +214,7 @@ function setupSearch() {
   productList.initialize();
   shopList.initialize();
 
-  $('#search_box .typeahead').typeahead({
+  var typeAhead = $('#search_box .typeahead').typeahead({
     hint: true,
     highlight: true,
     minLength: 1,
@@ -234,7 +234,7 @@ function setupSearch() {
       header: '<h3 class="search-set">Products</h3>',
       suggestion: function(context) {
         $.extend(context, numToStars);
-        return Mustache.render('<div class="row"><div class="col-xs-3"><div class="img-responsive center-block"><a href="/product/{{product_id}}"><img class="cart-picture scale" src="{{pictures.0.url}}"></a></div></div><div class="col-xs-9"><a href="/product/{{product_id}}" class="text-overflow"> {{title}}</a> <div class="text-info"> {{number_of_reviews}} <small>{{#numToStars}} {{review_avg}} {{/numToStars}}</small></div><p class="text-muted"><small>{{shop_name}}</small></p></div></div>', context);
+        return Mustache.render('<div class="row"><div class="col-xs-3"><div class="img-responsive center-block"><a href="/product/{{product_id}}"><img class="cart-picture scale" src="{{pictures.0.url}}"></a></div></div><div class="col-xs-9"><div class="text-overflow"> {{title}}</div> <div class="text-info"> {{number_of_reviews}} <small>{{#numToStars}} {{review_avg}} {{/numToStars}}</small></div><p class="text-muted"><small>{{shop_name}}</small></p></div></div>', context);
       }
     }
   }, {
@@ -266,6 +266,11 @@ function setupSearch() {
     $(this).submit();
   });
 
+  // $('[name=search_input]').focus();
+
+  // $('.tt-input').focus();
+  setTimeout("$('[name=search_input]').focus();", 0)
+
   $("#search_form").submit(function(event) {
     var formData = $("#search_form").serializeArray();
 
@@ -291,6 +296,9 @@ function setupSearch() {
     }
     // console.log(searchString);
 
+    if (redirectUrl == null) {
+      redirectUrl = '/browse';
+    }
     window.location.replace(redirectUrl);
 
     event.preventDefault();

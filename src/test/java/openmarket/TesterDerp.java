@@ -24,9 +24,10 @@ public class TesterDerp extends TestCase {
 		DataSources.HOME_DIR = DataSources.HOME_DIR  + "/testnet";
 		
 		Tools.dbInit();
-		log.info(CategoryActions.getCategoryThumbnails("1"));
+//		log.info(CategoryActions.getCategoryThumbnails("1"));
 //		log.info(CATEGORY_CHILDREN.find("id = ?", 1).toJson(true));
 		
+		log.info(Tools.nodeToJsonPretty(Tools.rqlStatus()));
 		Tools.dbClose();
 		
 	}
