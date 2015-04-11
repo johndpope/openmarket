@@ -398,6 +398,42 @@ public class Transformations {
 		return a;
 
 	}
+	
+	public static ObjectNode saleGroupedJson(String sellerId) {
+
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("sale_groups");
+
+		List<OrderGroup> ogs;
+
+		ogs = ORDER_GROUP.find("seller_id = ?", sellerId).orderBy("created_at desc");
+	
+		for (OrderGroup og : ogs) {
+			
+			String paymentId = og.getString("payment_id");
+
+			List<OrderView> cvs = ORDER_VIEW.find("seller_id = ? and payment_id = ?",
+					sellerId, paymentId);
+
+
+			JsonNode cgNode = Tools.jsonToNode(og.toJson(false));
+
+			// Need to add the product array to this later
+			ObjectNode on = Tools.MAPPER.valueToTree(cgNode);		
+
+			ArrayNode ac = on.putArray("products");
+			for (OrderView cv : cvs) {
+				ac.add(Tools.jsonToNode(cv.toJson(false)));
+			}
+			ab.add(on);
+
+
+		}
+
+		return a;
+
+	}
 
 	public static ObjectNode browseJson() {
 

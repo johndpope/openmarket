@@ -13,8 +13,8 @@
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
   <!-- Link to font awesome -->
-  <!-- <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"> -->
-  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"> 
+  <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
   <!-- Bootstrap social css -->
   <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
   <!--   Bootstrap validator -->
@@ -139,7 +139,7 @@
                     </div>
                     {{/.}} {{#0}}
                     <div class="row">
-                    <hr>
+                      <hr>
                       <div class="col-md-offset-1 col-md-10">
                         <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a>
                       </div>
@@ -231,7 +231,7 @@
               </div>
             </div>
           </div>
-          <div class="panel panel-warning">
+          <div id="seller_settings" class="panel panel-warning hide">
             <div class="panel-body">
               <div class="col-md-4 vertical-line">
                 <h3> Seller Settings <br> <small> Seller setup</small></h3>
@@ -249,9 +249,11 @@
                 <h4> Sales </h4>
                 <a href="wallet"> Bitcoin Wallet</a>
                 <br>
-                <a href="seller_orders"> Sales</a>
-                <br>
                 <a href="seller_orders"> Orders</a>
+                <br>
+                <a href="sales"> Sales</a>
+                <br>
+                <a href="sales"> Update Shipping Information</a>
                 <br>
               </div>
             </div>
@@ -368,7 +370,7 @@
   <!-- my scripts -->
   <script src="../js/tools.js"></script>
   <script src="../js/common.js"></script>
-  <script src="../js/home.js"></script>
+  <script src="../js/dashboard.js"></script>
 </body>
 
 </html>

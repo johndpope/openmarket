@@ -18,17 +18,17 @@ public class DataSources {
 
 	public static Boolean IS_SSL = false;
 
-	public static String HTTP = (IS_SSL) ? "https://" : "http://";
+	public static String HTTP() {return (IS_SSL) ? "https://" : "http://";}
 
-	public static String EXTERNAL_IP = Tools.httpGet("http://checkip.amazonaws.com/").trim();
+	public static String EXTERNAL_IP = Tools.httpGet("http://api.ipify.org/").trim();
 
 
-	public static String WEB_SERVICE_EXTERNAL_URL(){
-		return  HTTP + EXTERNAL_IP + ":" + SPARK_WEB_PORT + "/";
+	public static String WEB_SERVICE_EXTERNAL_URL() {
+		return  HTTP() + EXTERNAL_IP + ":" + SPARK_WEB_PORT + "/";
 	}
 
 	public static String WEB_SERVICE_INTERNAL_URL() {
-		return HTTP + "localhost:" + SPARK_WEB_PORT + "/";
+		return HTTP() + "localhost:" + SPARK_WEB_PORT + "/";
 	}
 
 	public static String SET_PASSWORD_URL() {
@@ -61,9 +61,6 @@ public class DataSources {
 
 	public static final String KEYSTORE_FILE() {return HOME_DIR + "/keystore.jks";}
 
-	public static final String KEYSTORE_PASSWORD_FILE() {return HOME_DIR + "/pass";}
-
-	public static final String KEYSTORE_DOMAIN_FILE() {return HOME_DIR + "/domain";}
 
 	// RQL 
 	public static String RQL_DIR() {return HOME_DIR + "/db";}
@@ -90,6 +87,8 @@ public class DataSources {
 	public static final String EMAIL_PROP = SOURCE_CODE_HOME() + "/email.properties";
 
 	public static final String SIGNUP_EMAIL_TEMPLATE = SOURCE_CODE_HOME() + "/signup_email_template.html";
+	
+	public static final String UPDATE_SHIPPING_TEMPLATE = SOURCE_CODE_HOME() + "/update_shipping_template.html";
 
 	// Google categories
 	public static final String GOOGLE_CATEGORIES_LIST = SOURCE_CODE_HOME() + "/categories.list";
@@ -106,6 +105,10 @@ public class DataSources {
 	public static final String PAGES(String pageName) {
 		return WEB_HTML() + "/" + pageName + ".html";
 	}
+	
+	public static final String KEYTOOL_CMD = "keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass changeit -keypass changeit -validity 360 -keysize 2048";
+	
+	
 	
 	
 }

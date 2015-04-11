@@ -7,6 +7,9 @@ import static spark.SparkBase.setPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import spark.SparkBase;
+
+import com.bitmerchant.wallet.LocalWallet;
 import com.bitmerchant.webservice.API;
 import com.bitmerchant.webservice.WalletService;
 import com.openmarket.tools.DataSources;
@@ -20,7 +23,7 @@ public class WebService {
 
 	public static void start() {
 
-		//		setupSSL();
+				setupSSL();
 
 		// Add external web service url to beginning of javascript tools
 		//		Tools.addExternalWebServiceVarToTools();
@@ -64,6 +67,12 @@ public class WebService {
 
 
 
+	}
+	
+	public static void setupSSL() {
+		SparkBase.setSecure(DataSources.KEYSTORE_FILE(), "changeit",null,null);
+		LocalWallet.INSTANCE.controller.setIsSSLEncrypted(true);
+		
 	}
 
 	//	public static void setupSSL() {

@@ -1142,6 +1142,46 @@ public class Actions {
 
 			return message;
 		}
+
+		public static String saveTrackingUrl(String shipmentId, String sellerId,
+				String trackingUrl) {
+			
+			Shipment shipment = SHIPMENT.findFirst("id = ?", shipmentId);
+			
+			shipment.set("tracking_url", trackingUrl);
+			
+			
+			Tools.writeRQL(shipment.toUpdate());
+			
+			// Get the user for the order:
+			String userId = ORDER_GROUP.findFirst("shipmentId = ?", shipmentId).getString("user_id");
+			
+			User user = USER.findFirst("id = ?", userId);
+			sendUpdatedTrackingEmail(trackingUrl, user);
+			
+			String message = "Tracking URL saved, and an email sent to user notifying them.";
+
+			return message;
+		}
+		
+		public static String sendUpdatedTrackingEmail(String trackingUrl, User user) {
+
+
+			String email = user.getString("email");
+
+			String subject = "OpenMarket Order Shipping Information";
+
+			Map<String, Object> vars = ImmutableMap.<String, Object>builder()
+					.put("tracking_url", trackingUrl)
+					.build();
+
+			String html = Tools.parseMustache(vars, DataSources.UPDATE_SHIPPING_TEMPLATE);
+
+			String message = Tools.sendEmail(email, subject, html);
+
+			return message;
+
+		}
 	}
 
 
@@ -1240,7 +1280,7 @@ public class Actions {
 			String authenticatedSessionId = Tools.generateSecureRandom();
 
 			// Not sure if this is necessary yet
-			Boolean secure = false;
+			Boolean secure = true;
 
 			// Store the users user in the DB, give them a session id
 			Login login = LOGIN.create("user_id", user.getId(),

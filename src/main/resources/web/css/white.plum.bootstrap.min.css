@@ -1,4 +1,35 @@
-@import url(http://fonts.googleapis.com/css?family=Raleway:100,300,700,900,500);/*!
+/*@import url(http://fonts.googleapis.com/css?family=Raleway:100,300,700,900,500);*/
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Raleway Thin'), local('Raleway-Thin'), url(../fonts/Raleway-Thin.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Raleway Light'), local('Raleway-Light'), url(../fonts/Raleway-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Raleway Medium'), local('Raleway-Medium'), url(../fonts/Raleway-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Raleway Bold'), local('Raleway-Bold'), url(../fonts/Raleway-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Raleway Heavy'), local('Raleway-Heavy'), url(../fonts/Raleway-Heavy.ttf) format('truetype');
+}
+/*!
  * White Plum v0.3.0
  *
  * Copyright 2013 Divshot, Inc.

@@ -17,6 +17,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
@@ -30,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
@@ -63,6 +65,7 @@ import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
+import org.joda.money.CurrencyUnit;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -72,6 +75,7 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+import com.bitmerchant.tools.CurrencyConverter;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -428,6 +432,20 @@ public class Tools {
 			e.printStackTrace();
 		}
 	}
+	
+
+	public static void runCommand(String cmd) {
+		try {
+
+			ProcessBuilder pb = new ProcessBuilder("bash", "-c",
+					cmd).inheritIO();
+			Process p = pb.start();     // Start the process.
+			p.waitFor();                // Wait for the process to finish.
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	public static final void dbInit() {
@@ -604,12 +622,46 @@ public class Tools {
 		copyResourcesToHomeDir(true);
 
 
-		addExternalWebServiceVarToTools();
+
 
 		// Initialize the DB if it hasn't already
 		InitializeTables.init(delete);
 
 
+	}
+	
+	public static void initializeSSL() {
+		
+
+		
+		// if the keystore file doesn't exist at that directory, then generate it:
+		if (!new File(DataSources.KEYSTORE_FILE()).exists()) {
+			
+			// Delete the old file if it exists or you're running this from a different dir
+			if (new File("keystore.jks").exists()) {
+				try {
+					java.nio.file.Files.delete(Paths.get("keystore.jks"));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+	
+			
+			Tools.runCommand(DataSources.KEYTOOL_CMD);
+			
+			// copy that file to the home dir
+			try {
+				// delete the old one if its there
+				
+				Files.copy(new File("keystore.jks"), new File(DataSources.KEYSTORE_FILE()));
+				DataSources.IS_SSL = true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
+		
 	}
 
 
@@ -938,6 +990,16 @@ public class Tools {
 				"";
 		
 		return s.replace("\"", "doublequote").replace(";","semicolon");
+	}
+	
+	public static void cacheCurrency(String currency) {
+		// Start up the currency converter just to pre cache it
+		try {
+			CurrencyConverter.INSTANCE.getBtcRatesCache().get(CurrencyUnit.of(currency));
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 

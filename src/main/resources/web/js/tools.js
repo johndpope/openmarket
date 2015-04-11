@@ -6,12 +6,32 @@ var externalSparkService = 'http://96.28.13.51:4567/';
 
 
 
+var ipget = $.ajax({
+   type: "GET",
+   url: "https://api.ipify.org",
+   async: false,
+ });
+var myip = 'https://' + ipget['responseText'] + ':4567/';
+
+console.log('my ip = ' + myip);
+console.log('spark service = ' + sparkService);
+console.log('ext spark = ' + externalSparkService);
+// This means you are running a seller machine, and everything should be using localhost
+var clientIsSeller = false;
+if (myip == externalSparkService) {
+  externalSparkService = sparkService;
+  clientIsSeller = true;
+} 
+// you are accessing it remotely, so you should be using the ip address
+else {
+  sparkService = externalSparkService;
+}
 
 
 var sparkServiceObj = {
-  sparkUrl: externalSparkService
+  sparkUrl: sparkService
 };
-sparkService = externalSparkService;
+
 
 var pageNumbers = {};
 // var cookie_path_name = "/";
@@ -19,6 +39,7 @@ var pageNumbers = {};
 
 function getJson(shortUrl, noToast, external) {
 
+  console.log(myip);
   noToast = (typeof noToast === "undefined") ? false : noToast;
   external = (typeof external === "undefined") ? false : external;
 
@@ -168,7 +189,7 @@ function fillProgressBar(url, divId) {
   }, 100); // 1000 milliseconds = 1 second.
 }
 
-function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, noToast, clearForm) {
+function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, noToast, clearForm, external) {
   // !!!!!!They must have names unfortunately
   // An optional arg
   modalId = (typeof modalId === "undefined") ? "defaultValue" : modalId;
@@ -178,6 +199,8 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
   noToast = (typeof noToast === "undefined") ? false : noToast;
 
   clearForm = (typeof clearForm === "undefined") ? false : clearForm;
+
+  external = (typeof external === "undefined") ? true : external;
 
 
 
@@ -190,7 +213,12 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
   // Loading
   btn.button('loading');
 
-  var url = sparkService + shortUrl; // the script where you handle the form input.
+  if (external) {
+    url = externalSparkService + shortUrl;
+  } else {
+    url = sparkService + shortUrl;
+  }
+
   // console.log(url);
   $.ajax({
     type: "POST",

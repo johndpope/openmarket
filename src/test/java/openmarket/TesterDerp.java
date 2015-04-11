@@ -27,7 +27,8 @@ public class TesterDerp extends TestCase {
 //		log.info(CategoryActions.getCategoryThumbnails("1"));
 //		log.info(CATEGORY_CHILDREN.find("id = ?", 1).toJson(true));
 		
-		log.info(Tools.nodeToJsonPretty(Tools.rqlStatus()));
+//		log.info(Tools.nodeToJsonPretty(Tools.rqlStatus()));
+		Tools.runCommand(DataSources.KEYTOOL_CMD);
 		Tools.dbClose();
 		
 	}

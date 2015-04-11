@@ -52,50 +52,25 @@ public class Main {
 
 		log.setLevel(Level.toLevel(loglevel));
 		
-
-
-
 		// get the correct network
 		DataSources.HOME_DIR = (testnet) ? DataSources.HOME_DIR  + "/testnet" : DataSources.HOME_DIR;
-		
-//		Tools.dbInit();
-//		Tools.dbClose();
-		
-//		com.bitmerchant.tools.Tools.dbInit();
-//		Actions.ButtonActions.listButtons();
-//		com.bitmerchant.tools.Tools.dbClose();
-	
+		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR;
 
 		// Initialize the replicated db
 		Tools.initializeDBAndSetupDirectories(deleteDB);
 		
-		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR;
-
+		Tools.initializeSSL();
+		
+		Tools.addExternalWebServiceVarToTools();
+		
+		// Start the bitmerchant wallet
 		LocalWallet.startService(DataSources.HOME_DIR, loglevel, testnet, deleteDB, false);
-//		
-//		com.bitmerchant.tools.Tools.dbInit();
-//		log.info(com.bitmerchant.tools.DataSources.DB_FILE());
-//		log.info(Currency.findAll().toJson(true));
-//		com.bitmerchant.tools.Tools.dbClose();
 		
 		// Start the webservice
 		WebService.start();
 		
-		// Start up the currency converter just to pre cache it
-		try {
-			CurrencyConverter.INSTANCE.getBtcRatesCache().get(CurrencyUnit.of("USD"));
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
+		Tools.cacheCurrency("USD");
 		
-
-		// Start the sellers wallet
-		//		INSTANCE.init();
-
-
 
 		//		Tools.pollAndOpenStartPage();
 
@@ -145,5 +120,7 @@ public class Main {
 		}
 		
 	}
+	
+	
 
 }

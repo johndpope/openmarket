@@ -1334,6 +1334,43 @@ public class Platform {
 			}
 
 		});
+		
+		post("/save_tracking_url/:shipmentId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				Map<String, String> vars = Tools.createMapFromAjaxPost(req.body());
+				log.info(vars.toString());
+
+				String shipmentId = req.params(":shipmentId");
+
+				String trackingUrl = vars.get("tracking_url");
+
+				Tools.dbInit();
+
+				String message = null;
+
+				Seller seller = SellerActions.getSellerFromSessionId(req);
+
+				message = SellerActions.saveTrackingUrl(shipmentId, 
+						seller.getId().toString(), 
+						trackingUrl);
+
+
+
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
 
 
 
@@ -1991,6 +2028,30 @@ public class Platform {
 				String json = null;
 
 				json = Tools.nodeToJson(Transformations.orderGroupedJson(user.getId().toString(), view));
+
+				return json;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+			}
+
+		});
+		
+		get("/get_sales_grouped", (req, res) -> {
+
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.dbInit();
+
+				Seller seller = SellerActions.getSellerFromSessionId(req);
+
+				String json = null;
+
+				json = Tools.nodeToJson(Transformations.saleGroupedJson(seller.getId().toString()));
 
 				return json;
 
