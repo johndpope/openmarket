@@ -84,11 +84,15 @@ public class DataSources {
 
 
 	// Properties files
-	public static final String EMAIL_PROP = SOURCE_CODE_HOME() + "/email.properties";
+	public static final String EMAIL_PROP() {return SOURCE_CODE_HOME() + "/email.properties";}
 
-	public static final String SIGNUP_EMAIL_TEMPLATE = SOURCE_CODE_HOME() + "/signup_email_template.html";
+	public static final String SIGNUP_EMAIL_TEMPLATE() {
+		return SOURCE_CODE_HOME() + "/signup_email_template.html";
+	}
 	
-	public static final String UPDATE_SHIPPING_TEMPLATE = SOURCE_CODE_HOME() + "/update_shipping_template.html";
+	public static final String UPDATE_SHIPPING_TEMPLATE() {return 
+			SOURCE_CODE_HOME() + "/update_shipping_template.html";
+	}
 
 	// Google categories
 	public static final String GOOGLE_CATEGORIES_LIST = SOURCE_CODE_HOME() + "/categories.list";

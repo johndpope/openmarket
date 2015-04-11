@@ -145,9 +145,9 @@ public class Actions {
 					.put("url", url)
 					.build();
 
-			String html = Tools.parseMustache(vars, DataSources.SIGNUP_EMAIL_TEMPLATE);
+			String html = Tools.parseMustache(vars, DataSources.SIGNUP_EMAIL_TEMPLATE());
 
-			String message = Tools.sendEmail(email, subject, html);
+			String message = Tools.sendEmail(email, null, subject, html);
 
 			return message;
 
@@ -1143,8 +1143,10 @@ public class Actions {
 			return message;
 		}
 
-		public static String saveTrackingUrl(String shipmentId, String sellerId,
+		public static String saveTrackingUrl(String shipmentId, Seller seller,
 				String trackingUrl) {
+			
+			
 			
 			Shipment shipment = SHIPMENT.findFirst("id = ?", shipmentId);
 			
@@ -1154,20 +1156,25 @@ public class Actions {
 			Tools.writeRQL(shipment.toUpdate());
 			
 			// Get the user for the order:
-			String userId = ORDER_GROUP.findFirst("shipmentId = ?", shipmentId).getString("user_id");
-			
+			String userId = ORDER_GROUP.findFirst("shipment_id = ?", shipmentId).getString("user_id");
+						
 			User user = USER.findFirst("id = ?", userId);
-			sendUpdatedTrackingEmail(trackingUrl, user);
+			
+			// Get the seller user for the email
+			User sellerUser = USER.findFirst("id = ?", seller.getString("user_id"));
+			
+			String toEmail = user.getString("email");
+			String replyToEmail = sellerUser.getString("email");
+			
+			sendUpdatedTrackingEmail(trackingUrl, toEmail, replyToEmail);
 			
 			String message = "Tracking URL saved, and an email sent to user notifying them.";
 
 			return message;
 		}
 		
-		public static String sendUpdatedTrackingEmail(String trackingUrl, User user) {
-
-
-			String email = user.getString("email");
+		public static String sendUpdatedTrackingEmail(String trackingUrl, 
+				String userEmail, String sellerEmail) {
 
 			String subject = "OpenMarket Order Shipping Information";
 
@@ -1175,9 +1182,10 @@ public class Actions {
 					.put("tracking_url", trackingUrl)
 					.build();
 
-			String html = Tools.parseMustache(vars, DataSources.UPDATE_SHIPPING_TEMPLATE);
+			String html = Tools.parseMustache(vars, DataSources.UPDATE_SHIPPING_TEMPLATE());
 
-			String message = Tools.sendEmail(email, subject, html);
+			
+			String message = Tools.sendEmail(userEmail, sellerEmail, subject, html);
 
 			return message;
 

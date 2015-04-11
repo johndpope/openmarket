@@ -1354,7 +1354,7 @@ public class Platform {
 				Seller seller = SellerActions.getSellerFromSessionId(req);
 
 				message = SellerActions.saveTrackingUrl(shipmentId, 
-						seller.getId().toString(), 
+						seller, 
 						trackingUrl);
 
 

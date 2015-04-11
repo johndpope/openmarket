@@ -158,7 +158,7 @@ public class Tools {
 		return s.toString();
 
 	}
-	
+
 	public static String toUpdate(String tableName, Set<String> ids, Object... namesAndValues) {
 
 
@@ -185,7 +185,7 @@ public class Tools {
 		for (;;) {
 			String id = idIt.next();
 			s.append(" id = " + id);
-			
+
 			if (idIt.hasNext()) {
 				s.append(" OR ");
 			} else {
@@ -197,7 +197,7 @@ public class Tools {
 		return s.toString();
 
 	}
-	
+
 	public static String toUpdate(String tableName, String conditionCol, Integer condition, Object... namesAndValues) {
 
 
@@ -291,9 +291,9 @@ public class Tools {
 	}
 
 
-	public static String sendEmail(String email, String subject, String text) {
+	public static String sendEmail(String toEmail, String replyToEmail, String subject, String text) {
 
-		Properties props = Tools.loadProperties(DataSources.EMAIL_PROP);
+		Properties props = Tools.loadProperties(DataSources.EMAIL_PROP());
 		final String username = props.getProperty("username");
 		log.info("user-email-name = " + username);
 		final String password =  props.getProperty("password");
@@ -315,8 +315,14 @@ public class Tools {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("Noreply_bitpieces@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse(email));
+					InternetAddress.parse(toEmail));
 			message.setSubject(subject);
+
+			if (replyToEmail != null) {
+				message.setReplyTo(new javax.mail.Address[] {
+						new InternetAddress(replyToEmail)
+				});
+			}
 
 			//			message.setText(text);
 			message.setContent(text, "text/html");
@@ -330,7 +336,7 @@ public class Tools {
 			throw new NoSuchElementException(e.getMessage());
 		}
 
-		String message = "Email sent to " + email;
+		String message = "Email sent to " + toEmail;
 
 		return message;
 
@@ -432,7 +438,7 @@ public class Tools {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 	public static void runCommand(String cmd) {
 		try {
@@ -552,21 +558,21 @@ public class Tools {
 		log.info(message);
 		return message;
 	}
-	
+
 	public static ObjectNode rqlStatus() {
 
 		ObjectNode on = MAPPER.createObjectNode();
-		
-		
+
+
 
 		on.put("raft", jsonToNode(rqlGetEndpoint("raft")));
 		on.put("diagnostics", jsonToNode(rqlGetEndpoint("diagnostics")));
 		on.put("statistics", jsonToNode(rqlGetEndpoint("statistics")));
-		
-		
+
+
 		return on;
 	}
-	
+
 	public static String rqlGetEndpoint(String endPoint) {
 		String postURL = DataSources.MASTER_NODE_URL + "/" + endPoint + "?pretty";
 
@@ -576,7 +582,7 @@ public class Tools {
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 
 			HttpGet httpPost = new HttpGet(postURL);
-//			httpPost.setEntity(new StringEntity(reformatted));
+			//			httpPost.setEntity(new StringEntity(reformatted));
 
 			ResponseHandler<String> handler = new BasicResponseHandler();
 
@@ -588,10 +594,10 @@ public class Tools {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return message;
 	}
-	
+
 	public static JsonNode jsonToNode(String json) {
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -629,14 +635,14 @@ public class Tools {
 
 
 	}
-	
-	public static void initializeSSL() {
-		
 
-		
+	public static void initializeSSL() {
+
+
+
 		// if the keystore file doesn't exist at that directory, then generate it:
 		if (!new File(DataSources.KEYSTORE_FILE()).exists()) {
-			
+
 			// Delete the old file if it exists or you're running this from a different dir
 			if (new File("keystore.jks").exists()) {
 				try {
@@ -646,22 +652,24 @@ public class Tools {
 					e.printStackTrace();
 				}
 			}
-	
-			
+
+
 			Tools.runCommand(DataSources.KEYTOOL_CMD);
-			
+
 			// copy that file to the home dir
 			try {
 				// delete the old one if its there
-				
+
 				Files.copy(new File("keystore.jks"), new File(DataSources.KEYSTORE_FILE()));
 				DataSources.IS_SSL = true;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} 
-		
+		} else {
+			DataSources.IS_SSL = true;
+		}
+
 	}
 
 
@@ -933,7 +941,7 @@ public class Tools {
 		}
 		return null;
 	}
-	
+
 	public static String nodeToJsonPretty(ObjectNode a) {
 		try {
 			return Tools.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(a);
@@ -960,14 +968,14 @@ public class Tools {
 }
 
 	 */
-	
+
 	public static String createBitmerchantButtonRequest(String total,
 			String iso, String paymentId) {
-		
+
 		ObjectNode a = Tools.MAPPER.createObjectNode();
-		
+
 		ObjectNode b = Tools.MAPPER.createObjectNode();
-		
+
 		b.put("name", "Order #" + paymentId);
 		b.put("type", "buy_now");
 		b.put("style", "custom_large");
@@ -977,9 +985,9 @@ public class Tools {
 		b.put("callback_url", DataSources.WEB_SERVICE_EXTERNAL_URL() + "callback/" + paymentId);
 		b.put("description", "Order #" + paymentId);
 		a.put("button", b);
-		
+
 		return Tools.nodeToJson(a);
-		
+
 	}
 
 	public static String createBitmerchantIframe(String buttonId, String orderId, String ip) {
@@ -988,10 +996,10 @@ public class Tools {
 				+ "style=\"width: 460px; height: 300px; border: none; "
 				+ "\" allowtransparency=\"true\" frameborder=\"0\" white-space=\"nowrap\"></iframe>\n"+
 				"";
-		
+
 		return s.replace("\"", "doublequote").replace(";","semicolon");
 	}
-	
+
 	public static void cacheCurrency(String currency) {
 		// Start up the currency converter just to pre cache it
 		try {

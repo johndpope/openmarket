@@ -8,17 +8,22 @@ var externalSparkService = 'http://96.28.13.51:4567/';
 
 var ipget = $.ajax({
    type: "GET",
+   timeout: 1000,
    url: "https://api.ipify.org",
    async: false,
+
  });
-var myip = 'https://' + ipget['responseText'] + ':4567/';
+
+var ipget_ip = (ipget['responseText'] != null) ? ipget['responseText'] : 'localhost';
+var myip = 'https://' + ipget_ip + ':4567/';
 
 console.log('my ip = ' + myip);
 console.log('spark service = ' + sparkService);
 console.log('ext spark = ' + externalSparkService);
+
 // This means you are running a seller machine, and everything should be using localhost
 var clientIsSeller = false;
-if (myip == externalSparkService) {
+if (myip == externalSparkService || myip == 'https://localhost:4567/') {
   externalSparkService = sparkService;
   clientIsSeller = true;
 } 

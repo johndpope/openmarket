@@ -183,12 +183,12 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="col-md-12">
-          <div id="order_groups_div">
-            <script id="order_groups_template" type="x-tmpl-mustache">
-              {{#order_groups}}
+          <div id="sale_groups_div">
+            <script id="sale_groups_template" type="x-tmpl-mustache">
+              {{#sale_groups}}
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  Order from {{shop_name}}
+                  Order # {{payment_id}}
                 </div>
                 <div class="panel-body">
                   <div class="col-md-9 vertical-line">
@@ -205,7 +205,18 @@
                         <p class="text-success">{{#toFixed}}{{price}}{{/toFixed}} <small>{{iso}}</small> </p>
                       </div>
                     </div>
-                    <hr> {{/products}}
+                    <hr>
+                    <form id="update_shipment_{{shipment_id}}" class="form-horizontal">
+                      <div class="col-md-12">
+                        <div class="input-group">
+                          <input name="tracking_url" class="form-control" placeholder="Provide a Shipping Tracking URL" type="url" data-fv-uri-message="The website address is not valid" />
+                          <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Save</button>
+                            </span>
+                        </div>
+                      </div>
+                    </form>
+                    {{/products}}
                   </div>
                   <div class="col-md-3">
                     {{#tracking_url}}
@@ -215,9 +226,8 @@
                     {{/tracking_url}}
                     <p class="text-muted"> Order placed on
                       <br>{{#otherdateformat}}{{created_at}}{{/otherdateformat}}</p>
-                    <p class="text-muted"> Shipping to:
-                      <br>
-                      <b>{{full_name}}</b>
+                    <p class="text-muted"> Shipping to:<br>
+                    <b>{{full_name}}</b>
                       <br> {{address_line_1}} {{address_line_2}}
                       <br> {{city}}, {{state}}, {{zip}}
                       <br> {{country_name}}
@@ -235,8 +245,8 @@
                   </div>
                 </div>
               </div>
-              {{/order_groups}} {{^order_groups}}
-              <h4> No previous orders</h4> {{/order_groups}}
+              {{/sale_groups}} {{^sale_groups}}
+              <h4> No previous orders</h4> {{/sale_groups}}
             </script>
           </div>
         </div>
@@ -349,7 +359,7 @@
     <!-- my scripts -->
     <script src="../js/tools.js"></script>
     <script src="../js/common.js"></script>
-    <script src="../js/orders.js"></script>
+    <script src="../js/sales.js"></script>
 </body>
 
 </html>
