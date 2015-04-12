@@ -26,10 +26,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>tomp2p.net</id>
-			<url>http://tomp2p.net/dev/mvn/</url>
-		</repository>
+
 
 
 	</repositories>
