@@ -125,7 +125,7 @@ public class Actions {
 			return user;
 		}
 
-		public static String sendSignUpEmail(User user) {
+		public static String sendSignUpEmail(User user, String webServiceURL) {
 
 
 			String email = user.getString("email");
@@ -137,13 +137,12 @@ public class Actions {
 			// Store that token in the user row
 			//			User userUpdate = user.set("email_code", token);
 
-
-
+			
 			String update = Tools.toUpdate("user", user.getId().toString(), "email_code", token);
 
 			Tools.writeRQL(update);
 
-			String url = DataSources.SET_PASSWORD_URL() + "?token=" + token;
+			String url = webServiceURL + "user_setup?token=" + token;
 
 			Map<String, Object> vars = ImmutableMap.<String, Object>builder()
 					.put("url", url)
@@ -729,6 +728,8 @@ public class Actions {
 				String shipmentId, String messageHtml) {
 
 			String note = StringEscapeUtils.unescapeHtml4(messageHtml);
+			String userName = (user.getString("name") != null) ? user.getString("name") :
+				"user #" + user.getId().toString();
 
 			OrderView ov = ORDER_VIEW.findFirst("shipment_id = ?", shipmentId);
 
@@ -744,7 +745,7 @@ public class Actions {
 			String subject = "OpenMarket Message from Customer";
 
 			Map<String, Object> vars = ImmutableMap.<String, Object>builder()
-					.put("user_name", user.getString("name"))
+					.put("user_name", userName)
 					.put("product_name", productName)
 					.put("message", note)
 					.build();

@@ -76,10 +76,14 @@ public class Platform {
 
 				User user = UserActions.createUserSimple(email);
 
-				// If its a local IP, also create the seller too
-				Seller seller = SellerActions.createSellerSimple(user.getId().toString());
+				// If its a local IP, also create the seller too TODO
+				String webServiceIP = DataSources.WEB_SERVICE_EXTERNAL_URL();
+				if (Tools.isLocalIP(req.ip())) {
+					Seller seller = SellerActions.createSellerSimple(user.getId().toString());
+					webServiceIP = DataSources.WEB_SERVICE_INTERNAL_URL();
+				}
 
-				String message = UserActions.sendSignUpEmail(user);
+				String message = UserActions.sendSignUpEmail(user, webServiceIP);
 
 
 				return message;
@@ -102,7 +106,13 @@ public class Platform {
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
 
-				String message = UserActions.sendSignUpEmail(user);
+				// If its a local IP,
+				String webServiceIP = DataSources.WEB_SERVICE_EXTERNAL_URL();
+				if (Tools.isLocalIP(req.ip())) {
+					webServiceIP = DataSources.WEB_SERVICE_INTERNAL_URL();
+				}
+
+				String message = UserActions.sendSignUpEmail(user, webServiceIP);
 
 				return message;
 

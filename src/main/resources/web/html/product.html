@@ -13,7 +13,7 @@
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
   <!-- Link to font awesome -->
-  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css"> 
+  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
   <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
   <!-- Bootstrap social css -->
   <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
@@ -139,7 +139,7 @@
                     </div>
                     {{/.}} {{#0}}
                     <div class="row">
-                    <hr>
+                      <hr>
                       <div class="col-md-offset-1 col-md-10">
                         <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a>
                       </div>
@@ -209,7 +209,7 @@
                         <a class="right carousel-control" href=".item-{{id}}" role="button" data-slide="next">
                           <span class="icon-next"></span>
                         </a>
-                         {{/pictures.1}}
+                        {{/pictures.1}}
                       </div>
                     </div>
                   </div>
@@ -251,7 +251,8 @@
                       {{headline}}
                       </h4>
                             <span class="text-muted">By blank on {{created_at}}</span>
-                            <br> {{#htmlDecode}}{{{text_html}}}{{/htmlDecode}} <br>
+                            <br> {{#htmlDecode}}{{{text_html}}}{{/htmlDecode}}
+                            <br>
                             <a href="" id="review_comments_btn_{{id}}">{{comments.length}} Comments <span class="caret"></a>
                             <span class="text-muted">&nbsp;&nbsp;&nbsp;</span>
                             <span id="review_vote_helpful_{{id}}" class="btn btn-sm btn-default vote-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>" type="submit"><i class='fa fa-thumbs-o-up'> Helpful</i>
@@ -316,7 +317,6 @@
                                     <p>{{text}}
                                       <br>
                                       <span class="text-muted">Blank answered on {{created_at}} </span>
-                                      
                                     </p>
                                   </div>
                                 </div>
@@ -415,67 +415,65 @@
                   </div>
                   <div class="panel panel-warning">
                     <div class="panel-body">
-                      <h2 class="text-center"> <a href="">{{shop_name}}</a>
+                      <h2 class="text-center"> <a href="/shop/{{seller_id}}">{{shop_name}}</a>
                   <br>
                   <small> 
                   </small>
                   </h2>
-                      <h4 class="text-muted text-center"> Other items from {{shop_name}}</h4>
+                      <h4 class="text-muted text-center"> Other items from <a class="text-muted" href="/shop/{{seller_id}}">{{shop_name}}</a></h4>
                       <br> {{#products}}
-              <div class="col-md-6">
-                <div class="panel panel-default">
-                  <div class="panel-body">
-                    <div class="carousel slide item-{{product_id}}" data-ride="carousel" data-interval="false">
-                      <div class="carousel-inner" role="listbox">
-                        {{#pictures}}
-                        <div class="item pic_num-{{num_}} img-responsive center-block">
-                          <a href="/product/{{product_id}}"><img class="panel-picture-smaller scale" src="{{url}}"></a>
+                      <div class="col-md-6">
+                        <div class="panel panel-default">
+                          <div class="panel-body">
+                            <div class="carousel slide item-{{product_id}}" data-ride="carousel" data-interval="false">
+                              <div class="carousel-inner" role="listbox">
+                                {{#pictures}}
+                                <div class="item pic_num-{{num_}} img-responsive center-block">
+                                  <a href="/product/{{product_id}}"><img class="panel-picture-smallest scale" src="{{url}}"></a>
+                                </div>
+                                {{/pictures}} {{^pictures}}
+                                <div class="item pic_num-1 active img-responsive center-block">
+                                  <a href="/product/{{product_id}}"><img class="panel-picture-smallest scale" src="http://i.ytimg.com/vi/G5pxWdJnnYg/maxresdefault.jpg"></a>
+                                </div>
+                                {{/pictures}}
+                              </div>
+                              {{#.pictures.1}}
+                              <a class="left carousel-control" href=".item-{{product_id}}" role="button" data-slide="prev">
+                                <span class="icon-prev"></span>
+                              </a>
+                              <a class="right carousel-control" href=".item-{{product_id}}" role="button" data-slide="next">
+                                <span class="icon-next"></span>
+                              </a>
+                              {{/.pictures.1}}
+                            </div>
+                          </div>
+                          <div class="panel-footer">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="text-center text-overflow">
+                                  <a href="/product/{{product_id}}">{{title}}</a>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="row">
+                              <div class="col-xs-4 text-overflow">
+                                <a class="text-center text-muted" href="/shop/{{seller_id}}"> {{shop_name}}</a>
+                              </div>
+                              <div class="col-xs-4 text-overflow">
+                                <div class="text-info text-center"> {{number_of_reviews}} <small>{{#numToStars}} {{review_avg}} {{/numToStars}}</small>
+                                </div>
+                              </div>
+                              <div class="col-xs-4 text-overflow">
+                                <div class="text-success text-right"> {{price}} <small>{{price_iso}}</small></div>
+                              </div>
+                            </div>
+                            <div class="font-spacer">&nbsp;</div>
+                          </div>
                         </div>
-                        {{/pictures}} {{^pictures}}
-                        <div class="item pic_num-1 active img-responsive center-block">
-                          <a href="/product/{{product_id}}"><img class="panel-picture-smaller scale" src="http://i.ytimg.com/vi/G5pxWdJnnYg/maxresdefault.jpg"></a>
-                        </div>
-                        {{/pictures}}
                       </div>
-                      {{#.pictures.1}}
-                      <a class="left carousel-control" href=".item-{{product_id}}" role="button" data-slide="prev">
-                        <span class="icon-prev"></span>
-                      </a>
-                      <a class="right carousel-control" href=".item-{{product_id}}" role="button" data-slide="next">
-                        <span class="icon-next"></span>
-                      </a>
-                      {{/.pictures.1}}
-                    </div>
-                  </div>
-                  <div class="panel-footer">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="text-center text-overflow">
-                          <a href="/product/{{product_id}}">{{title}}</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="spacer"></div>
-                    <div class="row">
-                      <div class="col-md-4">
-                        <a class="text-center text-muted text-overflow" href="/shop/{{seller_id}}"> {{shop_name}}</a>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="text-info text-center"> {{number_of_reviews}} <small>{{#numToStars}} {{review_avg}} {{/numToStars}}</small>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="text-success text-right"> {{price}} <small>{{price_iso}}</small></div>
-                      </div>
-                    </div>
-                    <div class="font-spacer">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-              {{/products}}
-              {{^products}}
-                <h4> Nothing other products</h4>
-              {{/products}}
+                      {{/products}} {{^products}}
+                      <h4> Nothing other products</h4> {{/products}}
                     </div>
                   </div>
                 </div>

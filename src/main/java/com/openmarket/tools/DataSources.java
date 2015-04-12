@@ -5,16 +5,9 @@ public class DataSources {
 
 	public static String APP_NAME = "openmarket";
 
-
-
 	public static Integer SPARK_WEB_PORT = 4567;
 
-	public static String URL() {
-		return "http://localhost:" + SPARK_WEB_PORT + "/";
-	}
-
-
-
+	public static Boolean TESTNET = false;
 
 	public static Boolean IS_SSL = false;
 
@@ -31,27 +24,30 @@ public class DataSources {
 		return HTTP() + "localhost:" + SPARK_WEB_PORT + "/";
 	}
 
-	public static String SET_PASSWORD_URL() {
-		return URL() + "user_setup";
+	// The path to the openmarket dir
+	public static String HOME_DIR() {
+		String userHome = System.getProperty( "user.home" ) + "/." + APP_NAME;
+		if (TESTNET) {
+			userHome += "/testnet";
+		}
+		return userHome;
 	}
 
-	// The path to the openmarket dir
-	public static String HOME_DIR = System.getProperty( "user.home" ) + "/." + APP_NAME;
 
 	// This should not be used, other than for unzipping to the home dir
 	public static final String CODE_DIR = System.getProperty("user.dir");
 
-	public static final String SOURCE_CODE_HOME() {return HOME_DIR + "/src";}
+	public static final String SOURCE_CODE_HOME() {return HOME_DIR() + "/src";}
 
 	public static final String SHADED_JAR_FILE = CODE_DIR + "/target/" + APP_NAME + ".jar";
 
 	public static final String SHADED_JAR_FILE_2 = CODE_DIR + "/" + APP_NAME + ".jar";
 
-	public static final String ZIP_FILE() {return HOME_DIR + "/" + APP_NAME + ".zip";}
+	public static final String ZIP_FILE() {return HOME_DIR() + "/" + APP_NAME + ".zip";}
 
 	public static final String TOOLS_JS() {return SOURCE_CODE_HOME() + "/web/js/tools.js";}
 
-	public static final String DB_FILE() {return HOME_DIR + "/db/data/db.sqlite";}
+	public static final String DB_FILE() {return HOME_DIR() + "/db/data/db.sqlite";}
 
 	public static final String SQL_FILE() {return SOURCE_CODE_HOME() + "/ddl.sql";}
 
@@ -59,20 +55,25 @@ public class DataSources {
 
 	public static final String BUTTON_JSON_REQ ="{\n \"button\" : {\n    \"name\": \"kittin mittinz\",\n    \"type\": \"buy_now\",\n       \"text\": \"Buy with USD/BTC\",\n    \"price_string\": \"0.50\",\n    \"price_currency_iso\": \"USD\",\n  \"network\": \"test\",\n   \"callback_url\": \"http://www.example.com/my_custom_button_callback\",\n    \"description\": \"Sample description\"\n  }\n   \n}";
 
-	public static final String KEYSTORE_FILE() {return HOME_DIR + "/keystore.jks";}
+	public static final String KEYSTORE_FILE() {return HOME_DIR() + "/keystore.jks";}
 
 
 	// RQL 
-	public static String RQL_DIR() {return HOME_DIR + "/db";}
+	public static String RQL_DIR() {return HOME_DIR() + "/db";}
 
-	public static String MASTER_NODE_IP = "localhost";
+	public static String RQL_MASTER_NODE_IP = "localhost";
 
-	public static String MASTER_NODE_PORT = "4001";
+	public static String RQL_MASTER_NODE_PORT = (!TESTNET) ? "4001" : "4002";
+	
 
-	public static final String MASTER_NODE_URL = "http://" + MASTER_NODE_IP + ":" + MASTER_NODE_PORT;
+	public static final String MASTER_NODE_URL() {
+		return "http://" + RQL_MASTER_NODE_IP + ":" + RQL_MASTER_NODE_PORT;
+	}
 
-	public static final Boolean IS_MASTER_NODE = MASTER_NODE_IP.equals("localhost") || 
-			MASTER_NODE_IP.equals(EXTERNAL_IP);
+	public static final Boolean IS_MASTER_NODE() {
+		return RQL_MASTER_NODE_IP.equals("localhost") || 
+				RQL_MASTER_NODE_IP.equals(EXTERNAL_IP);
+	}
 
 	public static final Integer RQL_PORT = 4001;
 

@@ -82,12 +82,14 @@ function checkStatusOfPayment(paymentId) {
       console.log(data);
       var paymentSuccess = data['completed'];
 
+      // The payment was a success
       if (paymentSuccess == '1') {
         clearInterval(intervalID2);
         console.log('success!');
         sendNote();
         $('#paymentModal').modal('hide');
         $('#rootwizard').find("a[href*='status']").trigger('click');
+        setupCart();
       }
 
 

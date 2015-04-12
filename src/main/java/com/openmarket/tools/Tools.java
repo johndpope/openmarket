@@ -533,7 +533,7 @@ public class Tools {
 		String reformatted = reformatSQLForRQL(cmd);
 		log.info("rql write string : " + reformatted);
 
-		String postURL = DataSources.MASTER_NODE_URL + "/db?pretty";
+		String postURL = DataSources.MASTER_NODE_URL() + "/db?pretty";
 
 		String message = "";
 		try {
@@ -574,7 +574,7 @@ public class Tools {
 	}
 
 	public static String rqlGetEndpoint(String endPoint) {
-		String postURL = DataSources.MASTER_NODE_URL + "/" + endPoint + "?pretty";
+		String postURL = DataSources.MASTER_NODE_URL() + "/" + endPoint + "?pretty";
 
 		String message = "";
 		try {
@@ -617,7 +617,7 @@ public class Tools {
 
 		if (delete) {
 			try {
-				FileUtils.deleteDirectory(new File(DataSources.HOME_DIR));
+				FileUtils.deleteDirectory(new File(DataSources.HOME_DIR()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -682,9 +682,9 @@ public class Tools {
 		}
 	}
 	public static void setupDirectories() {
-		if (!new File(DataSources.HOME_DIR).exists()) {
+		if (!new File(DataSources.HOME_DIR()).exists()) {
 			log.info("Setting up ~/." + DataSources.APP_NAME + " dirs");
-			new File(DataSources.HOME_DIR).mkdirs();
+			new File(DataSources.HOME_DIR()).mkdirs();
 		} else {
 			log.info("Home directory already exists");
 		}
@@ -1043,6 +1043,9 @@ public class Tools {
 		JsonNode on = jsonToNode(message);
 		return on;
 	}
+	
+	
+	
 
 
 }

@@ -117,7 +117,7 @@ public class TableConstants {
 	public static final List<String> INSTALL_RQLITE_SCRIPT_LINES() {
 		return Arrays.asList(
 				"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
-				"cd " + DataSources.HOME_DIR,
+				"cd " + DataSources.HOME_DIR(),
 				"mkdir db",
 				"cd db/",
 				"export GOPATH=$PWD",
@@ -132,7 +132,7 @@ public class TableConstants {
 					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
 					"cd " + DataSources.RQL_DIR(),
 					"export GOPATH=$PWD",
-					"$GOPATH/bin/rqlite -join " + DataSources.MASTER_NODE_URL + 
+					"$GOPATH/bin/rqlite -join " + DataSources.MASTER_NODE_URL() + 
 					" -p " + DataSources.RQL_PORT + " data");
 	}
 			

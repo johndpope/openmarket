@@ -215,6 +215,7 @@ address.zip,
 address.country_id,
 payment_id,
 purchased, 
+bitmerchant_address,
 order_iframe, 
 cart_item.created_at 
 from cart_item 

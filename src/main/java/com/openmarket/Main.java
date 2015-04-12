@@ -22,7 +22,7 @@ public class Main {
 	static  Logger log = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
 
-	@Option(name="-test",usage="Run using the Bitcoin testnet3, and a test DB")
+	@Option(name="-testnet",usage="Run using the Bitcoin testnet3, and a test DB")
 	private boolean testnet;
 
 	@Option(name="-deleteDB",usage="Delete the sqlite DB before running.")
@@ -53,8 +53,9 @@ public class Main {
 		log.setLevel(Level.toLevel(loglevel));
 		
 		// get the correct network
-		DataSources.HOME_DIR = (testnet) ? DataSources.HOME_DIR  + "/testnet" : DataSources.HOME_DIR;
-		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR;
+		DataSources.TESTNET = testnet;
+		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR();
+		
 
 		// Initialize the replicated db
 		Tools.initializeDBAndSetupDirectories(deleteDB);
@@ -64,7 +65,7 @@ public class Main {
 		Tools.addExternalWebServiceVarToTools();
 		
 		// Start the bitmerchant wallet
-		LocalWallet.startService(DataSources.HOME_DIR, loglevel, testnet, deleteDB, false);
+		LocalWallet.startService(DataSources.HOME_DIR(), loglevel, testnet, deleteDB, false);
 		
 		// Start the webservice
 		WebService.start();
@@ -109,8 +110,8 @@ public class Main {
 		if (customMasterNode != null) {
 			String[] split = customMasterNode.split(":");
 			
-			DataSources.MASTER_NODE_IP = split[0];
-			DataSources.MASTER_NODE_PORT = split[1];
+			DataSources.RQL_MASTER_NODE_IP = split[0];
+			DataSources.RQL_MASTER_NODE_PORT = split[1];
 		}
 	}
 	

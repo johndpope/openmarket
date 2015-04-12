@@ -21,7 +21,7 @@ public class TesterDerp extends TestCase {
 	
 	public void testCreateUser() throws InterruptedException {
 			
-		DataSources.HOME_DIR = DataSources.HOME_DIR  + "/testnet";
+		DataSources.TESTNET = true;
 		
 		Tools.dbInit();
 //		log.info(CategoryActions.getCategoryThumbnails("1"));

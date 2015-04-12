@@ -66,13 +66,13 @@ public class InitializeTables {
 
 				// For some reason the joining command is a weird one, then after initializing its 
 				// like regular.
-				if (!DataSources.IS_MASTER_NODE) {
-					log.info("Joining rqlite master node @ " + DataSources.MASTER_NODE_URL);
+				if (!DataSources.IS_MASTER_NODE()) {
+					log.info("Joining rqlite master node @ " + DataSources.MASTER_NODE_URL());
 					java.nio.file.Files.write(Paths.get(DataSources.RQLITE_JOIN_SCRIPT()),
 							TableConstants.RQLITE_JOIN_LINES());
 
 					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT());
-				} 
+				}
 
 				firstRqlRun = true;
 
@@ -90,7 +90,7 @@ public class InitializeTables {
 			Tools.sleep(5000);
 
 			// This means you are the master node, so you need to set up the tables from scratch
-			if (DataSources.IS_MASTER_NODE && firstRqlRun) {
+			if (DataSources.IS_MASTER_NODE() && firstRqlRun) {
 				log.info("Filling the tables, be aware that this will take ~20 minutes due to filling"
 						+ " over 16000 product categories from google's product taxonomy.");
 				createTables();
