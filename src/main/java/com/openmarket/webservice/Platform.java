@@ -157,7 +157,7 @@ public class Platform {
 				Tools.dbInit();
 
 				String message = UserActions.userLogin(email, password, res);
-				
+
 
 
 
@@ -1326,7 +1326,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/save_tracking_url/:shipmentId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
@@ -1363,21 +1363,21 @@ public class Platform {
 			}
 
 		});
-		
+
 		post("/send_order_note/:shipmentId", (req, res) -> {
 			try {
 				Tools.allowAllHeaders(req, res);
 				Tools.logRequestInfo(req);
 
 				String shipmentId = req.params(":shipmentId");
-							
+
 				String messageHtml = req.body();
 
 				Tools.dbInit();
 				User user = UserActions.getUserFromSessionId(req);
 
 				String message = UserActions.sendNote(user, shipmentId, messageHtml);
-				
+
 
 				return message;
 
@@ -2060,7 +2060,7 @@ public class Platform {
 			}
 
 		});
-		
+
 		get("/get_sales_grouped", (req, res) -> {
 
 			try {
@@ -2204,7 +2204,7 @@ public class Platform {
 				String query = req.params(":query");
 				String json = null;
 
-				json = CATEGORY.find("name like ?", "%" + query + "%").toJson(false);
+				json = CATEGORY.find("name like ?", "%" + query + "%").limit(10).toJson(false);
 
 				return json;
 
@@ -2229,7 +2229,8 @@ public class Platform {
 				String json = null;
 
 				List<ProductThumbnailView> pvs = 
-						PRODUCT_THUMBNAIL_VIEW.find("title like ?", "%" + query + "%");
+						PRODUCT_THUMBNAIL_VIEW.find("title like ?", "%" + query + "%").limit(10)
+						.orderBy("number_of_reviews desc");
 				json = Transformations.searchProductThumbnailViewJson(pvs);
 				return json;
 
@@ -2253,7 +2254,7 @@ public class Platform {
 				String query = req.params(":query");
 				String json = null;
 
-				json = SELLER.find("shop_name like ?", "%" + query + "%").toJson(false);
+				json = SELLER.find("shop_name like ?", "%" + query + "%").limit(10).toJson(false);
 
 				return json;
 
