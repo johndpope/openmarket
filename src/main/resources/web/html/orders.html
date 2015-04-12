@@ -13,7 +13,7 @@
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
   <!-- Link to font awesome -->
-  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
   <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
   <!-- Bootstrap social css -->
   <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
@@ -206,6 +206,13 @@
                       </div>
                     </div>
                     <hr> {{/products}}
+                    <div class="row">
+                      <div class="col-md-9">
+                        <p>Note to {{shop_name}} <small class="text-muted">optional</small></p>
+                        <div class="summernote fake-text-area send_note_content_{{shipment_id}}" placeholder="You can send a message with the order here"></div>
+                        <button id="send_note_btn_{{shipment_id}}" type="button" class="btn btn-default btn-block send-note-btn" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">Send note</button>
+                      </div>
+                    </div>
                   </div>
                   <div class="col-md-3">
                     {{#tracking_url}}

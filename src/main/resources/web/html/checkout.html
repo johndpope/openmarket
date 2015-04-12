@@ -13,7 +13,7 @@
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
   <!-- Link to font awesome -->
-  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"> 
+  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
   <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
   <!-- Bootstrap social css -->
   <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
@@ -141,7 +141,7 @@
                     </div>
                     {{/.}} {{#0}}
                     <div class="row">
-                    <hr>
+                      <hr>
                       <div class="col-md-offset-1 col-md-10">
                         <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a>
                       </div>
@@ -261,7 +261,7 @@
                             <div class="col-md-4 vertical-line">
                               <h5 class="text-center"><b>Shipping Address</b></h5>
                               <p><b>{{full_name}}</b> <span class="pull-right"> 
-                                  <small><a href="" >Change</a></small></span>
+                                  <small><a id="change_address_btn" href="javascript:;" >Change</a></small></span>
                                 <br> {{address_line_1}} {{address_line_2}}
                                 <br> {{city}}, {{state}}, {{zip}}
                                 <br> {{country_name}}
@@ -312,7 +312,7 @@
                             </div>
                             <div class="col-md-4">
                               <p>Note to {{shop_name}} <small class="text-muted">optional</small></p>
-                              <div class="summernote fake-text-area" placeholder="You can send a message with the order here"></div>
+                              <div class="summernote fake-text-area send_note_content_{{shipment_id}}" shipment_id={{shipment_id}} placeholder="You can send a message with the order here"></div>
                             </div>
                           </div>
                         </div>

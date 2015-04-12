@@ -64,6 +64,7 @@ function setupCart() {
     console.log(data);
 
     if (data.length == 0) {
+      $('#cart_dropdown_title').html('Cart');
       $('#cart_dropdown').addClass('hide');
 
     } else {
@@ -83,6 +84,7 @@ function setupWishlist() {
     console.log(data);
 
     if (data['products'].length == 0) {
+      $('#wishlist_dropdown_title').html('Wishlist');
       $('#wishlist_dropdown').addClass('hide');
 
     } else {

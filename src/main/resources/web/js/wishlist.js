@@ -1,4 +1,4 @@
-var wishlistTemplate = $('#wishlist_page_template').html();
+var wishlistPageTemplate = $('#wishlist_page_template').html();
 
 $(document).ready(function() {
 
@@ -11,7 +11,7 @@ function fillWishList() {
   getJson('wishlist_thumbnails').done(function(e) {
     var data = JSON.parse(e);
     console.log(data);
-    fillMustacheWithJson(data, wishlistTemplate, '#wishlist_page_div');
+    fillMustacheWithJson(data, wishlistPageTemplate, '#wishlist_page_div');
     $('.pic_num-1').addClass('active');
 
     setupRemoveFromWishlist();
@@ -25,6 +25,7 @@ function fillWishList() {
       simplePost('remove_from_wishlist/' + productId, null, null,
         function(data) {
           fillWishList();
+          setupWishlist();
         }, null, null);
 
     });

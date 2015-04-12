@@ -111,7 +111,7 @@ public class Tools {
 		try {
 			List<String> lines = java.nio.file.Files.readAllLines(Paths.get(DataSources.TOOLS_JS()));
 
-			String interalServiceLine = "var sparkService = '" + 
+			String interalServiceLine = "var localSparkService = '" + 
 					DataSources.WEB_SERVICE_INTERNAL_URL() + "';";
 
 			String externalServiceLine = "var externalSparkService ='" + 
@@ -990,9 +990,9 @@ public class Tools {
 
 	}
 
-	public static String createBitmerchantIframe(String buttonId, String orderId, String ip) {
+	public static String createBitmerchantIframe(String buttonId, String ip) {
 		String s="<iframe id=\"bitmerchant_iframe\" name=\"" + buttonId + "\" src=\"" + ip + "html/payment_iframe.html\" "
-				+ " ordernum = \"" + orderId + "\" "
+				+ " "
 				+ "style=\"width: 460px; height: 300px; border: none; "
 				+ "\" allowtransparency=\"true\" frameborder=\"0\" white-space=\"nowrap\"></iframe>\n"+
 				"";
@@ -1008,6 +1008,40 @@ public class Tools {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static JsonNode sendBitmerchantRequestToSeller(String jsonReq, String sellerIP) {
+
+		log.info("json req : " + jsonReq);
+		
+
+		String postURL = sellerIP + "api/create_order";
+		
+		log.info("post url : " + postURL);
+
+		String message = "";
+		try {
+
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+
+			HttpPost httpPost = new HttpPost(postURL);
+			httpPost.setEntity(new StringEntity(jsonReq));
+
+			ResponseHandler<String> handler = new BasicResponseHandler();
+
+			CloseableHttpResponse response = httpClient.execute(httpPost);
+
+			message = handler.handleResponse(response);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		log.info(message);
+		
+		JsonNode on = jsonToNode(message);
+		return on;
 	}
 
 

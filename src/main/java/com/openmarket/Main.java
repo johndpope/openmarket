@@ -59,7 +59,7 @@ public class Main {
 		// Initialize the replicated db
 		Tools.initializeDBAndSetupDirectories(deleteDB);
 		
-		Tools.initializeSSL();
+//		Tools.initializeSSL();
 		
 		Tools.addExternalWebServiceVarToTools();
 		

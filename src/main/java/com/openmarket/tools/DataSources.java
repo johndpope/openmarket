@@ -89,9 +89,13 @@ public class DataSources {
 	public static final String SIGNUP_EMAIL_TEMPLATE() {
 		return SOURCE_CODE_HOME() + "/signup_email_template.html";
 	}
-	
-	public static final String UPDATE_SHIPPING_TEMPLATE() {return 
-			SOURCE_CODE_HOME() + "/update_shipping_template.html";
+
+	public static final String UPDATE_SHIPPING_TEMPLATE() {
+		return SOURCE_CODE_HOME() + "/update_shipping_template.html";
+	}
+
+	public static final String TO_SELLER_MESSAGE_TEMPLATE() {
+		return SOURCE_CODE_HOME() + "/to_seller_message_template.html";
 	}
 
 	// Google categories
@@ -109,10 +113,10 @@ public class DataSources {
 	public static final String PAGES(String pageName) {
 		return WEB_HTML() + "/" + pageName + ".html";
 	}
-	
+
 	public static final String KEYTOOL_CMD = "keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass changeit -keypass changeit -validity 360 -keysize 2048";
-	
-	
-	
-	
+
+
+
+
 }

@@ -13,7 +13,7 @@ $(document).ready(function() {
 
     addToCart();
     addToWishlist();
-    
+
     $('.pic_num-1').addClass('active');
 
     writeReviewBtn();
@@ -45,13 +45,17 @@ $(document).ready(function() {
 
 function addToCart() {
   $('#addToCart').click(function(e) {
-    simplePost('add_to_cart/' + productId, null, null, null, null, null);
+    simplePost('add_to_cart/' + productId, null, null, function() {
+      setupCart();
+    }, null, null);
   });
 }
 
 function addToWishlist() {
   $('#addToWishlist').click(function(e) {
-    simplePost('add_to_wishlist/' + productId, null, null, null, null, null);
+    simplePost('add_to_wishlist/' + productId, null, null, function() {
+      setupWishlist();
+    }, null, null);
   });
 }
 
@@ -85,4 +89,3 @@ function writeReviewBtn() {
   });
 
 }
-

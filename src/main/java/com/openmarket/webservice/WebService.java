@@ -23,7 +23,7 @@ public class WebService {
 
 	public static void start() {
 
-				setupSSL();
+//				setupSSL();
 
 		// Add external web service url to beginning of javascript tools
 		//		Tools.addExternalWebServiceVarToTools();
@@ -61,12 +61,6 @@ public class WebService {
 			return Tools.readFile(DataSources.PAGES(pageName));
 		});
 	
-
-		
-
-
-
-
 	}
 	
 	public static void setupSSL() {

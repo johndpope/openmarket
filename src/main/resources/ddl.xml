@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- SQL XML created by WWW SQL Designer, http://code.google.com/p/wwwsqldesigner/ -->
-<!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
+<!-- Active URL: http://ondras.zarovi.cz/sql/demo/?keyword=openmarket -->
 <sql>
 <datatypes db="sqlite">
     <group label="Affinity">
@@ -49,6 +49,9 @@
 <default>NULL</default><relation table="user" row="id" />
 </row>
 <row name="shop_name" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="bitmerchant_address" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="created_at" null="0" autoincrement="0">

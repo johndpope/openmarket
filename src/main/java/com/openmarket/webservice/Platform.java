@@ -133,16 +133,6 @@ public class Platform {
 
 				String message = UserActions.userLogin(email, password, res);
 
-				// see if the user is actually a seller, if it is, change the message to a seller one,
-				// in order to redirect the page
-				Seller seller = SellerActions.getSeller(user.getId().toString());
-				if (seller != null) {
-					message = "Logged in as a seller";
-				}
-
-
-
-
 				return message;
 
 			} catch (Exception e) {
@@ -167,6 +157,8 @@ public class Platform {
 				Tools.dbInit();
 
 				String message = UserActions.userLogin(email, password, res);
+				
+
 
 
 
@@ -1368,6 +1360,34 @@ public class Platform {
 				return e.getMessage();
 			} finally {
 				Tools.dbClose();
+			}
+
+		});
+		
+		post("/send_order_note/:shipmentId", (req, res) -> {
+			try {
+				Tools.allowAllHeaders(req, res);
+				Tools.logRequestInfo(req);
+
+				String shipmentId = req.params(":shipmentId");
+							
+				String messageHtml = req.body();
+
+				Tools.dbInit();
+				User user = UserActions.getUserFromSessionId(req);
+
+				String message = UserActions.sendNote(user, shipmentId, messageHtml);
+				
+
+				return message;
+
+			} catch (Exception e) {
+				res.status(666);
+				e.printStackTrace();
+				return e.getMessage();
+			} finally {
+				Tools.dbClose();
+
 			}
 
 		});

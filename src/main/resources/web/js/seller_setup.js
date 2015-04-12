@@ -37,8 +37,8 @@ function setupWizard() {
 
   $('#rootwizard .finish').click(function() {
     // alert('Finished!, Starting over!');
-    window.location('/wallet');
-    $('#rootwizard').find("a[href*='tab1']").trigger('click');
+    // window.location('/wallet');
+    // $('#rootwizard').find("a[href*='tab1']").trigger('click');
   });
 }
 

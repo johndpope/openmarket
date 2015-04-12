@@ -1,4 +1,4 @@
-var sparkService = 'http://localhost:4567/';
+var localSparkService = 'http://localhost:4567/';
 var externalSparkService = 'http://96.28.13.51:4567/';
 
 
@@ -15,22 +15,24 @@ var ipget = $.ajax({
  });
 
 var ipget_ip = (ipget['responseText'] != null) ? ipget['responseText'] : 'localhost';
-var myip = 'https://' + ipget_ip + ':4567/';
+var myip = 'http://' + ipget_ip + ':4567/';
 
 console.log('my ip = ' + myip);
-console.log('spark service = ' + sparkService);
+console.log('local spark service = ' + localSparkService);
 console.log('ext spark = ' + externalSparkService);
 
+var sparkService;
 // This means you are running a seller machine, and everything should be using localhost
 var clientIsSeller = false;
-if (myip == externalSparkService || myip == 'https://localhost:4567/') {
-  externalSparkService = sparkService;
+if (myip == externalSparkService || myip == 'http://localhost:4567/') {
+  sparkService = localSparkService;
   clientIsSeller = true;
 } 
-// you are accessing it remotely, so you should be using the ip address
+// you are accessing it remotely, so you should be using the ip address fetching version
 else {
   sparkService = externalSparkService;
 }
+console.log('spark service used = ' + sparkService);
 
 
 var sparkServiceObj = {
@@ -43,8 +45,6 @@ var pageNumbers = {};
 
 
 function getJson(shortUrl, noToast, external) {
-
-  console.log(myip);
   noToast = (typeof noToast === "undefined") ? false : noToast;
   external = (typeof external === "undefined") ? false : external;
 
@@ -57,6 +57,7 @@ function getJson(shortUrl, noToast, external) {
     url = sparkService + shortUrl;
   }
 
+  console.log(url);
   return simpleAjax(url, noToast);
 
 
@@ -205,7 +206,7 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
 
   clearForm = (typeof clearForm === "undefined") ? false : clearForm;
 
-  external = (typeof external === "undefined") ? true : external;
+  external = (typeof external === "undefined") ? false : external;
 
 
 
@@ -223,6 +224,8 @@ function standardFormPost(shortUrl, formId, modalId, reload, successFunctions, n
   } else {
     url = sparkService + shortUrl;
   }
+
+  console.log(url);
 
   // console.log(url);
   $.ajax({

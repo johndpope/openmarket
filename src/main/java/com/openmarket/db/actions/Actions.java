@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.JsonNode;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import spark.Response;
 import com.bitmerchant.db.Tables.Order;
 import com.google.common.collect.ImmutableMap;
 import com.openmarket.db.Tables.CategoryTreeView;
+import com.openmarket.db.Tables.Seller;
 import com.openmarket.db.Tables.User;
 import com.openmarket.db.Tables.WishlistItem;
 import com.openmarket.db.Transformations;
@@ -58,6 +60,8 @@ public class Actions {
 			Boolean correctPass = Tools.PASS_ENCRYPT.checkPassword(password, encryptedPassword);
 
 			if (correctPass) {
+
+
 				return WebActions.setCookiesForLogin(user, res);
 
 			} else {
@@ -510,17 +514,24 @@ public class Actions {
 			String total = cg.getString("checkout_total");
 			String iso = cg.getString("iso");
 
+			String bitmerchantAddress = cg.getString("bitmerchant_address");
+
 			String jsonReq = Tools.createBitmerchantButtonRequest(total, iso, paymentId);
 
 			// Create the bitmerchant order and iframe stuff
-			Order o = com.bitmerchant.db.Actions.OrderActions.createOrder(jsonReq);
+			//			Order o = com.bitmerchant.db.Actions.OrderActions.createOrder(jsonReq);
 
-			String buttonId = o.getString("button_id");
+			JsonNode jn = Tools.sendBitmerchantRequestToSeller(jsonReq, bitmerchantAddress);
+			
+			log.info(jn.toString());
+
+			String buttonId = jn.get("order").get("button_id").asText();
+			//			String buttonId = o.getString("button_id");
 
 			Payment payment = PAYMENT.findFirst("id = ?", paymentId);
 
-			String iframeText = Tools.createBitmerchantIframe(buttonId, o.getId().toString(),
-					DataSources.WEB_SERVICE_EXTERNAL_URL());
+			String iframeText = Tools.createBitmerchantIframe(buttonId,
+					bitmerchantAddress);
 
 
 			log.info(iframeText);
@@ -712,6 +723,41 @@ public class Actions {
 					String message = "Feedback saved";
 
 					return message;
+
+		}
+		public static String sendNote(User user, 
+				String shipmentId, String messageHtml) {
+
+			String note = StringEscapeUtils.unescapeHtml4(messageHtml);
+
+			OrderView ov = ORDER_VIEW.findFirst("shipment_id = ?", shipmentId);
+
+			// Get the seller info 
+			log.info(ov.toJson(true));
+			String sellerId = ov.getString("seller_id");
+			Seller seller = SELLER.findFirst("id = ?", sellerId);
+			String sellerUserId = seller.getString("user_id");
+			String productName = ov.getString("title");
+
+
+
+			String subject = "OpenMarket Message from Customer";
+
+			Map<String, Object> vars = ImmutableMap.<String, Object>builder()
+					.put("user_name", user.getString("name"))
+					.put("product_name", productName)
+					.put("message", note)
+					.build();
+
+			String html = Tools.parseMustache(vars, DataSources.TO_SELLER_MESSAGE_TEMPLATE());
+
+			String userEmail = user.getString("email");
+
+			String sellerEmail = USER.findFirst("id = ?", sellerUserId).getString("email");
+
+			String message = Tools.sendEmail(sellerEmail, userEmail, subject, html);
+
+			return message;
 
 		}
 
@@ -1145,34 +1191,34 @@ public class Actions {
 
 		public static String saveTrackingUrl(String shipmentId, Seller seller,
 				String trackingUrl) {
-			
-			
-			
+
+
+
 			Shipment shipment = SHIPMENT.findFirst("id = ?", shipmentId);
-			
+
 			shipment.set("tracking_url", trackingUrl);
-			
-			
+
+
 			Tools.writeRQL(shipment.toUpdate());
-			
+
 			// Get the user for the order:
 			String userId = ORDER_GROUP.findFirst("shipment_id = ?", shipmentId).getString("user_id");
-						
+
 			User user = USER.findFirst("id = ?", userId);
-			
+
 			// Get the seller user for the email
 			User sellerUser = USER.findFirst("id = ?", seller.getString("user_id"));
-			
+
 			String toEmail = user.getString("email");
 			String replyToEmail = sellerUser.getString("email");
-			
+
 			sendUpdatedTrackingEmail(trackingUrl, toEmail, replyToEmail);
-			
+
 			String message = "Tracking URL saved, and an email sent to user notifying them.";
 
 			return message;
 		}
-		
+
 		public static String sendUpdatedTrackingEmail(String trackingUrl, 
 				String userEmail, String sellerEmail) {
 
@@ -1184,7 +1230,7 @@ public class Actions {
 
 			String html = Tools.parseMustache(vars, DataSources.UPDATE_SHIPPING_TEMPLATE());
 
-			
+
 			String message = Tools.sendEmail(userEmail, sellerEmail, subject, html);
 
 			return message;
@@ -1243,7 +1289,7 @@ public class Actions {
 			// have to get all the children here
 			Set<Integer> children = getAllCategoryChildren(Integer.parseInt(categoryId));
 			children.add(Integer.parseInt(categoryId));
-			
+
 			// Construct an in clause
 			StringBuilder inClause = new StringBuilder();
 			inClause.append("(");
@@ -1264,7 +1310,7 @@ public class Actions {
 					"category_id in " + inClause.toString());
 
 			String json = Tools.nodeToJson(Transformations.productThumbnailViewJson(pvs));
-			
+
 			return json;
 		}
 
@@ -1288,7 +1334,7 @@ public class Actions {
 			String authenticatedSessionId = Tools.generateSecureRandom();
 
 			// Not sure if this is necessary yet
-			Boolean secure = true;
+			Boolean secure = DataSources.IS_SSL;
 
 			// Store the users user in the DB, give them a session id
 			Login login = LOGIN.create("user_id", user.getId(),
@@ -1306,7 +1352,16 @@ public class Actions {
 			//			System.out.println(json);
 
 
-			return "Logged in";
+			// see if the user is actually a seller, if it is, change the message to a seller one,
+			// in order to redirect the page, and set the bitmerchant address
+			Seller seller = SellerActions.getSeller(user.getId().toString());
+			if (seller != null) {
+				seller.set("bitmerchant_address", DataSources.WEB_SERVICE_EXTERNAL_URL());
+				Tools.writeRQL(seller.toUpdate());
+				return "Logged in as a seller";
+			} else {
+				return "Logged in";
+			}
 
 
 		}

@@ -26,21 +26,54 @@ function setupReview() {
     console.log(data);
     fillMustacheWithJson(data, reviewOrderTemplate, '#review_order_div');
 
+    setupSummerNoteNormal();
+
     var iframeText = data['order_iframe'].replace(/doublequote/g, '\"').replace(/semicolon/g, ';');
     console.log(iframeText);
     $('#iframe_div').html(iframeText);
 
     var paymentId = data['payment_id'];
 
+    $('#change_address_btn').click(function() {
+      $('#rootwizard').find("a[href*='shipping']").trigger('click');
+    });
     // check the payment status, move to that tab if it ever gets to success
-    checkStatus(paymentId);
+    checkStatusOfPayment(paymentId);
 
   });
 
 
 }
 
-function checkStatus(paymentId) {
+function setupSummerNoteNormal() {
+  $('.summernote').summernote({
+    airMode: true
+  });
+}
+
+function sendNote() {
+
+  var summernoteDiv = $('.summernote');
+  var note = summernoteDiv.code();
+
+  if (note != null && note != '') {
+
+    console.log(note);
+    var shipmentId = parseInt($('.summernote').attr('shipment_id'));
+
+    // var note = $('.send_note_content_' + shipmentId).code();
+    // var shipmentId = $('.send_note_content_' + shipmentId).attr('shipment_id');
+
+    // var jsonMap = {"note": note, "shipmentId":shipmentId};
+
+
+    simplePost('/send_order_note/' + shipmentId, note, null,
+      null, null, null, null);
+  }
+
+}
+
+function checkStatusOfPayment(paymentId) {
   var url = externalSparkService + url; // the script where you handle the form input.
   var intervalID2 = setInterval(function() {
     getJson('get_payment/' + paymentId).done(function(e) {
@@ -52,7 +85,8 @@ function checkStatus(paymentId) {
       if (paymentSuccess == '1') {
         clearInterval(intervalID2);
         console.log('success!');
-		$('#paymentModal').modal('hide');
+        sendNote();
+        $('#paymentModal').modal('hide');
         $('#rootwizard').find("a[href*='status']").trigger('click');
       }
 
@@ -65,7 +99,7 @@ function checkStatus(paymentId) {
 
 function createPayment() {
   standardFormPost('create_payment/' + sellerId, null, null, null, function() {
-    setupReview();
+    // setupReview();
   }, null, null);
 }
 
@@ -160,7 +194,7 @@ function saveShippingForm() {
           standardFormPost('save_address', '#shipping_form', "#shippingModal", null,
             function() {
               setupAddresses();
-            }, null, true);
+            }, null, null);
 
 
         });
@@ -196,7 +230,7 @@ function editShippingForm(addressData, addressId) {
         standardFormPost('edit_address/' + addressId, '#shipping_form', "#shippingModal", null,
           function() {
             setupAddresses();
-          }, null, true);
+          }, null, null);
 
 
       });

@@ -2,12 +2,12 @@ var cartGroupsTemplate = $('#cart_groups_template').html();
 
 
 $(document).ready(function() {
-  setupCart();
+  setupShoppingCart();
 
 
 });
 
-function setupCart() {
+function setupShoppingCart() {
   getJson('get_cart_grouped').done(function(e) {
 
     var data = JSON.parse(e);
@@ -33,7 +33,8 @@ function setupRemoveFromCart() {
     console.log(cartItemId);
     simplePost('remove_from_cart/' + cartItemId, null, null,
       function(data) {
-      	setupCart();
+      	setupShoppingCart();
+        setupCart();
       }, null, null);
 
   });

@@ -18,16 +18,16 @@ public class JsonTest extends TestCase {
 
 
 
-		String s2="DROP VIEW category_children;";
+		String s2="drop view cart_group;";
 		Tools.writeRQL(s2);
 
 
 
 
-		String s="CREATE VIEW category_children AS \nWITH RECURSIVE t(n) AS (VALUES(3) UNION select id from category, t where parent=t.n) SELECT * from t;";
-//		Tools.writeRQL(s);
-		
-		
+		String s="CREATE VIEW cart_group AS \nselect cart_item.user_id,\nseller_id, \nshop_name, \nmax(time_span_string) as time_span_string, \nsum(product_price.price*cart_item.quantity) as cost,\nmax(iso) as iso,\nIFNULL(max(shipping_cost.price),0) as shipping,\nsum(product_price.price*cart_item.quantity) + IFNULL(max(shipping_cost.price),0) as checkout_total ,\nshipment_id, \naddress.full_name,\naddress.address_line_1,\naddress.address_line_2,\naddress.city,\naddress.state,\naddress.zip,\naddress.country_id,\npayment_id,\npurchased, \nbitmerchant_address,\norder_iframe, \ncart_item.created_at \nfrom cart_item \nleft join product on product.id = cart_item.product_id \nleft join product_price on cart_item.product_id = product_price.product_id \nleft join shipping on cart_item.product_id = shipping.product_id \nleft join shipping_cost on shipping.id = shipping_cost.shipping_id \nleft join seller on product.seller_id = seller.id \nleft join time_span_view on product.processing_time_span_id = time_span_view.id \nleft join currency on product_price.native_currency_id = currency.id \nleft join shipment on cart_item.shipment_id = shipment.id \nleft join address on shipment.address_id = address.id \nleft join payment on cart_item.payment_id = payment.id \nwhere purchased = 0 \ngroup by cart_item.user_id, product.seller_id \n;";
+		Tools.writeRQL(s);
+
+
 
 	}
 
