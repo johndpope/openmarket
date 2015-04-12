@@ -61,21 +61,23 @@ public class DataSources {
 	// RQL 
 	public static String RQL_DIR() {return HOME_DIR() + "/db";}
 
-	public static String RQL_MASTER_NODE_IP = "localhost";
+	public static String RQL_MASTER_NODE_IP = "96.28.13.51";
 
-	public static String RQL_MASTER_NODE_PORT = (!TESTNET) ? "4001" : "4002";
+	public static String RQL_MASTER_NODE_PORT = "4001";
 	
-
-	public static final String MASTER_NODE_URL() {
+	public static String RQL_MY_NODE_IP = "localhost";
+	
+	public static final String RQL_MASTER_NODE_URL() {
 		return "http://" + RQL_MASTER_NODE_IP + ":" + RQL_MASTER_NODE_PORT;
+	}
+	
+	public static final String RQL_MY_NODE_URL() {
+		return "http://" + RQL_MY_NODE_IP + ":" + RQL_MASTER_NODE_PORT;
 	}
 
 	public static final Boolean IS_MASTER_NODE() {
-		return RQL_MASTER_NODE_IP.equals("localhost") || 
-				RQL_MASTER_NODE_IP.equals(EXTERNAL_IP);
+		return (EXTERNAL_IP.equals(RQL_MASTER_NODE_IP));
 	}
-
-	public static final Integer RQL_PORT = 4001;
 
 	public static final String RQLITE_INSTALL_SCRIPT() {return SOURCE_CODE_HOME() + "/rql_setup.sh";}
 

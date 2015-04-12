@@ -45,6 +45,10 @@ public class Main {
 
 
 		parseArguments(args);
+		
+		// get the correct network
+		DataSources.TESTNET = testnet;
+		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR();
 
 		setRQLMasterNodeVars(customMasterNode);
 		
@@ -52,9 +56,7 @@ public class Main {
 
 		log.setLevel(Level.toLevel(loglevel));
 		
-		// get the correct network
-		DataSources.TESTNET = testnet;
-		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR();
+
 		
 
 		// Initialize the replicated db
@@ -112,6 +114,8 @@ public class Main {
 			
 			DataSources.RQL_MASTER_NODE_IP = split[0];
 			DataSources.RQL_MASTER_NODE_PORT = split[1];
+		} else {
+			DataSources.RQL_MASTER_NODE_PORT = (!DataSources.TESTNET) ? "4001":"4002";
 		}
 	}
 	

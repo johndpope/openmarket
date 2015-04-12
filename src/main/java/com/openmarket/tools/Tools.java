@@ -531,9 +531,10 @@ public class Tools {
 	public static String writeRQL(String cmd) {
 
 		String reformatted = reformatSQLForRQL(cmd);
-		log.info("rql write string : " + reformatted);
 
-		String postURL = DataSources.MASTER_NODE_URL() + "/db?pretty";
+		String postURL = DataSources.RQL_MY_NODE_URL() + "/db?pretty";
+		
+		log.info("rql write string : " + reformatted + "\npostUrl: " + postURL);
 
 		String message = "";
 		try {
@@ -542,6 +543,7 @@ public class Tools {
 
 			HttpPost httpPost = new HttpPost(postURL);
 			httpPost.setEntity(new StringEntity(reformatted));
+//			httpPost.setEntity(new StringEntity("L"));
 
 			ResponseHandler<String> handler = new BasicResponseHandler();
 
@@ -574,7 +576,7 @@ public class Tools {
 	}
 
 	public static String rqlGetEndpoint(String endPoint) {
-		String postURL = DataSources.MASTER_NODE_URL() + "/" + endPoint + "?pretty";
+		String postURL = DataSources.RQL_MY_NODE_URL() + "/" + endPoint + "?pretty";
 
 		String message = "";
 		try {

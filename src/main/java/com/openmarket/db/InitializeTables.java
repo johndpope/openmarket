@@ -67,7 +67,7 @@ public class InitializeTables {
 				// For some reason the joining command is a weird one, then after initializing its 
 				// like regular.
 				if (!DataSources.IS_MASTER_NODE()) {
-					log.info("Joining rqlite master node @ " + DataSources.MASTER_NODE_URL());
+					log.info("Joining rqlite master node @ " + DataSources.RQL_MASTER_NODE_URL());
 					java.nio.file.Files.write(Paths.get(DataSources.RQLITE_JOIN_SCRIPT()),
 							TableConstants.RQLITE_JOIN_LINES());
 
