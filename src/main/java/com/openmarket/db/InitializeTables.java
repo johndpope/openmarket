@@ -62,6 +62,7 @@ public class InitializeTables {
 				java.nio.file.Files.write(Paths.get(DataSources.RQLITE_INSTALL_SCRIPT()),
 						TableConstants.INSTALL_RQLITE_SCRIPT_LINES());
 
+				log.info("rqlite install script lines:\n" + TableConstants.INSTALL_RQLITE_SCRIPT_LINES());
 				Tools.runScript(DataSources.RQLITE_INSTALL_SCRIPT());
 
 				// For some reason the joining command is a weird one, then after initializing its 
@@ -84,6 +85,7 @@ public class InitializeTables {
 			java.nio.file.Files.write(Paths.get(DataSources.RQLITE_STARTUP_SCRIPT()), 
 					TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
 
+			log.info("rqlite run script lines:\n" + TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
 			RQLite.start();
 
 			// Let it start up
