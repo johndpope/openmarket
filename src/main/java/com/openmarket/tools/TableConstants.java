@@ -132,7 +132,8 @@ public class TableConstants {
 					"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
 					"cd " + DataSources.RQL_DIR(),
 					"export GOPATH=$PWD",
-					"$GOPATH/bin/rqlite -join " + DataSources.RQL_MASTER_NODE_URL() + 
+					"$GOPATH/bin/rqlite -h " + DataSources.EXTERNAL_IP + 
+					" -join " + DataSources.RQL_MASTER_NODE_URL() + 
 					" -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
 	}
 
@@ -142,7 +143,8 @@ public class TableConstants {
 				"cd " + DataSources.RQL_DIR(),
 				"export GOPATH=$PWD",
 //				"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
-				"$GOPATH/bin/rqlite -s 1000000 -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
+				"$GOPATH/bin/rqlite -h " + DataSources.EXTERNAL_IP + 
+				" -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
 	}
 
 }
