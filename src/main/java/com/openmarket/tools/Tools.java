@@ -57,7 +57,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
@@ -539,8 +542,10 @@ public class Tools {
 		String message = "";
 		try {
 
-			CloseableHttpClient httpClient = HttpClients.createDefault();
-
+//			CloseableHttpClient httpClient = HttpClients.createDefault();
+			CloseableHttpClient httpClient = 
+					HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+		    
 			HttpPost httpPost = new HttpPost(postURL);
 			httpPost.setEntity(new StringEntity(reformatted));
 //			httpPost.setEntity(new StringEntity("L"));
