@@ -6,13 +6,17 @@ import com.openmarket.tools.Tools;
 public class RQLite implements Runnable {
 
 	private static Thread t;
+	
+	private static String rqlScript;
+	
 	public void run() {
-		Tools.runScript(DataSources.RQLITE_STARTUP_SCRIPT());
+		Tools.runScript(rqlScript);
 	}
 	
 	
 	
-	public static void start() {
+	public static void start(String script) {
+		rqlScript = script;
 		RQLite r = new RQLite();
 		t = new Thread(r);
 		t.start();

@@ -53,6 +53,8 @@ public class InitializeTables {
 
 			Boolean firstRqlRun = false;
 
+			Boolean firstJoiner = false;
+
 			log.info("rql dir = " + DataSources.RQL_DIR());
 			if (!rqlDirExists) {
 
@@ -72,7 +74,8 @@ public class InitializeTables {
 					java.nio.file.Files.write(Paths.get(DataSources.RQLITE_JOIN_SCRIPT()),
 							TableConstants.RQLITE_JOIN_LINES());
 
-					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT());
+					//					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT());
+					firstJoiner = true;
 				}
 
 				firstRqlRun = true;
@@ -85,8 +88,13 @@ public class InitializeTables {
 			java.nio.file.Files.write(Paths.get(DataSources.RQLITE_STARTUP_SCRIPT()), 
 					TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
 
-			log.info("rqlite run script lines:\n" + TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
-			RQLite.start();
+			if (!firstJoiner) {
+				log.info("rqlite run script lines:\n" + TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
+				RQLite.start(DataSources.RQLITE_STARTUP_SCRIPT());
+			} else {
+				log.info("rqlite join script lines:\n" + TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
+				RQLite.start(DataSources.RQLITE_JOIN_SCRIPT());
+			}
 
 			// Let it start up
 			Tools.sleep(5000);
