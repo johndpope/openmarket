@@ -68,7 +68,7 @@ public class DataSources {
 	public static String RQL_MY_NODE_IP = "localhost";
 	
 	public static final String RQL_MASTER_NODE_URL() {
-		return "http://" + RQL_MASTER_NODE_IP + ":" + RQL_MASTER_NODE_PORT;
+		return RQL_MASTER_NODE_IP + ":" + RQL_MASTER_NODE_PORT;
 	}
 	
 	public static final String RQL_MY_NODE_URL() {
