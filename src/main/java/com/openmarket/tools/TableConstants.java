@@ -135,14 +135,14 @@ public class TableConstants {
 					"$GOPATH/bin/rqlite -join " + DataSources.RQL_MASTER_NODE_URL() + 
 					" -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
 	}
-			
 
 	public static final List<String> RQLITE_STARTUP_SCRIPT_LINES() {
 		return Arrays.asList(
 				"ps aux | grep -ie rqlite | awk '{print $2}' | xargs kill -9",
 				"cd " + DataSources.RQL_DIR(),
 				"export GOPATH=$PWD",
-				"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
+//				"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
+				"$GOPATH/bin/rqlite -s 1000000 -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
 	}
 
 }
