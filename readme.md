@@ -20,17 +20,22 @@ To see what its all about, check out [a sample OpenMarket website]()
 * A decentrally hosted database, built atop [rqlite](https://github.com/otoolep/rqlite). 
 * A fully portable webservice and website built with java [Spark](https://github.com/perwendel/spark). *No web server required*
 * An offline bitcoin [wallet](http://github.com/tchoulihan/bitmerchant) that uses [BIP70](https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki). 
-* Refund orders at the click of a button.
+* A [network page]() showing the connected nodes.
 
 
 ## Screenshots:
-<img src="http://i.imgur.com/V6BHKZy.png">
+<img src="http://i.imgur.com/dwqxaaL.png">
+<img src="http://i.imgur.com/5BX8h5R.png">
+<img src="http://i.imgur.com/xd40ucL.png">
+<img src="http://i.imgur.com/ckDwi77.png">
+<img src="http://i.imgur.com/0c584RB.png">
 
 
 ## Installation
 ### Requirements
 - Java 8
-- Go (version at least 1.4)
+- Go (version at least 1.4) 
+-  [GVM](https://github.com/moovweb/gvm) is the best way to install.
 - If behind a router, make sure ports 4566-4570 are correctly forwarded to your local ip address.
 
 Download the jar, located [here]()
