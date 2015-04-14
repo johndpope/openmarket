@@ -92,7 +92,7 @@ public class InitializeTables {
 				log.info("rqlite run script lines:\n" + TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
 				RQLite.start(DataSources.RQLITE_STARTUP_SCRIPT());
 			} else {
-				log.info("rqlite join script lines:\n" + TableConstants.RQLITE_STARTUP_SCRIPT_LINES());
+				log.info("rqlite join script lines:\n" + TableConstants.RQLITE_JOIN_LINES());
 				RQLite.start(DataSources.RQLITE_JOIN_SCRIPT());
 			}
 

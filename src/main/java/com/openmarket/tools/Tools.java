@@ -50,6 +50,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -61,6 +64,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
@@ -544,7 +549,8 @@ public class Tools {
 
 //			CloseableHttpClient httpClient = HttpClients.createDefault();
 			CloseableHttpClient httpClient = 
-					HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+					HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).
+					addInterceptorFirst(new ContentLengthHeaderRemover()).build();
 		    
 			HttpPost httpPost = new HttpPost(postURL);
 			httpPost.setEntity(new StringEntity(reformatted));
@@ -552,7 +558,8 @@ public class Tools {
 //			httpPost.setEntity(new StringEntity("L"));
 
 			ResponseHandler<String> handler = new BasicResponseHandler();
-
+			
+			
 			CloseableHttpResponse response = httpClient.execute(httpPost);
 
 			message = handler.handleResponse(response);
@@ -565,6 +572,14 @@ public class Tools {
 		message = "Rqlite write status : " + message;
 		log.info(message);
 		return message;
+	}
+	
+	private static class ContentLengthHeaderRemover implements HttpRequestInterceptor{
+	    @Override
+	    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+	        request.removeHeaders(HTTP.CONTENT_LEN);// fighting org.apache.http.protocol.RequestContent's ProtocolException("Content-Length header already present");
+	    }
+
 	}
 
 	public static ObjectNode rqlStatus() {
