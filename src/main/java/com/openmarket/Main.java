@@ -31,7 +31,7 @@ public class Main {
 	@Option(name="-loglevel", usage="Sets the log level [INFO, DEBUG, etc.]")     
 	private String loglevel = "INFO";
 
-	@Option(name="-masternode", usage="Startup OpenMarket with a different master DB node" + 
+	@Option(name="-join", usage="Startup OpenMarket joining a master node" + 
 			"IE, 127.0.0.1:4001")   
 	private String customMasterNode;
 	
