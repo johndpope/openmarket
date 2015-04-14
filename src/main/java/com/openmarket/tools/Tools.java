@@ -541,25 +541,25 @@ public class Tools {
 		String reformatted = reformatSQLForRQL(cmd);
 
 		String postURL = DataSources.RQL_MY_NODE_URL() + "/db?pretty";
-		
+
 		log.info("rql write string : " + reformatted + "\npostUrl: " + postURL);
 
 		String message = "";
 		try {
 
-//			CloseableHttpClient httpClient = HttpClients.createDefault();
+			//			CloseableHttpClient httpClient = HttpClients.createDefault();
 			CloseableHttpClient httpClient = 
 					HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).
 					addInterceptorFirst(new ContentLengthHeaderRemover()).build();
-		    
+
 			HttpPost httpPost = new HttpPost(postURL);
 			httpPost.setEntity(new StringEntity(reformatted));
 
-//			httpPost.setEntity(new StringEntity("L"));
+			//			httpPost.setEntity(new StringEntity("L"));
 
 			ResponseHandler<String> handler = new BasicResponseHandler();
-			
-			
+
+
 			CloseableHttpResponse response = httpClient.execute(httpPost);
 
 			message = handler.handleResponse(response);
@@ -573,12 +573,12 @@ public class Tools {
 		log.info(message);
 		return message;
 	}
-	
+
 	private static class ContentLengthHeaderRemover implements HttpRequestInterceptor{
-	    @Override
-	    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-	        request.removeHeaders(HTTP.CONTENT_LEN);// fighting org.apache.http.protocol.RequestContent's ProtocolException("Content-Length header already present");
-	    }
+		@Override
+		public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+			request.removeHeaders(HTTP.CONTENT_LEN);// fighting org.apache.http.protocol.RequestContent's ProtocolException("Content-Length header already present");
+		}
 
 	}
 
@@ -1036,10 +1036,10 @@ public class Tools {
 	public static JsonNode sendBitmerchantRequestToSeller(String jsonReq, String sellerIP) {
 
 		log.info("json req : " + jsonReq);
-		
+
 
 		String postURL = sellerIP + "api/create_order";
-		
+
 		log.info("post url : " + postURL);
 
 		String message = "";
@@ -1062,20 +1062,68 @@ public class Tools {
 		}
 
 		log.info(message);
-		
+
 		JsonNode on = jsonToNode(message);
 		return on;
 	}
-	
-	
+
+
 	public static void uninstall() {
-		
+
 		try {
 			FileUtils.deleteDirectory(new File(DataSources.HOME_DIR()));
 			log.info("Openmarket uninstalled successfully.");
 			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static Boolean isGoInstalled() {
+		try {
+			ProcessBuilder process = new ProcessBuilder()
+			.command("bash", "-c", "go version")
+			.redirectErrorStream(true);
+			Process p = process.start();
+
+			BufferedReader reader = 
+					new BufferedReader(new InputStreamReader(p.getInputStream()));
+			StringBuilder builder = new StringBuilder();
+			String line = null;
+			while ( (line = reader.readLine()) != null) {
+				builder.append(line);
+				builder.append(System.getProperty("line.separator"));
+			}
+			String result = builder.toString();
+
+			if (result.contains("not installed.")) {
+				return false;
+			} else {
+				String goVersion = result.split("\\s+")[2];
+				Double goMajorVersion = Double.parseDouble(goVersion.substring(2,5));
+
+				log.info("go version = " + goVersion);
+
+				if (goMajorVersion >= 1.4) {
+					log.info("Go is correctly installed");
+					return true;
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		log.info("Go (version at least 1.4) is not installed");
+
+		return false;
+
+	}
+	
+	public static void ensureGoInstalled() {
+		if (!isGoInstalled()) {
+			System.exit(0);
 		}
 	}
 

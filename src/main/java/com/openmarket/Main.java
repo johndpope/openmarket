@@ -65,7 +65,8 @@ public class Main {
 		log.setLevel(Level.toLevel(loglevel));
 
 
-
+		// Make sure go1.4 is installed
+		Tools.ensureGoInstalled();
 
 		// Initialize the replicated db
 		Tools.initializeDBAndSetupDirectories(deleteDB);

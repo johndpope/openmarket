@@ -28,7 +28,11 @@ public class TesterDerp extends TestCase {
 //		log.info(CATEGORY_CHILDREN.find("id = ?", 1).toJson(true));
 		
 //		log.info(Tools.nodeToJsonPretty(Tools.rqlStatus()));
-		Tools.runCommand(DataSources.KEYTOOL_CMD);
+//		Tools.runCommand(DataSources.KEYTOOL_CMD);
+		
+		if (Tools.isGoInstalled()) {
+			log.info("go is installed");
+		};
 		Tools.dbClose();
 		
 	}

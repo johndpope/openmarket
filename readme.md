@@ -35,7 +35,7 @@ To see what its all about, check out [a sample OpenMarket website]()
 ### Requirements
 - Java 8
 - Go (version at least 1.4) 
--  [GVM](https://github.com/moovweb/gvm) is the best way to install.
+  - [GVM](https://github.com/moovweb/gvm) is the best way to install.
 - If behind a router, make sure ports 4566-4570 are correctly forwarded to your local ip address.
 
 Download the jar, located [here]()
