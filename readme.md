@@ -4,20 +4,22 @@
 
 [OpenMarket]() &mdash; A free, decentralized marketplace.
 ==========
-![asdf](http://img.shields.io/version/0.1.2.png?color=green)
+![asdf](http://img.shields.io/version/0.0.2.png?color=green)
 
-**Currently in alpha testing**
+**Currently alpha testing**
 
-OpenMarket is an open-source, decentralized marketplace, where you can sell anything in exchange for bitcoin. The network and website is hosted by any seller running software installed from this page. 
+[OpenMarket]() is an open-source, decentralized marketplace, like amazon or etsy, where you can sell anything in exchange for bitcoin. The network and website is hosted by any seller running software installed from this page, and accessible by any of the running network nodes that keep a complete copy of the database.
 
-It comes with an integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-based [Bitcoin wallet](http://tchoulihan.github.io/bitmerchant/) so you can immediately start accepting payments without having to go through an intermediary service like coinbase or bitpay;
+It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-based [Bitcoin wallet](http://github.com/tchoulihan/bitmerchant) so you can immediately start accepting payments without having to go through an intermediary service like coinbase or bitpay. 
+
+To see what its all about, check out [a sample OpenMarket website]()
 
 
 ## Features include
-* A complete
-* A decentrally hosted database, built atop [rqlite](https://github.com/otoolep/rqlite).
-* A fully portable website and service, built with java [Spark](https://github.com/perwendel/spark).
-* An offline bitcoin [wallet](http://tchoulihan.github.io/bitmerchant/) that uses [BIP70](https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki).
+* A complete web store including product reviews, ratings, wishlists, shipping tracking urls, feedback, categories, etc.
+* A decentrally hosted database, built atop [rqlite](https://github.com/otoolep/rqlite). 
+* A fully portable webservice and website built with java [Spark](https://github.com/perwendel/spark). *No web server required*
+* An offline bitcoin [wallet](http://github.com/tchoulihan/bitmerchant) that uses [BIP70](https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki). 
 * Refund orders at the click of a button.
 
 
@@ -68,6 +70,8 @@ and access
 ## Support 
 If you'd like to contribute to the project, you can either post bounties for desired features [here](https://www.bountysource.com/trackers/9805417-tchoulihan-bitmerchant), or click [this link](http://tchoulihan.github.io/bitmerchant/support.html).
 
+## Bugs and feature requests
+Have a bug or a feature request? If your issue isn't [already listed](https://github.com/tchoulihan/openmarket/issues/), then [open a new issue here](https://github.com/tchoulihan/openmarket/issues/new).
 
 ## Thanks
 * Special thanks to Mike Hearn and Andreas Schildbach for their assistance with BIP70 and refunding orders.
