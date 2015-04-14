@@ -34,46 +34,46 @@ public class Main {
 	@Option(name="-join", usage="Startup OpenMarket joining a master node" + 
 			"IE, 127.0.0.1:4001")   
 	private String customMasterNode;
-	
+
 	@Option(name="-port", usage="Startup your webserver on a different port(default is 4567)")
 	private Integer port;
-	
-	
+
+
 
 
 	public void doMain(String[] args) {
 
 
 		parseArguments(args);
-		
+
 		// get the correct network
 		DataSources.TESTNET = testnet;
 		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR();
 
 		setRQLMasterNodeVars(customMasterNode);
-		
+
 		setPort(port);
 
 		log.setLevel(Level.toLevel(loglevel));
-		
 
-		
+
+
 
 		// Initialize the replicated db
 		Tools.initializeDBAndSetupDirectories(deleteDB);
-		
-//		Tools.initializeSSL();
-		
+
+		//		Tools.initializeSSL();
+
 		Tools.addExternalWebServiceVarToTools();
-		
+
 		// Start the bitmerchant wallet
 		LocalWallet.startService(DataSources.HOME_DIR(), loglevel, testnet, deleteDB, false);
-		
+
 		// Start the webservice
 		WebService.start();
-		
+
 		Tools.cacheCurrency("USD");
-		
+
 
 		//		Tools.pollAndOpenStartPage();
 
@@ -111,21 +111,23 @@ public class Main {
 	private void setRQLMasterNodeVars(String customMasterNode) {
 		if (customMasterNode != null) {
 			String[] split = customMasterNode.split(":");
-			
+
 			DataSources.RQL_MASTER_NODE_IP = split[0];
 			DataSources.RQL_MASTER_NODE_PORT = split[1];
 		} else {
-			DataSources.RQL_MASTER_NODE_PORT = (!DataSources.TESTNET) ? "4001":"4002";
+			DataSources.RQL_MASTER_NODE_PORT = (!DataSources.TESTNET) ? 
+					DataSources.RQL_MAIN_PORT:
+						DataSources.RQL_TEST_PORT;
 		}
 	}
-	
+
 	private void setPort(Integer port) {
 		if (port != null) {
 			DataSources.SPARK_WEB_PORT = port;
 		}
-		
+
 	}
-	
-	
+
+
 
 }

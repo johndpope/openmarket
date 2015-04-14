@@ -32,19 +32,21 @@ For more information, head over to http://tchoulihan.github.io/bitmerchant/
 
 ## Screenshots:
 <img src="http://i.imgur.com/V6BHKZy.png">
-<img src="http://i.imgur.com/21kdKit.png">
-<img src="http://i.imgur.com/BR58XBa.png">
-<img src="http://i.imgur.com/6QQ3kyN.png">
+
 
 ## Installation
 ### Requirements
 - Java 8
 - Go (version at least 1.4)
+- If behind a router, make sure ports 4566-4570 are correctly forwarded to your local ip address.
 
 Download the jar, located [here](https://github.com/tchoulihan/bitmerchant/releases/download/1.3/bitmerchant-shaded.jar)
 
+To help test, use this command to join an existing test node that uses the bitcoin testnet:
+<pre>java -jar openmarket.jar -testnet -join 96.28.13.51:4002 -port 4569</pre>
 
-<pre>java -jar bitmerchant-shaded.jar [parameters]</pre>
+
+<pre>java -jar openmarket.jar [parameters]</pre>
 <pre>parameters:
 	-testnet  : run on the bitcoin testnet3
 	-deleteDB : delete the local database before starting

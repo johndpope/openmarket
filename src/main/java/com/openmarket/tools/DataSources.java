@@ -65,6 +65,11 @@ public class DataSources {
 
 	public static String RQL_MASTER_NODE_PORT = null;
 	
+	public static String RQL_MAIN_PORT = "4569";
+	
+	public static String RQL_TEST_PORT = "4570";
+	
+	
 	public static String RQL_MY_NODE_IP = "localhost";
 	
 	public static final String RQL_MASTER_NODE_URL() {
