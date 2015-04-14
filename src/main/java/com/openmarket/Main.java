@@ -25,8 +25,11 @@ public class Main {
 	@Option(name="-testnet",usage="Run using the Bitcoin testnet3, and a test DB")
 	private boolean testnet;
 
-	@Option(name="-deleteDB",usage="Delete the sqlite DB before running.")
+	@Option(name="-deleteDB",usage="Delete the sqlite DB before running.(Warning, this deletes your wallets too)")
 	private boolean deleteDB;
+	
+	@Option(name="-uninstall",usage="Uninstall OpenMarket.(Warning, this deletes your wallets too)")
+	private boolean uninstall;
 
 	@Option(name="-loglevel", usage="Sets the log level [INFO, DEBUG, etc.]")     
 	private String loglevel = "INFO";
@@ -45,10 +48,15 @@ public class Main {
 
 
 		parseArguments(args);
-
+		
 		// get the correct network
 		DataSources.TESTNET = testnet;
 		com.bitmerchant.tools.DataSources.HOME_DIR = DataSources.HOME_DIR();
+		
+		// See if the user wants to uninstall it
+		if (uninstall) {
+			Tools.uninstall();
+		}
 
 		setRQLMasterNodeVars(customMasterNode);
 

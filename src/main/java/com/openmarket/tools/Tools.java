@@ -1068,7 +1068,16 @@ public class Tools {
 	}
 	
 	
-	
+	public static void uninstall() {
+		
+		try {
+			FileUtils.deleteDirectory(new File(DataSources.HOME_DIR()));
+			log.info("Openmarket uninstalled successfully.");
+			System.exit(0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 }
