@@ -1114,8 +1114,6 @@ public class Tools {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		log.info("Go (version at least 1.4) is not installed");
 
 		return false;
 
@@ -1123,8 +1121,9 @@ public class Tools {
 	
 	public static void ensureGoInstalled() {
 		if (!isGoInstalled()) {
+			log.info("Go (version at least 1.4) is not installed");
 			System.exit(0);
-		}
+		} 
 	}
 
 
