@@ -77,7 +77,7 @@ public class InitializeTables {
 					//					Tools.runScript(DataSources.RQLITE_JOIN_SCRIPT());
 					firstJoiner = true;
 				}
-
+				
 				firstRqlRun = true;
 
 

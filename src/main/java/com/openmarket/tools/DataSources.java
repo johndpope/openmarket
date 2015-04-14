@@ -76,7 +76,7 @@ public class DataSources {
 	}
 
 	public static final Boolean IS_MASTER_NODE() {
-		return (EXTERNAL_IP.equals(RQL_MASTER_NODE_IP));
+		return (RQL_MASTER_NODE_IP == null || EXTERNAL_IP.equals(RQL_MASTER_NODE_IP));
 	}
 
 	public static final String RQLITE_INSTALL_SCRIPT() {return SOURCE_CODE_HOME() + "/rql_setup.sh";}
