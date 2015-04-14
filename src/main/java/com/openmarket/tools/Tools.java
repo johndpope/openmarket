@@ -1095,7 +1095,7 @@ public class Tools {
 				builder.append(System.getProperty("line.separator"));
 			}
 			String result = builder.toString();
-
+			log.info(result);
 			if (result.contains("not installed.")) {
 				return false;
 			} else {
