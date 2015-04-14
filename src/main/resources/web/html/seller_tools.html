@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>OpenMarket</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="/pics/favicon.ico" type="image/x-icon" />
+  <!-- Bootstrap core CSS -->
+  <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
+  <!-- Link to font awesome -->
+  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
+  <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <!-- Bootstrap social css -->
+  <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
+  <!--   Bootstrap validator -->
+  <link rel="stylesheet" href="../bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
+  <!--   toastr css -->
+  <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
+  <!--   typeahead css -->
+  <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
+  <!-- Pickadate -->
+  <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
+  <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
+  <!-- Summernote -->
+  <link href="../bower_components/summernote/dist/summernote.css" rel="stylesheet" />
+  <!-- Jquery UI for the button -->
+  <link href="../bower_components/jquery-ui/themes/cupertino/jquery-ui.css" rel="stylesheet" />
+  <!-- Bootstrap datepicker -->
+  <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
+  <!-- This main css -->
+  <link href="../css/main.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navbars -->
+  <!-- the start of the doc -->
+  <div id="wrapper" class="wrapper">
+    <!-- header -->
+    <nav class="navbar navbar-default navbar-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">OpenMarket</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li id="searchbar">
+              <form id="search_form" class="navbar-form navbar-left navbar-input-group " role="search">
+                <input id='search_id' type='hidden' name='id' />
+                <div class="input-group">
+                  <div id="search_box" class="form-group">
+                    <input name="search_input" type="text" class="form-control typeahead rounded-left" placeholder="Search for Items, Shops, or Categories">
+                  </div>
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default rounded-right"><i class="fa fa-search"></i>
+                        </button>
+                   </span>
+                </div>
+              </form>
+            </li>
+            <li id="top_categories_div" class="dropdown">
+              <script id="top_categories_template" type="x-tmpl-mustache">
+                <div class="navbar-form">
+                  <a class="dropdown-toggle btn btn-default rounded-right rounded-left" data-toggle="dropdown">Browse <span class="caret"></span>
+                </a>
+                  <ul class="dropdown-menu" role="menu">
+                    {{#.}}
+                    <li><a href="/category/{{id}}">{{name}}</a>
+                    </li>
+                    {{/.}}
+                    <li class="divider">
+                    </li>
+                    <li><a href="/browse"> View all</a>
+                    </li>
+                  </ul>
+                </div>
+              </script>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a id="wishlist_dropdown_title" class="dropdown-toggle" data-toggle="dropdown" href="/wishlist">Wishlist <span class="caret"></span></a>
+              <ul id="wishlist_dropdown" class="dropdown-menu extra-width hide" role="menu">
+                <div id="wishlist_div">
+                  <script id="wishlist_template" type="x-tmpl-mustache">
+                    {{#products}}
+                    <div class="row">
+                      <div class="col-xs-3">
+                        <div class="img-responsive center-block">
+                          <a href="/product/{{product_id}}"><img class="cart-picture scale" src="{{pictures.0.url}}"></a>
+                        </div>
+                      </div>
+                      <div class="col-xs-9">
+                        <a href="/product/{{product_id}}" class="text-overflow"> {{title}}</a>
+                        <p class="text-muted"><small>{{shop_name}}</small></p>
+                      </div>
+                    </div>
+                    {{/products}} {{#products.0}}
+                    <div class="row">
+                      <hr>
+                      <div class="col-md-offset-1 col-md-10">
+                        <a href="/wishlist" class="btn btn-default btn-block">View Wishlist ({{products.length}} items)</a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <br>
+                    </div>
+                    {{/products.0}}
+                  </script>
+                </div>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a id="cart_dropdown_title" class="dropdown-toggle" data-toggle="dropdown" href="/cart">Cart <span class="caret"></span></a>
+              <ul id="cart_dropdown" class="dropdown-menu extra-width hide" role="menu">
+                <div id="cart_div">
+                  <script id="cart_template" type="x-tmpl-mustache">
+                    {{#.}}
+                    <div class="row">
+                      <div class="col-xs-3">
+                        <div class="img-responsive center-block">
+                          <a href="/product/{{product_id}}"><img class="cart-picture scale" src="{{url}}"></a>
+                        </div>
+                      </div>
+                      <div class="col-xs-9">
+                        <a href="/product/{{product_id}}" class="text-overflow"> {{title}}</a>
+                        <p class="text-muted"><small>Quantity: {{quantity}}</small></p>
+                      </div>
+                    </div>
+                    {{/.}} {{#0}}
+                    <div class="row">
+                      <hr>
+                      <div class="col-md-offset-1 col-md-10">
+                        <a href="/cart" class="btn btn-default btn-block">View cart ({{length}} items)</a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <br>
+                    </div>
+                    {{/0}}
+                  </script>
+                </div>
+              </ul>
+            </li>
+            <li class="dropdown logged-out">
+              <div class="navbar-form">
+                <a class="btn btn-default rounded-left rounded-right" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
+              </div>
+            </li>
+            <li class="dropdown logged-in">
+              <div class="navbar-form">
+                <a class="dropdown-toggle btn btn-default rounded-left rounded-right" data-toggle="dropdown">You <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="/orders"><i class="fa fa-shopping-cart fa-fw"></i> Purchases and Orders</a>
+                  </li>
+                  <li><a href="/dashboard"><i class="fa fa-cog fa-fw"></i> Account Settings</a>
+                  </li>
+                  <li class="divider">
+                  </li>
+                  <li><a id="logouthref" href="#"><i class="fa fa-sign-out fa-fw"></i> Sign out</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+    <!-- The full page with teh sidebar -->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- The sidebar -->
+        <div id="side_col" class="col-md-3 sidebar">
+          <div class="mini-submenu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </div>
+          <div class="list-group">
+            <a class="list-group-item active" href="wallet" rel="keep-params"><i class="fa fa-bank fa-fw"></i> &nbsp; Wallet</a>
+            <a class="list-group-item" href="seller_orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
+            <a class="list-group-item" href="seller_tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
+            <a class="list-group-item" href="seller_setup#bitcoin_wallet" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Settings</a>
+          </div>
+        </div>
+      </div>
+      <!-- stop plugging in -->
+      <!-- Sidebar -->
+      <!--   <div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+      <li class="active"><a href="userdashboard_overview.html"><i class="fa fa-dashboard"></i> Overview</a></li>
+      <li><a href="userdashboard_funds.html"><i class="fa fa-bar-chart-o"></i> Funds</a></li>
+      <li><a href="userdashboard_pieces.html"><i class="fa fa-table"></i> Pieces</a></li>
+      <li><a href="userdashboard_prices.html"><i class="fa fa-edit"></i> Prices</a></li>
+    </ul>
+
+  </div> -->
+      <!-- The sidebar -->
+      <!-- The Page -->
+      <div class="row-fluid">
+        <div class="othermain-col col-md-9 col-md-offset-3">
+          <div class="row">
+            <ul class="nav nav-tabs">
+              <li role="presentation" class="active"><a href="#">Button Generator</a>
+              </li>
+            </ul>
+            <div class="col-md-6">
+              <h1 id="page_title"> Button Generator</h1>
+            </div>
+            <div class="col-md-6">
+              <h1></h1>
+              <p class="text-muted text-bottom"> This tool can generate buttons and payment iframes to accept bitcoin on your site.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <ol class="breadcrumb breadcrumb-small">
+                <li><a href="wallet" rel="keep-params"><i class="fa fa-bars"></i> &nbsp; Home</a>
+                </li>
+                <li><a href="tools" rel="keep-params"><i class="fa fa-wrench"></i> Tools</li></a>
+                  <li class="active"><i class="fa fa-share-square-o"></i> Button Generator</li>
+              </ol>
+            </div>
+          </div>
+          <hr>
+          <!-- Page content -->
+          <!-- The generator form -->
+          <form id="generatorForm" class="form-horizontal" role="form">
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Type</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <label class="radio-inline">
+                    <input type="radio" name="frameType" value="button" checked="checked"> Button
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="frameType" value="iframe"> iFrame
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Payment</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <label class="radio-inline">
+                    <input type="radio" name="type" value="buy_now" checked="checked"> Buy now
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="type" value="donation"> Donation
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!-- Split the name and amount over 2 fields -->
+            <div class="col-md-12">
+              <div class="form-group">
+                <!--                  <label class="col-sm-2 control-label" for="formGroupInputLarge">MetaData</label> -->
+                <div class="form-group row">
+                  <label class="col-sm-2 control-label" for="formGroupInputLarge">Item name</label>
+                  <div class="col-sm-4">
+                    <input name="name" type="text" class="form-control " placeholder="Kitten Mittens" data-bv-notempty="true" data-bv-notempty-message="A name is required">
+                  </div>
+                  <label class="col-sm-1 control-label" for="formGroupInputLarge">Price</label>
+                  <div id="currencies" class="col-sm-2 ">
+                    <script id="currencies_template" type="x-tmpl-mustache">
+                      <select name="price_currency_iso" class="form-control">
+                        {{#currencies}}
+                        <option name="{{currency.iso}}" value="{{currency.iso}}">{{currency.iso}}</option>
+                        {{/currencies}}
+                      </select>
+                    </script>
+                  </div>
+                  <div class="col-sm-3 ">
+                    <input name="price_string" type="text" class="form-control " placeholder="$1.23" data-bv-greaterthan="true" data-bv-notempty="true" data-bv-notempty-message="An amount is required" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Item Description</label>
+              <div class="col-sm-10">
+                <textarea name="description" type="text" class="form-control" placeholder="Is your cat making too much noise all the time?" rows="2"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-10 col-sm-offset-2">
+                <div class="input-group">
+                  <a id="advancedBtn" href="#advanced_options">Show advanced options</a>
+                </div>
+              </div>
+            </div>
+            <div id="advanced_stuff" class="hide">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="formGroupInputLarge">Variable price</label>
+                <div class="col-sm-10">
+                  <div class="input-group">
+                    <label class="radio">
+                      <input type="checkbox" name="variable_price" value="1"> Let the user change the amount
+                    </label>
+                    <label class="radio">
+                      <input id="suggested_amounts" type="checkbox" name="price_select" value="1"> Add some suggested amounts
+                    </label>
+                    <div id="variable_prices" class="hide">
+                      <div class="form-group">
+                        <div class="col-sm-2">
+                          <input name="price_1" type="text" class="form-control " placeholder="$1" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                        </div>
+                        <div class="col-sm-2">
+                          <input name="price_2" type="text" class="form-control " placeholder="$5" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                        </div>
+                        <div class="col-sm-2">
+                          <input name="price_3" type="text" class="form-control " placeholder="$10" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                        </div>
+                        <div class="col-sm-2">
+                          <input name="price_4" type="text" class="form-control " placeholder="$15" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                        </div>
+                        <div class="col-sm-2">
+                          <input name="price_5" type="text" class="form-control " placeholder="$20" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="formGroupInputLarge">Callback URL</label>
+                <div class="col-sm-10">
+                  <input name="callback_url" type="text" class="form-control " placeholder="http://www.example.com/callback">
+                </div>
+              </div>
+            </div>
+            <button name="generateBtn" type="submit" class="btn btn-primary">Generate Code</button>
+          </form>
+          <!-- The preview -->
+          <div id="after_generate" class="row hide">
+            <div class="col-md-12">
+              <h3> Embed code</h3>
+              <textarea id="embed_code" name="embed_code" type="text" class="form-control" rows="4" onclick="$(this).select()"></textarea>
+              <h3> Preview</h3>
+              <div id="preview"></div>
+            </div>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  </div>
+  </div>
+  <!-- end of wrapper -->
+  </div>
+  </div>
+  <!-- Modals -->
+  <div id="sendModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Send Money</h4>
+        </div>
+        <div class="modal-body">
+          <form id="sendMoneyForm" class="form-horizontal" role="form">
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Amount</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <div id="withdrawSymbol" class="input-group-addon">BTC</div>
+                  <input name="sendAmount" class="form-control" type="text" id="formGroupInputLarge" placeholder="BTC" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">To</label>
+              <div class="col-sm-10">
+                <input name="address" type="text" class="form-control" placeholder="Bitcoin Address">
+              </div>
+            </div>
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Your Funds</label>
+              <div name="funds" class="col-sm-10 form-control-static balance-btc">
+              </div>
+            </div>
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Potential Funds After</label>
+              <div name="fundsLeft" class="col-sm-10 form-control-static">
+              </div>
+            </div>
+            <button name="placeSendBtn" type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="sendEncryptedModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Send Money</h4>
+        </div>
+        <div class="modal-body">
+          <form id="sendMoneyEncryptedForm" class="form-horizontal" role="form">
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Amount</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <div id="withdrawSymbol" class="input-group-addon">BTC</div>
+                  <input name="sendAmount" class="form-control" type="text" id="formGroupInputLarge" placeholder="BTC" data-bv-notempty="true" data-bv-notempty-message="An amount is required" data-bv-greaterthan="true" data-bv-greaterthan-value=".0001" data-bv-greaterthan-message="Must be > .0001">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">To</label>
+              <div class="col-sm-10">
+                <input name="address" type="text" class="form-control" placeholder="Bitcoin Address" data-bv-notempty="true" data-bv-notempty-message="An Address is required">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-10">
+                <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password" data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" data-bv-stringlength="true" data-bv-stringlength-min="5" data-bv-stringlength-message="The password must be more than 5 characters long" />
+              </div>
+            </div>
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Your Funds</label>
+              <div name="funds" class="col-sm-10 form-control-static balance-btc">
+              </div>
+            </div>
+            <div class="form-group form-group-lg">
+              <label class="col-sm-2 control-label" for="formGroupInputLarge">Potential Funds After</label>
+              <div name="fundsLeft" class="col-sm-10 form-control-static">
+              </div>
+            </div>
+            <button name="placeSendBtn" type="submit" class="btn btn-primary" data-loading-text="Sending &nbsp;<i class='fa fa-circle-o-notch fa-spin'></i>">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade bs-example-modal-lg" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="userloginModalLabel">Receive Money</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div id="qrcode" class="text-center"></div>
+            <h4 id="receive_address" class="text-center well"></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap core JavaScript
+      ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+  <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../bower_components/bootstrapValidator/dist/js/bootstrapValidator.min.js "></script>
+  <script src="../bower_components/toastr/toastr.js"></script>
+  <script src="../bower_components/mustache/mustache.js"></script>
+  <script src="../bower_components/holderjs/holder.js"></script>
+  <script src="../js/json.date-extensions.min.js"></script>
+  <script src="../bower_components/tablesorter/jquery.tablesorter.min.js"></script>
+  <script src="../bower_components/highcharts/highcharts.js"></script>
+  <script src="../bower_components/highcharts/modules/exporting.js"></script>
+  <script src="../bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+  <script src="../bower_components/pickadate/lib/picker.js"></script>
+  <script src="../bower_components/pickadate/lib/picker.date.js"></script>
+  <script src="../bower_components/summernote/dist/summernote.min.js"></script>
+  <script src="../bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="../bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
+  <!-- my scripts -->
+  <script src="../js/tools.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/seller_tools.js"></script>
+</body>
+
+</html>
