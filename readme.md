@@ -2,7 +2,7 @@
 ==================
 
 
-[OpenMarket](http://104.236.98.130:4568/) &mdash; A free, decentralized marketplace.
+[OpenMarket](http://104.236.98.130:4568/) &mdash; A free, decentralized bitcoin-based marketplace.
 ==========
 ![](http://img.shields.io/version/0.0.2.png?color=green)
 
@@ -14,6 +14,7 @@ It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bi
 
 To see what its all about, check out [a sample OpenMarket website](http://104.236.98.130:4568/)
 
+[Subreddit](http://www.reddit.com/r/openmarket_net)
 
 ## Features include
 * A complete web store including product reviews, ratings, wishlists, shipping tracking urls, feedback, categories, etc.
