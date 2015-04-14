@@ -14,4 +14,4 @@ $GOPATH/bin/rqlite -join localhost:4002 -p 4003 data
 
 $GOPATH/bin/rqlite -join 96.28.13.51:4002 data
 
-./deploy.sh -testnet -join 96.28.13.51:4002 -port 4569
+./deploy.sh -testnet -join 96.28.13.51:4570 -port 4568
