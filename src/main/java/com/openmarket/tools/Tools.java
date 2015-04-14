@@ -1096,7 +1096,7 @@ public class Tools {
 			}
 			String result = builder.toString();
 			log.info(result);
-			if (result.contains("not installed.")) {
+			if (result.contains("not installed.") || result.contains("command not found")) {
 				return false;
 			} else {
 				String goVersion = result.split("\\s+")[2];
