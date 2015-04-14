@@ -61,9 +61,9 @@ public class DataSources {
 	// RQL 
 	public static String RQL_DIR() {return HOME_DIR() + "/db";}
 
-	public static String RQL_MASTER_NODE_IP = "96.28.13.51";
+	public static String RQL_MASTER_NODE_IP = null;
 
-	public static String RQL_MASTER_NODE_PORT = "4001";
+	public static String RQL_MASTER_NODE_PORT = null;
 	
 	public static String RQL_MY_NODE_IP = "localhost";
 	

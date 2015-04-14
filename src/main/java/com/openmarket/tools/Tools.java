@@ -548,6 +548,7 @@ public class Tools {
 		    
 			HttpPost httpPost = new HttpPost(postURL);
 			httpPost.setEntity(new StringEntity(reformatted));
+
 //			httpPost.setEntity(new StringEntity("L"));
 
 			ResponseHandler<String> handler = new BasicResponseHandler();
