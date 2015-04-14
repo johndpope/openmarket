@@ -43,7 +43,7 @@ Download the jar, located [here]()
 To help test, use this command to join an existing test node that uses the bitcoin testnet:
 <pre>java -jar openmarket.jar -testnet -join 96.28.13.51:4570</pre>
 
-
+General usage:
 <pre>java -jar openmarket.jar [parameters]</pre>
 <pre>parameters:
  -deleteDB     : Delete the sqlite DB before running.(Warning, this deletes
@@ -71,11 +71,16 @@ chmod +x deploy.sh
 
 and access
 
-
+## Contributing
+Start with getting familiar with the [schema](http://ondras.zarovi.cz/sql/demo/?keyword=openmarket). 
 
 ## Support 
-If you'd like to contribute to the project, you can either post bounties for desired features [here](), or here:
-![bitcoin:17N2wDi8Y6Cnrnrbzq5JsRcdjnW9DVyVhL](http://i.imgur.com/87N3QWu.png).
+If you'd like to help fund me to keep developing openmarket, you can either post bounties for desired features [on BountySource](https://www.bountysource.com/trackers/12711596-tchoulihan-openmarket), or donate directly here:
+
+bitcoin:17N2wDi8Y6Cnrnrbzq5JsRcdjnW9DVyVhL
+![bitcoin:17N2wDi8Y6Cnrnrbzq5JsRcdjnW9DVyVhL](http://i.imgur.com/87N3QWu.png)
+
+
 
 ## Bugs and feature requests
 Have a bug or a feature request? If your issue isn't [already listed](https://github.com/tchoulihan/openmarket/issues/), then [open a new issue here](https://github.com/tchoulihan/openmarket/issues/new).

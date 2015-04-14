@@ -16,11 +16,16 @@
       bottom:0;
       }*/
 
-
-
-.dropdown, .dropdown-menu {
-  z-index:2;
+.small-nav-link {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
+
+.dropdown,
+.dropdown-menu {
+  z-index: 2;
+}
+
 .navbar {
   position: static;
   z-index: 1;
@@ -282,12 +287,12 @@ body.modal-open {
   /*hight of the spinner gif +2px to fix IE8 issue */
 }
 
-
 .text-overflow {
   overflow: hidden;
   white-space: nowrap;
   /* Don't forget this one */
   /*display:inline-block;*/
+  
   text-overflow: ellipsis;
   /*width: 160px;*/
 }
