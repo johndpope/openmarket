@@ -2,8 +2,9 @@
 ==================
 
 
-[OpenMarket](http://tchoulihan.github.io/bitmerchant/) &mdash; A free, decentralized marketplace.
+[OpenMarket]() &mdash; A free, decentralized marketplace.
 ==========
+[asdf](http://img.shields.io/version/0.1.2.png?color=green)
 
 **Currently in alpha testing**
 
@@ -30,11 +31,10 @@ It comes with an integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-bas
 - Go (version at least 1.4)
 - If behind a router, make sure ports 4566-4570 are correctly forwarded to your local ip address.
 
-Download the jar, located [here](https://github.com/tchoulihan/bitmerchant/releases/download/1.3/bitmerchant-shaded.jar)
+Download the jar, located [here]()
 
 To help test, use this command to join an existing test node that uses the bitcoin testnet:
 <pre>java -jar openmarket.jar -testnet -join 96.28.13.51:4570</pre>
-
 
 <pre>java -jar openmarket.jar [parameters]</pre>
 <pre>parameters:
@@ -48,7 +48,7 @@ To help test, use this command to join an existing test node that uses the bitco
 
 </pre>
 
-If accessing from another machine, vnc to the machine, or use a vpn service
+Then access this URL from your browser, and go through the signup process
 http://localhost:4567/
 
 ## Building from scratch
@@ -58,8 +58,10 @@ To build OpenMarket, run the following commands:
 git clone https://github.com/tchoulihan/openmarket
 cd openmarket
 chmod +x deploy.sh
-./deploy.sh
+./deploy.sh -testnet -join 96.28.13.51:4570
 ```
+
+and access
 
 
 
