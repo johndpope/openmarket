@@ -25,10 +25,10 @@ public class Main {
 	@Option(name="-testnet",usage="Run using the Bitcoin testnet3, and a test DB")
 	private boolean testnet;
 
-	@Option(name="-deleteDB",usage="Delete the sqlite DB before running.(Warning, this deletes your wallets too)")
+	@Option(name="-deleteDB",usage="Delete the sqlite DB before running.(WARNING, this deletes your wallet)")
 	private boolean deleteDB;
 	
-	@Option(name="-uninstall",usage="Uninstall OpenMarket.(Warning, this deletes your wallets too)")
+	@Option(name="-uninstall",usage="Uninstall OpenMarket.(WARNING, this deletes your wallet)")
 	private boolean uninstall;
 
 	@Option(name="-loglevel", usage="Sets the log level [INFO, DEBUG, etc.]")     
@@ -106,10 +106,11 @@ public class Main {
 			// you'll get this exception. this will report
 			// an error message.
 			System.err.println(e.getMessage());
-			System.err.println("java LocalWallet [options...] arguments...");
+			System.err.println("java -jar openmarket.jar [options...] arguments...");
 			// print the list of available options
 			parser.printUsage(System.err);
 			System.err.println();
+			System.exit(0);
 
 
 			return;
