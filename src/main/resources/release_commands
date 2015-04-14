@@ -1,0 +1,17 @@
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
+
+mvn clean release:prepare
+mvn clean release:perform
+mvn3 nexus-staging:release -e
+
+
+http://central.sonatype.org/pages/apache-maven.html
+
+export GOPATH=$PWD
+go get github.com/otoolep/rqlite
+go get gopkg.in/check.v1;
+$GOPATH/bin/rqlite -join localhost:4002 -p 4003 data
+
+$GOPATH/bin/rqlite -join 96.28.13.51:4002 data
+
+./deploy.sh -testnet -join 96.28.13.51:4002 -port 4569

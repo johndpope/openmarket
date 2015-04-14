@@ -199,8 +199,15 @@
                     <div class="text-normal">Type: <span class="text-muted">{{raft.state}}</span></div>
                     <div class="text-normal">Leader: <span class="text-muted">{{raft.leader}}</span></div>
                   </div>
-                  <div class="col-md-4 vertical-line">
-                    {{#raft.peers}} No connected peers {{/raft.peers}} {{^raft.peers}} {{/raft.peers}}
+                  <div class="col-md-4">
+                    {{#raft.peers.0}} 
+                    Peers:
+                    {{/raft.peers.0}}
+                    {{#raft.peers}} 
+                    <div class="text-normal">Name: <span class="text-muted">{{name}} </span></div>
+                     <div class="text-normal">Connection: <span class="text-muted">{{connectionString}} </span></div><br>
+                    {{/raft.peers}} {{^raft.peers}} No connected peers {{/raft.peers}}
+                    
                   </div>
                 </div>
               </div>
@@ -223,7 +230,9 @@
                   </div>
                   <div class="col-md-4 vertical-line">
                   <div class="text-muted"> Requests</div>
-                    <div class="text-normal">Received: <span class="text-muted">{{statistics.server.execute.Received}}</span></div>
+                    <div class="text-normal">Received: <span class="text-muted">{{statistics.server.execute_received.count}}</span></div>
+                    <div class="text-normal">Executed: <span class="text-muted">{{statistics.server.execute_success.count}}</span></div>
+                    <div class="text-normal">Failed: <span class="text-muted">{{statistics.server.execute_fail.count}}</span></div>
                   </div>
                 </div>
               </div>

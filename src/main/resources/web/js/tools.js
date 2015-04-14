@@ -7,12 +7,12 @@ var externalSparkService = 'http://96.28.13.51:4567/';
 
 
 var ipget = $.ajax({
-   type: "GET",
-   timeout: 1000,
-   url: "https://api.ipify.org",
-   async: false,
+  type: "GET",
+  timeout: 1000,
+  url: "https://api.ipify.org",
+  async: false,
 
- });
+});
 
 var ipget_ip = (ipget['responseText'] != null) ? ipget['responseText'] : 'localhost';
 var myip = 'http://' + ipget_ip + ':4567/';
@@ -27,7 +27,7 @@ var clientIsSeller = false;
 if (myip == externalSparkService || myip == 'http://localhost:4567/') {
   sparkService = localSparkService;
   clientIsSeller = true;
-} 
+}
 // you are accessing it remotely, so you should be using the ip address fetching version
 else {
   sparkService = externalSparkService;
@@ -665,8 +665,8 @@ var otherDateFormatObj = {
       // months are off by 1 in js, and hours are off by the timezone offset
       var tzOffset = new Date().getTimezoneOffset() / 60;
       var date = new Date(a[0], a[1] - 1, a[2], a[3] - tzOffset, a[4], a[5]);
-      console.log(a);
-      console.log(date);
+      // console.log(a);
+      // console.log(date);
       return date.customFormat("#YYYY#/#MM#/#DD# #hh#:#mm# #AMPM#")
     }
   }
@@ -1012,4 +1012,14 @@ function tabLoad() {
     window.location.hash = e.target.hash.replace("#", "#" + prefix);
     $('#rootwizard').find("a[href*='" + hash + "']").trigger('click');
   });
+}
+
+Array.prototype.contains = function(obj) {
+  var i = this.length;
+  while (i--) {
+    if (this[i] === obj) {
+      return true;
+    }
+  }
+  return false;
 }

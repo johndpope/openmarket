@@ -51,7 +51,21 @@ function setupLoginFormModal() {
     })
     .on('success.form.bv', function(event) {
       event.preventDefault();
-      standardFormPost('login', "#login_form_modal", "#loginModal", null, showHideElementsLoggedIn, null, true);
+      standardFormPost('login', "#login_form_modal", "#loginModal", null, function() {
+
+        showHideElementsLoggedIn();
+
+        var dontReloadPageNames = ['/home', '/dashboard', '/'];
+        var currentPage = window.location.pathname;
+
+        // if the current page isn't home, then reload the page after a bit
+        if (!dontReloadPageNames.contains(currentPage)) {
+          delay(function() {
+            location.reload();
+          }, 1500);
+        }
+        console.log(currentPage);
+      }, null, true);
 
     });
 
@@ -111,7 +125,6 @@ function showHideElementsLoggedIn() {
     setupCart();
     setupWishlist();
     setupLogout();
-
 
 
     $(".logged-in").removeClass("hide");
@@ -175,6 +188,10 @@ function logout() {
       //     }, 1500);
 
       showHideElementsLoggedIn();
+
+      delay(function() {
+        window.location.href = '/';
+      }, 1500);
 
 
     },

@@ -1,62 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-
-
   <title>OpenMarket</title>
-
   <!-- favicon -->
   <link rel="shortcut icon" href="/pics/favicon.ico" type="image/x-icon" />
-
   <!-- Bootstrap core CSS -->
   <link href="../css/white.plum.bootstrap.min.css" rel="stylesheet">
-
   <!-- Link to font awesome -->
-  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css"> 
+  <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
   <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
-
   <!-- Bootstrap social css -->
   <link href="../bower_components/bootstrap-social/bootstrap-social.css" rel="stylesheet">
-
   <!--   Bootstrap validator -->
   <link rel="stylesheet" href="../bower_components/bootstrapValidator/dist/css/bootstrapValidator.min.css" />
-
   <!--   toastr css -->
   <link href="../bower_components/toastr/toastr.css" rel="stylesheet" />
-
   <!--   typeahead css -->
   <!-- <link href="typeaheadjs.css" rel="stylesheet" /> -->
-
   <!-- Pickadate -->
   <link href="../bower_components/pickadate/lib/themes/default.css" rel="stylesheet" />
   <link href="../bower_components/pickadate/lib/themes/default.date.css" rel="stylesheet" />
-
   <!-- Summernote -->
   <link href="../bower_components/summernote/dist/summernote.css" rel="stylesheet" />
-
   <!-- Bootstrap datepicker -->
   <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
-
   <!-- This main css -->
   <link href="../css/main.css" rel="stylesheet">
-
 
 </head>
 
 <body>
   <!-- Navbars -->
-
   <!-- the start of the doc -->
   <div id="wrapper" class="wrapper">
-
-   <!-- header -->
+    <!-- header -->
     <nav class="navbar navbar-default navbar-top" role="navigation">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -69,28 +52,26 @@
           </button>
           <a class="navbar-brand" href="/">OpenMarket</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-          <li id="searchbar">
-            <form id="search_form" class="navbar-form navbar-left navbar-input-group " role="search">
-              <div class="input-group">
-                <div class="input-group-btn">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">All <span class="caret"></span>
-                  </button>
-                </div>
-                <div class="form-group">
-                  <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for items or shops" autofocus="autofocus">
-                </div>
-                <span class="input-group-btn">
+            <li id="searchbar">
+              <form id="search_form" class="navbar-form navbar-left navbar-input-group " role="search">
+                <div class="input-group">
+                  <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">All <span class="caret"></span>
+                    </button>
+                  </div>
+                  <div class="form-group">
+                    <input name="search_input" type="text" class="form-control typeahead" placeholder="Search for items or shops" autofocus="autofocus">
+                  </div>
+                  <span class="input-group-btn">
               <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
               </button>
               </span>
-              </div>
-            </form>
+                </div>
+              </form>
             </li>
-
             <li class="dropdown">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">Browse <span class="caret"></span>
@@ -101,25 +82,17 @@
                 </ul>
               </div>
             </li>
-
-
-
           </ul>
-
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#login">Wishlist <span class="caret"></span></a>
             </li>
-
             <li><a href="/about">Cart <span class="caret"></span></a>
             </li>
             <li class="dropdown logged-out">
               <div class="navbar-form">
-
                 <a class="btn btn-default" data-toggle="modal" data-target="#loginModal">Sign in <span class="caret"></span></a>
-
               </div>
             </li>
-
             <li class="dropdown logged-in">
               <div class="navbar-form">
                 <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">You <span class="caret"></span>
@@ -138,24 +111,17 @@
                 </ul>
               </div>
             </li>
-
-
           </ul>
-
-
         </div>
         <!-- /.navbar-collapse -->
       </div>
       <!-- /.container-fluid -->
     </nav>
-
     <!-- The full page with teh sidebar -->
     <div class="container-fluid">
       <div class="row">
-
         <!-- The sidebar -->
         <div id="side_col" class="col-md-3 sidebar">
-
           <div class="mini-submenu">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -164,16 +130,12 @@
           <div class="list-group">
             <a class="list-group-item" href="wallet" rel="keep-params"><i class="fa fa-bank fa-fw"></i> &nbsp; Wallet</a>
             <a class="list-group-item active" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
-            <a class="list-group-item" href="tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
-            <a class="list-group-item" href="settings" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Settings</a>
-
+            <a class="list-group-item" href="seller_tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
+            <a class="list-group-item" href="seller_setup#bitcoin_wallet" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Settings</a>
           </div>
         </div>
       </div>
-
       <!-- stop plugging in -->
-
-
       <!-- Sidebar -->
       <!--   <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
@@ -184,34 +146,16 @@
     </ul>
 
   </div> -->
-
-
-
       <!-- The sidebar -->
-
-
-
       <!-- The Page -->
       <div class="row-fluid">
         <div class="othermain-col col-md-9 col-md-offset-3">
-
-
-
           <div class="row">
-
-
             <div class="col-md-12">
               <h1 id="page_title" class="text-center"> Orders</h1>
             </div>
-
-
           </div>
           <br>
-
-
-
-
-
           <div class="row">
             <div class="col-md-12">
               <div class="panel panel-default">
@@ -264,15 +208,7 @@
   </div>
           </div>
 
-          <div class="row">
-            <hr class="featurette-divider">
-            <footer>
-              <p class="pull-right"><a href="#">Back to top</a>
-              </p>
-              <p>&copy; 2015 Bitmerchant, Inc. &middot; <a href="/about">About</a> &middot; <a href="https://github.com/tchoulihan/bitmerchant">Contact</a> &middot; <a href="/FAQ">Support</a> &middot; <a href="https://github.com/tchoulihan/bitmerchant">Github</a>
-              </p>
-            </footer>
-          </div>
+
 
 
           <br>
@@ -298,6 +234,8 @@
           <!-- Bootstrap core JavaScript
       ================================================== -->
           <!-- Placed at the end of the document so the pages load faster -->
+        <script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
+
           <script src="../bower_components/jquery/dist/jquery.min.js"></script>
           <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
           <script type="text/javascript" src="../bower_components/bootstrapValidator/dist/js/bootstrapValidator.min.js "></script>
