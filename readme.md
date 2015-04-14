@@ -4,7 +4,7 @@
 
 [OpenMarket]() &mdash; A free, decentralized marketplace.
 ==========
-[asdf](http://img.shields.io/version/0.1.2.png?color=green)
+![asdf](http://img.shields.io/version/0.1.2.png?color=green)
 
 **Currently in alpha testing**
 
