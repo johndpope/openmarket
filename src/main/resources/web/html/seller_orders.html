@@ -129,7 +129,7 @@
           </div>
           <div class="list-group">
             <a class="list-group-item" href="wallet" rel="keep-params"><i class="fa fa-bank fa-fw"></i> &nbsp; Wallet</a>
-            <a class="list-group-item active" href="orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
+            <a class="list-group-item active" href="seller_orders" rel="keep-params"><i class="fa fa-shopping-cart fa-fw"></i> &nbsp; Orders</a>
             <a class="list-group-item" href="seller_tools" rel="keep-params"><i class="fa fa-wrench fa-fw"></i> &nbsp; Tools</a>
             <a class="list-group-item" href="seller_setup#bitcoin_wallet" rel="keep-params"><i class="fa fa-cog fa-fw"></i> &nbsp; Settings</a>
           </div>
@@ -187,7 +187,7 @@
                 <td> <span class="text-success">{{order.total_native}}</span> {{order.native_currency_iso}}                
                 <br><span class="text-muted">{{order.total_satoshis}} satoshis</span>
                 </td>
-                <td> <a class="text-muted" href="/order_details?order={{order.id}}"> Order # {{order.id}} </a>
+                <td> <a class="text-muted" href="/seller_order_details?order={{order.id}}"> Order # {{order.id}} </a>
                 </td>
             
               </tr>

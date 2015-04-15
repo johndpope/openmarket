@@ -67,6 +67,8 @@ To build OpenMarket, run the following commands:
 git clone https://github.com/tchoulihan/openmarket
 cd openmarket
 chmod +x deploy.sh
+
+# This script does a git pull, maven install, and java -jar command
 ./deploy.sh -testnet -join 96.28.13.51:4570
 ```
 
