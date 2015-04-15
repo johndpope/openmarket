@@ -110,10 +110,10 @@ public class DataSources {
 	}
 
 	// Google categories
-	public static final String GOOGLE_CATEGORIES_LIST = SOURCE_CODE_HOME() + "/categories.list";
+	public static final String GOOGLE_CATEGORIES_LIST() {return SOURCE_CODE_HOME() + "/categories.list";}
 
 	// Countries
-	public static final String COUNTRIES_LIST = SOURCE_CODE_HOME() + "/countries.list";
+	public static final String COUNTRIES_LIST() {return SOURCE_CODE_HOME() + "/countries.list";}
 
 	// Web pages
 	public static final String WEB_HOME() {return SOURCE_CODE_HOME() + "/web";}

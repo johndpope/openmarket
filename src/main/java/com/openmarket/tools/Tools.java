@@ -827,7 +827,7 @@ public class Tools {
 		List<Map.Entry<String,String>> countryList = new ArrayList<Map.Entry<String,String>>();
 		try {
 
-			br = new BufferedReader(new FileReader(DataSources.COUNTRIES_LIST));
+			br = new BufferedReader(new FileReader(DataSources.COUNTRIES_LIST()));
 
 			while ((line = br.readLine()) != null) {
 
@@ -892,7 +892,7 @@ public class Tools {
 
 		try {
 
-			br = new BufferedReader(new FileReader(DataSources.GOOGLE_CATEGORIES_LIST));
+			br = new BufferedReader(new FileReader(DataSources.GOOGLE_CATEGORIES_LIST()));
 			Integer i = 0;
 			while ((line = br.readLine()) != null) {
 				i++;
