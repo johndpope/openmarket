@@ -8,17 +8,17 @@
 
 **Currently alpha testing on the bitcoin test network**
 
-[OpenMarket](http://104.236.98.130:4568/) is an open-source, decentralized marketplace, like amazon or etsy, where you can sell anything in exchange for bitcoin. The network and website is hosted by any seller running software installed from this page, and accessible by any of the running network nodes that keep a complete copy of the database.
+[OpenMarket](http://104.236.98.130:4568/) is an open-source, [decentrally-hosted](http://104.236.98.130:4568/network) marketplace, like amazon or etsy, where you can sell anything in exchange for bitcoin. The network and website is hosted by any seller running software installed from this page, and accessible by any of the running [network nodes](http://104.236.98.130:4568/network) that keep a complete copy of the distributed database. Buyers do not have to install anything; they can just type a [URL](http://104.236.98.130:4568/) into their browser.
 
-It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-based [Bitcoin wallet](http://github.com/tchoulihan/bitmerchant) so you can immediately start accepting payments without having to go through an intermediary service like coinbase or bitpay. 
+It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-based [Bitcoin wallet](http://github.com/tchoulihan/bitmerchant) so you can immediately start accepting payments for items without having to go through an intermediary service like coinbase or bitpay. 
 
-To see what its all about, check out [a sample OpenMarket website](http://104.236.98.130:4568/)
+To see what its all about, check out a sample [OpenMarket website](http://104.236.98.130:4568/)
 
-[Subreddit](http://www.reddit.com/r/openmarket_net)
+Suggest features or post bugs here, or on the [Subreddit](http://www.reddit.com/r/openmarket_net)
 
 ## Features include
 * A complete web store including product reviews, ratings, wishlists, shipping tracking urls, feedback, categories, etc.
-* A decentrally hosted database, built atop [rqlite](https://github.com/otoolep/rqlite). 
+* A decentralized database, built atop [rqlite](https://github.com/otoolep/rqlite). 
 * A fully portable webservice and website built with java [Spark](https://github.com/perwendel/spark). *No web server required*
 * An offline bitcoin [wallet](http://github.com/tchoulihan/bitmerchant) that uses [BIP70](https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki). 
 * A [network page](http://104.236.98.130:4568/network) showing the connected nodes.
@@ -57,7 +57,7 @@ General usage:
 
 </pre>
 
-Then access this URL from your browser, and go through the signup process
+Then access this URL from your browser, and go through the signup process using
 http://localhost:4567/
 
 ## Building from scratch
@@ -70,7 +70,7 @@ chmod +x deploy.sh
 ./deploy.sh -testnet -join 96.28.13.51:4570
 ```
 
-and access
+and access http://localhost:4567/
 
 ## Support 
 If you'd like to help fund me to keep developing openmarket, you can either post bounties for desired features [on BountySource](https://www.bountysource.com/trackers/12711596-tchoulihan-openmarket), or donate directly here:
