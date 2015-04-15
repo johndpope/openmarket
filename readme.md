@@ -12,9 +12,9 @@
 
 It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-based [Bitcoin wallet](http://github.com/tchoulihan/bitmerchant) so you can immediately start accepting payments for items without having to go through an intermediary service like coinbase or bitpay. 
 
-To see what its all about, check out a sample [OpenMarket website](http://104.236.98.130:4568/)
+To see what its all about, check out a sample testing [OpenMarket website](http://104.236.98.130:4568/).
 
-Suggest features or post bugs here, or on the [Subreddit](http://www.reddit.com/r/openmarket_net)
+Suggest features or post bugs here, or on the [Subreddit](http://www.reddit.com/r/openmarket_net).
 
 ## Features include
 * A complete web store including product reviews, ratings, wishlists, shipping tracking urls, feedback, categories, etc.
@@ -32,7 +32,7 @@ Suggest features or post bugs here, or on the [Subreddit](http://www.reddit.com/
 <img src="http://i.imgur.com/0c584RB.png">
 
 
-## Installation
+## Installation (only necessary for sellers)
 ### Requirements
 - Java 8
 - Go (version at least 1.4) 
