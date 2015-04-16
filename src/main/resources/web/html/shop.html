@@ -103,7 +103,7 @@
                       </div>
                       <div class="col-xs-9">
                         <a href="/product/{{product_id}}" class="text-overflow"> {{title}}</a>
-                        <p class="text-muted"><small>{{shop_name}}</small></p>
+                        <p><a class="text-muted" href="/shop/{{seller_id}}"><small>{{shop_name}}</small></a></p>
                       </div>
                     </div>
                     {{/products}} {{#products.0}}
@@ -219,10 +219,11 @@
                   <div class="col-xs-8">
                     <div class="text-right">
                       <span>Sort by:</span>
-                      <a class="btn btn-default">Most Reviews <span class="caret"></span></a>
+                      <a class="btn btn-default btn-sm">Most Reviews <span class="caret"></span></a>
                     </div>
                   </div>
                 </div>
+                <br>
                 <br> {{#products}}
                 <div class="col-md-4">
                   <div class="panel panel-default">
@@ -253,7 +254,7 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="text-center text-overflow">
-                            <a href="{{sparkURL}}product/{{product_id}}">{{title}}</a>
+                            <a href="/product/{{product_id}}">{{title}}</a>
                           </div>
                         </div>
                       </div>

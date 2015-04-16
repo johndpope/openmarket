@@ -80,6 +80,9 @@ public class Main {
 
 		// Start the webservice
 		WebService.start();
+		
+		// Load up in a browser
+		Tools.pollAndOpenStartPage();
 
 		Tools.cacheCurrency("USD");
 

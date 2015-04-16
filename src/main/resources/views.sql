@@ -12,7 +12,7 @@ shop_name,
 category_id,
 buy,
 auction,
-quantity,
+product.quantity,
 title,
 processing_time_span_id,
 time_span_string,
@@ -35,8 +35,9 @@ auction_currency.iso as auction_currency_iso,
 shipping.id as shipping_id, 
 from_country_id, 
 from_country.name as from_country, 
-count(review.id) as number_of_reviews, 
+count(distinct review.id) as number_of_reviews, 
 ifnull(avg(review.stars),0) as review_avg, 
+count(distinct cart_item.id) as number_of_purchases,
 product_html 
 FROM product 
 left join time_span_view on product.processing_time_span_id = time_span_view.id 
@@ -49,6 +50,7 @@ left join shipping on product.id = shipping.product_id
 left join country as from_country on shipping.from_country_id = from_country.id 
 left join review on review.product_id = product.id 
 left join seller on product.seller_id = seller.id  
+left join cart_item on product.id = cart_item.product_id and purchased=1 
 group by product.id
 ;
 
@@ -59,8 +61,9 @@ title,
 seller_id,
 category_id,
 shop_name, 
-count(review.id) as number_of_reviews, 
+count(distinct review.id) as number_of_reviews, 
 ifnull(avg(review.stars),0) as review_avg, 
+count(distinct cart_item.id) as number_of_purchases,
 auction,
 CASE WHEN auction='1'
 	THEN (select max(bid.amount) from bid where bid.auction_id = auction.id) 
@@ -73,6 +76,7 @@ left join seller on product.seller_id = seller.id
 left join auction on product.id = auction.product_id 
 left join review on review.product_id = product.id 
 left join product_price on product_price.product_id = product.id 
+left join cart_item on product.id = cart_item.product_id and purchased=1 
 group by product.id 
 ;
 
@@ -311,3 +315,58 @@ left join country on address.country_id = country.id
 ;
 
 
+-- select *,
+-- count(distinct review.id)
+--  from product
+-- left join review on product.id = review.product_id
+-- left join cart_item on product.id = cart_item.product_id and purchased=1 
+-- group by product.id
+-- ;
+
+-- SELECT product.id,
+-- seller_id,
+-- shop_name,
+-- category_id,
+-- buy,
+-- auction,
+-- product.quantity,
+-- title,
+-- processing_time_span_id,
+-- time_span_string,
+-- price,
+-- native_currency_id,
+-- currency.iso as price_iso,
+-- variable_price,
+-- price_select,
+-- price_1,
+-- price_2,
+-- price_3,
+-- price_4,
+-- price_5,
+-- expire_time,
+-- start_amount,
+-- reserve_amount,
+-- physical,
+-- currency_id as auction_currency_id,
+-- auction_currency.iso as auction_currency_iso,
+-- shipping.id as shipping_id, 
+-- from_country_id, 
+-- from_country.name as from_country, 
+-- count(review.id) as number_of_reviews, 
+-- ifnull(avg(review.stars),0) as review_avg, 
+-- count(cart_item.id) as number_of_purchases,
+-- product_html 
+-- FROM product 
+-- left join time_span_view on product.processing_time_span_id = time_span_view.id 
+-- left join product_page on product.id = product_page.product_id 
+-- left join product_price on product.id = product_price.product_id 
+-- left join auction on product.id = auction.product_id 
+-- left join currency on product_price.native_currency_id = currency.id 
+-- left join currency as auction_currency on auction.currency_id = auction_currency.id 
+-- left join shipping on product.id = shipping.product_id 
+-- left join country as from_country on shipping.from_country_id = from_country.id 
+-- left join review on review.product_id = product.id 
+-- left join seller on product.seller_id = seller.id  
+-- left join cart_item on product.id = cart_item.product_id and purchased=1 
+-- group by product.id
+-- ;

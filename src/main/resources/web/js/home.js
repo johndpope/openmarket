@@ -6,7 +6,7 @@ $(document).ready(function() {
 
   setupSignupForm();
 
-  setupTrending('#trending_div','review_avg desc');
+  setupTrending('#trending_div','number_of_purchases desc');
   setupTrending('#greatest_div','number_of_reviews desc');
 
 });

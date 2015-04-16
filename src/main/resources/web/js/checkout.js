@@ -274,10 +274,12 @@ function setupWizard() {
     },
     onTabClick: function(tab, navigation, index) {
       console.log(tab);
+      console.log(navigation);
+  
        var $clicked = index + 1;
        console.log($clicked);
         if ($clicked == 2 || $clicked ==3) {
-          return false
+          // return false
         }
       // return false;
     }

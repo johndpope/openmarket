@@ -1,5 +1,6 @@
 package com.openmarket.tools;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,11 +14,14 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
@@ -31,10 +35,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -48,11 +52,11 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -60,7 +64,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
@@ -70,7 +73,6 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.jasypt.util.password.StrongPasswordEncryptor;
-import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.DB;
 import org.javalite.activejdbc.DBException;
 import org.joda.money.CurrencyUnit;
@@ -357,7 +359,7 @@ public class Tools {
 	public static void allowOnlyLocalHeaders(Request req, Response res) {
 
 
-		log.info("req ip = " + req.ip());
+		log.debug("req ip = " + req.ip());
 
 
 		//		res.header("Access-Control-Allow-Origin", "http://mozilla.com");
@@ -568,7 +570,7 @@ public class Tools {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			
+			throw new NoSuchElementException("rqlite service is down");
 		} 
 
 		message = "Rqlite write status : " + message;
@@ -1126,6 +1128,59 @@ public class Tools {
 			log.info("Go (version at least 1.4) is not installed");
 			System.exit(0);
 		} 
+	}
+	
+	public static void pollAndOpenStartPage() {
+		// TODO poll some of the url's every .5 seconds, and load the page when they come back with a result
+		int i = 500;
+		int cTime = 0;
+		while (cTime < 30000) {
+			try {
+				try {
+					
+
+					HttpURLConnection connection = null;
+					URL url = new URL(DataSources.WEB_SERVICE_INTERNAL_URL());
+					connection = (HttpURLConnection) url.openConnection();
+					connection.setConnectTimeout(5000);//specify the timeout and catch the IOexception
+					connection.connect();
+					Thread.sleep(2*i);
+					Tools.openWebpage(DataSources.WEB_SERVICE_INTERNAL_URL());
+					cTime = 30000;
+				} catch (IOException e) {
+					log.info("Could not connect to local webservice, retrying in 500ms up to 30 seconds");
+					cTime += i;
+
+					Thread.sleep(i);
+
+				}
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+	public static void openWebpage(URI uri) {
+		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+			try {
+				desktop.browse(uri);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void openWebpage(String urlString) {
+		try {
+			URL url = new URL(urlString);
+			openWebpage(url.toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
