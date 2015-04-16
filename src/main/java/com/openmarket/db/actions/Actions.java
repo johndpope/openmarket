@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.Model;
 import org.slf4j.Logger;
@@ -150,7 +151,9 @@ public class Actions {
 
 			String html = Tools.parseMustache(vars, DataSources.SIGNUP_EMAIL_TEMPLATE());
 
-			String message = Tools.sendEmail(email, null, subject, html);
+			Tools.sendEmail(email, null, subject, html);
+			
+			String message = "An E-mail has been sent to you";
 
 			return message;
 
@@ -697,6 +700,7 @@ public class Actions {
 
 			log.info("feedback rows created for payment id = " + paymentId);
 		}
+		
 		public static String saveFeedback(String feedbackId, String userId,
 				String stars, String arrivedOnTime, String correctlyDescribed,
 				String promptService, String comments) {
@@ -756,10 +760,47 @@ public class Actions {
 
 			String sellerEmail = USER.findFirst("id = ?", sellerUserId).getString("email");
 
-			String message = Tools.sendEmail(sellerEmail, userEmail, subject, html);
+			Tools.sendEmail(sellerEmail, userEmail, subject, html);
 
+			String message = "Message sent to seller";
+			
 			return message;
 
+		}
+		public static String sendOrderEmail(String paymentId) {
+			
+			List<OrderGroup> ogs = ORDER_GROUP.find("payment_id = ?", paymentId);
+			
+			ObjectNode on = Transformations.orderGroupedJson(ogs);
+			
+			JsonNode o = on.get("order_groups").get(0);
+			
+			String total = o.get("cost").asText();
+			String totalIso = o.get("iso").asText();
+			String numOfItems = String.valueOf(o.get("products").size());
+			String userId = o.get("user_id").asText();
+			String orderLink = DataSources.WEB_SERVICE_EXTERNAL_URL() + "orders";
+			
+			String subject = "OpenMarket Order #" + paymentId;
+
+			Map<String, Object> vars = ImmutableMap.<String, Object>builder()
+					.put("total", total)
+					.put("total_iso", totalIso)
+					.put("number_of_items", numOfItems)
+					.put("order_link", orderLink)
+					
+					.build();
+
+			String html = Tools.parseMustache(vars, DataSources.ORDER_EMAIL_TEMPLATE());
+
+			User user = USER.findFirst("id = ?", userId);
+			String userEmail = user.getString("email");
+			
+			String message = Tools.sendEmail(userEmail, null, subject, html);
+
+			return message;
+			
+			
 		}
 
 

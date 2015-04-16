@@ -1253,7 +1253,8 @@ public class Platform {
 				log.info("i got the callback");
 				PaymentActions.updatePayment(paymentId);
 				UserActions.createFeedbackFromPaymentSuccess(paymentId);
-
+				UserActions.sendOrderEmail(paymentId);
+				
 				return null;
 
 			} catch (Exception e) {

@@ -362,9 +362,7 @@ public class Transformations {
 
 	public static ObjectNode orderGroupedJson(String userId, String view) {
 
-		ObjectNode a = Tools.MAPPER.createObjectNode();
 
-		ArrayNode ab = a.putArray("order_groups");
 
 		List<OrderGroup> ogs;
 
@@ -373,9 +371,23 @@ public class Transformations {
 		} else {
 			ogs = ORDER_GROUP.find("user_id = ?", userId).orderBy("created_at desc");
 		}
+		
+		ObjectNode on = orderGroupedJson(ogs);
+		
+		return on;
+
+	}
+	
+	public static ObjectNode orderGroupedJson(List<OrderGroup> ogs) {
+		ObjectNode a = Tools.MAPPER.createObjectNode();
+
+		ArrayNode ab = a.putArray("order_groups");
+		
+		
 		for (OrderGroup og : ogs) {
 			// each row is a distinct seller and payment?
 			String paymentId = og.getString("payment_id");
+			String userId = og.getString("user_id");
 
 			List<OrderView> cvs = ORDER_VIEW.find("user_id = ? and payment_id = ?",
 					userId, paymentId);
@@ -396,7 +408,6 @@ public class Transformations {
 		}
 
 		return a;
-
 	}
 	
 	public static ObjectNode saleGroupedJson(String sellerId) {

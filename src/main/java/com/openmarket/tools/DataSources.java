@@ -108,6 +108,10 @@ public class DataSources {
 	public static final String TO_SELLER_MESSAGE_TEMPLATE() {
 		return SOURCE_CODE_HOME() + "/to_seller_message_template.html";
 	}
+	
+	public static final String ORDER_EMAIL_TEMPLATE() {
+		return SOURCE_CODE_HOME() + "/order_email_template.html";
+	}
 
 	// Google categories
 	public static final String GOOGLE_CATEGORIES_LIST() {return SOURCE_CODE_HOME() + "/categories.list";}
