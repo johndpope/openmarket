@@ -1,24 +1,6 @@
 package com.openmarket.webservice;
 
-import static com.openmarket.db.Tables.ADDRESS_VIEW;
-import static com.openmarket.db.Tables.ANSWER_VOTE;
-import static com.openmarket.db.Tables.CART_VIEW;
-import static com.openmarket.db.Tables.CATEGORY;
-import static com.openmarket.db.Tables.COUNTRY;
-import static com.openmarket.db.Tables.CURRENCY;
-import static com.openmarket.db.Tables.FEEDBACK_VIEW;
-import static com.openmarket.db.Tables.PAYMENT;
-import static com.openmarket.db.Tables.PRODUCT_BULLET;
-import static com.openmarket.db.Tables.PRODUCT_PICTURE;
-import static com.openmarket.db.Tables.PRODUCT_THUMBNAIL_VIEW;
-import static com.openmarket.db.Tables.PRODUCT_VIEW;
-import static com.openmarket.db.Tables.QUESTION_VOTE;
-import static com.openmarket.db.Tables.REVIEW_VIEW;
-import static com.openmarket.db.Tables.REVIEW_VOTE;
-import static com.openmarket.db.Tables.SELLER;
-import static com.openmarket.db.Tables.SHIPPING;
-import static com.openmarket.db.Tables.SHIPPING_COST;
-import static com.openmarket.db.Tables.TIME_SPAN_VIEW;
+
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -50,6 +32,8 @@ import com.openmarket.db.actions.Actions.SellerActions;
 import com.openmarket.db.actions.Actions.UserActions;
 import com.openmarket.tools.DataSources;
 import com.openmarket.tools.Tools;
+import static com.openmarket.db.Tables.*;
+
 
 public class Platform {
 
