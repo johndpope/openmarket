@@ -4,7 +4,7 @@
 
 [OpenMarket](http://104.236.98.130:4568/) &mdash; A free, decentralized bitcoin-based marketplace.
 ==========
-![](http://img.shields.io/version/0.0.2.png?color=green)
+![](http://img.shields.io/version/0.0.3.png?color=green)
 
 **Currently alpha testing on the bitcoin test network**
 
