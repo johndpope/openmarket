@@ -143,7 +143,7 @@ public class TableConstants {
 				"cd " + DataSources.RQL_DIR(),
 				"export GOPATH=$PWD",
 //				"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
-				"$GOPATH/bin/rqlite " + // -h " + DataSources.EXTERNAL_IP + 
+				"$GOPATH/bin/rqlite -s 50 -h " + DataSources.EXTERNAL_IP + 
 				" -p " + DataSources.RQL_MY_NODE_PORT + " data");
 	}
 
