@@ -4,7 +4,7 @@
 	<groupId>com.openmarket</groupId>
 	<artifactId>openmarket</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>openmarket</name>
 	<url>http://maven.apache.org</url>
 

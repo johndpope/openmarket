@@ -8,13 +8,15 @@
 
 **Currently alpha testing on the bitcoin test network**
 
-[OpenMarket](http://104.236.98.130:4568/) is an open-source, [decentrally-hosted](http://104.236.98.130:4568/network) marketplace, like amazon or etsy, where you can sell anything in exchange for bitcoin. The network and website is hosted by any seller running software installed from this page, and accessible by any of the running [network nodes](http://104.236.98.130:4568/network) that keep a complete copy of the distributed database. Buyers do not have to install anything; they can just type a [URL](http://104.236.98.130:4568/) into their browser.
+[OpenMarket](http://104.236.98.130:4568/) is an open-source, [decentrally-hosted](http://104.236.98.130:4568/network) marketplace, like amazon or etsy, where you can sell anything in exchange for bitcoin. 
 
-It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-based [Bitcoin wallet](http://github.com/tchoulihan/bitmerchant) so you can immediately start accepting payments for items without having to go through an intermediary service like coinbase or bitpay. 
+The network and website uses the [raft protocol](https://raftconsensus.github.io/), and is hostable by any seller running software installed from this page. Buyers do not have to install anything; they can just type a [URL](http://104.236.98.130:4568/) into their browser.
+
+It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bitcoinj)-based [Bitcoin wallet](http://github.com/tchoulihan/bitmerchant) so you can immediately start accepting payments for items without having to go through an intermediary service like coinbase or bitpay. This is the first fully decentralized bitcoin marketplace.
 
 To see what its all about, check out a sample testing [OpenMarket website](http://104.236.98.130:4568/).
 
-Suggest features or post bugs here, or on the [Subreddit](http://www.reddit.com/r/openmarket_net).
+Suggest features or post bugs [here](https://github.com/tchoulihan/openmarket/issues/), or on the [Subreddit](http://www.reddit.com/r/openmarket_net).
 
 ## Features include
 * A complete web store including product reviews, ratings, wishlists, shipping tracking urls, feedback, categories, etc.
