@@ -16,14 +16,13 @@ It comes with a local-only, integrated [BitcoinJ](https://github.com/bitcoinj/bi
 
 To see what its all about, check out a sample testing [OpenMarket website](http://104.236.98.130:4568/).
 
-Suggest features or post bugs [here](https://github.com/tchoulihan/openmarket/issues/), or on the [Subreddit](http://www.reddit.com/r/openmarket_net).
+Suggest features or post bugs [here](https://github.com/tchoulihan/openmarket/issues/), or on the subreddit [r/openmarket_net](http://www.reddit.com/r/openmarket_net).
 
 ## Features include
-* A complete web store including product reviews, ratings, wishlists, shipping tracking urls, feedback, categories, etc.
-* A decentralized database, built atop [rqlite](https://github.com/otoolep/rqlite). 
+* A complete web store akin to etsy including product reviews, ratings, wishlists, shipping tracking urls, feedback, categories, etc.
+* A decentralized [raft-based](https://raftconsensus.github.io/) database, built atop [rqlite](https://github.com/otoolep/rqlite). 
 * A fully portable webservice and website built with java [Spark](https://github.com/perwendel/spark). *No web server required*
 * An offline bitcoin [wallet](http://github.com/tchoulihan/bitmerchant) that uses [BIP70](https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki). 
-* A [network page](http://104.236.98.130:4568/network) showing the connected nodes.
 
 
 ## Screenshots:
@@ -49,13 +48,15 @@ To help test, use this command to join an existing test node that uses the bitco
 General usage:
 <pre>java -jar openmarket.jar [parameters]</pre>
 <pre>parameters:
- -deleteDB     : Delete the sqlite DB before running.(Warning, this deletes
-                 your wallet too)
- -join VAL     : Startup OpenMarket joining a master node(IE, 127.0.0.1:4001)
+ -deleteDB     : Delete the sqlite DB before running.(WARNING, this deletes
+                 your wallet)
+ -join VAL     : Startup OpenMarket joining a master nodeIE, 127.0.0.1:4001
  -loglevel VAL : Sets the log level [INFO, DEBUG, etc.]
  -port N       : Startup your webserver on a different port(default is 4567)
+ -rqlport N    : Startup rql on a different port(default is 4570)
  -testnet      : Run using the Bitcoin testnet3, and a test DB
- -uninstall    : Uninstall OpenMarket.(Warning, this deletes your wallet too)
+ -uninstall    : Uninstall OpenMarket.(WARNING, this deletes your wallet)
+
 
 </pre>
 
