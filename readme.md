@@ -40,7 +40,7 @@ Suggest features or post bugs [here](https://github.com/tchoulihan/openmarket/is
   - [GVM](https://github.com/moovweb/gvm) is the best way to install go.
 - If behind a router, make sure ports 4566-4570 are correctly forwarded to your local ip address.
 
-Download the jar, located [here]()
+Download the jar, located [here](https://github.com/openmarket/openmarket/releases/download/0.0.3/openmarket.jar)
 
 To help test, use this command to join an existing test node that uses the bitcoin testnet:
 <pre>java -jar openmarket.jar -testnet -join 104.236.98.130:4570</pre>
