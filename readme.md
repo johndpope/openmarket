@@ -44,7 +44,7 @@ Suggest features or post bugs [here](https://github.com/tchoulihan/openmarket/is
 Download the jar, located [here]()
 
 To help test, use this command to join an existing test node that uses the bitcoin testnet:
-<pre>java -jar openmarket.jar -testnet -join 96.28.13.51:4570</pre>
+<pre>java -jar openmarket.jar -testnet -join 104.236.98.130:4570</pre>
 
 General usage:
 <pre>java -jar openmarket.jar [parameters]</pre>
@@ -70,7 +70,7 @@ cd openmarket
 chmod +x deploy.sh
 
 # This script does a git pull, maven install, and java -jar command
-./deploy.sh -testnet -join 96.28.13.51:4570
+./deploy.sh -testnet -join 104.236.98.130:4570
 ```
 
 and access http://localhost:4567/
