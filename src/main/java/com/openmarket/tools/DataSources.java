@@ -61,26 +61,28 @@ public class DataSources {
 	// RQL 
 	public static String RQL_DIR() {return HOME_DIR() + "/db";}
 	
-	public static String RQL_MAIN_PORT = "4569";
+	public static Integer RQL_MAIN_PORT = 4569;
 	
-	public static String RQL_TEST_PORT = "4570";
+	public static Integer RQL_TEST_PORT = 4570;
 	
 
 	public static String RQL_MASTER_NODE_IP = null;
 
-	public static String RQL_MASTER_NODE_PORT = RQL_TEST_PORT;
+	public static Integer RQL_MASTER_NODE_PORT = RQL_TEST_PORT;
 	
-
+	
 	
 	
 	public static String RQL_MY_NODE_IP = "localhost";
+	
+	public static Integer RQL_MY_NODE_PORT = RQL_TEST_PORT;
 	
 	public static final String RQL_MASTER_NODE_URL() {
 		return RQL_MASTER_NODE_IP + ":" + RQL_MASTER_NODE_PORT;
 	}
 	
 	public static final String RQL_MY_NODE_URL() {
-		return "http://" + RQL_MY_NODE_IP + ":" + RQL_MASTER_NODE_PORT;
+		return "http://" + RQL_MY_NODE_IP + ":" + RQL_MY_NODE_PORT;
 	}
 
 	public static final Boolean IS_MASTER_NODE() {

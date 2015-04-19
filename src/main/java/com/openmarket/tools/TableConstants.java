@@ -134,7 +134,7 @@ public class TableConstants {
 					"export GOPATH=$PWD",
 					"$GOPATH/bin/rqlite -h " + DataSources.EXTERNAL_IP + 
 					" -join " + DataSources.RQL_MASTER_NODE_URL() + 
-					" -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
+					" -p " + DataSources.RQL_MY_NODE_PORT + " data");
 	}
 
 	public static final List<String> RQLITE_STARTUP_SCRIPT_LINES() {
@@ -144,7 +144,7 @@ public class TableConstants {
 				"export GOPATH=$PWD",
 //				"$GOPATH/bin/rqlite -s 50 -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
 				"$GOPATH/bin/rqlite -h " + DataSources.EXTERNAL_IP + 
-				" -p " + DataSources.RQL_MASTER_NODE_PORT + " data");
+				" -p " + DataSources.RQL_MY_NODE_PORT + " data");
 	}
 
 }

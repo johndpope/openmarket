@@ -37,9 +37,14 @@ public class Main {
 	@Option(name="-join", usage="Startup OpenMarket joining a master node" + 
 			"IE, 127.0.0.1:4001")   
 	private String customMasterNode;
+	
+	@Option(name="-rqlport", usage="Startup rql on a different port(default is 4570)")
+	private Integer customRqlPort;
 
 	@Option(name="-port", usage="Startup your webserver on a different port(default is 4567)")
 	private Integer port;
+	
+	
 
 
 
@@ -58,7 +63,7 @@ public class Main {
 			Tools.uninstall();
 		}
 
-		setRQLMasterNodeVars(customMasterNode);
+		setRQLVars(customMasterNode);
 
 		setPort(port);
 
@@ -121,17 +126,23 @@ public class Main {
 		}
 	}
 
-	private void setRQLMasterNodeVars(String customMasterNode) {
+	private void setRQLVars(String customMasterNode) {
 		if (customMasterNode != null) {
 			String[] split = customMasterNode.split(":");
 
 			DataSources.RQL_MASTER_NODE_IP = split[0];
-			DataSources.RQL_MASTER_NODE_PORT = split[1];
+			DataSources.RQL_MASTER_NODE_PORT = Integer.parseInt(split[1]);
 		} else {
 			DataSources.RQL_MASTER_NODE_PORT = (!DataSources.TESTNET) ? 
 					DataSources.RQL_MAIN_PORT:
 						DataSources.RQL_TEST_PORT;
 		}
+		
+		if (customRqlPort != null) {
+			DataSources.RQL_MY_NODE_PORT = customRqlPort;
+		}
+		
+		
 	}
 
 	private void setPort(Integer port) {

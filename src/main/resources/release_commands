@@ -16,9 +16,10 @@ $GOPATH/bin/rqlite -join 96.28.13.51:4002 data
 
 
 Install stuff
+./deploy.sh -testnet -uninstall
 
 # bitmerchant one
-./deploy.sh -testnet -port 4568
+./deploy.sh -testnet -h 104.236.98.130 -port 4568
 
 # my one
 ./deploy.sh -testnet -join 104.236.98.130:4570 -port 4567
