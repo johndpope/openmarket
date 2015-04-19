@@ -15,7 +15,8 @@ var ipget = $.ajax({
 });
 
 var ipget_ip = (ipget['responseText'] != null) ? ipget['responseText'] : 'localhost';
-var myip = 'http://' + ipget_ip + ':4567/';
+var myport = localSparkService.split(':')[2].split('/')[0];
+var myip = 'http://' + ipget_ip + ':' + myport + '/';
 
 console.log('my ip = ' + myip);
 console.log('local spark service = ' + localSparkService);
@@ -24,7 +25,7 @@ console.log('ext spark = ' + externalSparkService);
 var sparkService;
 // This means you are running a seller machine, and everything should be using localhost
 var clientIsSeller = false;
-if (myip == externalSparkService || myip == 'http://localhost:4567/') {
+if (myip == externalSparkService) {
   sparkService = localSparkService;
   clientIsSeller = true;
 }
