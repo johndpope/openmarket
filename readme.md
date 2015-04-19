@@ -57,14 +57,13 @@ General usage:
 
 </pre>
 
-Then access this URL from your browser, and go through the signup process using
-http://localhost:4567/
+A browser window will load the page at http://localhost:4567/, and make sure you complete the signup from there.
 
 ## Building from scratch
 
 To build OpenMarket, run the following commands:
 ```
-git clone https://github.com/tchoulihan/openmarket
+git clone https://github.com/openmarket/openmarket
 cd openmarket
 chmod +x deploy.sh
 
