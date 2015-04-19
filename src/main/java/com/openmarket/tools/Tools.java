@@ -58,9 +58,11 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -553,6 +555,7 @@ public class Tools {
 			CloseableHttpClient httpClient = 
 					HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).
 					addInterceptorFirst(new ContentLengthHeaderRemover()).build();
+//			httpClient.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
 
 			HttpPost httpPost = new HttpPost(postURL);
 			httpPost.setEntity(new StringEntity(reformatted));

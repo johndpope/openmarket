@@ -16,15 +16,15 @@ $GOPATH/bin/rqlite -join 96.28.13.51:4002 data
 
 
 Install stuff
-./deploy.sh -testnet -uninstall
+nohup java -jar target/openmarket.jar -testnet -uninstall &> log.out &
 
 # bitmerchant one
-./deploy.sh -testnet -h 104.236.98.130 -port 4568
+nohup java -jar target/openmarket.jar -testnet -port 4568 &> log.out &
 
 # my one
-./deploy.sh -testnet -join 104.236.98.130:4570 -port 4567
+nohup java -jar target/openmarket.jar -testnet -join 104.236.98.130:4570 -port 4567 &> log.out &
 
 # wd one
-./deploy.sh -testnet -join 104.236.98.130:4570 -port 4568
+nohup java -jar target/openmarket.jar -testnet -join 104.236.98.130:4570 -port 4568 &> log.out &
 
 

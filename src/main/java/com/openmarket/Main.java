@@ -148,6 +148,7 @@ public class Main {
 	private void setPort(Integer port) {
 		if (port != null) {
 			DataSources.SPARK_WEB_PORT = port;
+			com.bitmerchant.tools.DataSources.SPARK_WEB_PORT = port;
 		}
 
 	}
